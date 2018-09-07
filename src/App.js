@@ -9,7 +9,7 @@ import './App.css';
 
 class App extends Component {
   state = { users: [] ,
-    model:'<p>Shantanu Gade<br><span class="fr-video fr-fvc fr-dvb fr-draggable" contenteditable="false" draggable="true"><iframe width="640" height="360" src="https://www.youtube.com/embed/MevKTPN4ozw?wmode=opaque" frameborder="0" allowfullscreen="" class="fr-draggable"></iframe></span>SHantanu</p>' 
+    model:' ' 
   }
 
   componentDidMount() {
@@ -18,14 +18,33 @@ class App extends Component {
     //   .then(users => this.setState({ users }));
   }
   config={
-    videoUploadURL:'https://drive.google.com/drive/folders/1sVBa_EQLW3Wfvx69NNuH8DP2T8if40v3?usp=sharing'
-    }
+   // videoUploadURL:'https://drive.google.com/drive/folders/1sVBa_EQLW3Wfvx69NNuH8DP2T8if40v3?usp=sharing',
+    
+
+   imageUpload: true,
+   imageUploadMethod: 'POST',
+   imageUploadParam: 'file_name',
+   imageUploadParams: {
+    id: 'my_editor'
+  },
+  imageUploadRemoteUrls: true,
+  imageUploadURL: 'http://localhost:3000/imageupload',
+
+   fileUpload: true,
+   fileUploadURL: 'http://localhost:3000/fileupload',
+   fileUploadMethod: 'PUT',
+   fileUploadParam: 'filename',
+   colorsDefaultTab: 'background',
+    disableRightClick: true,
+    codeMirror: false
+    } 
 
   handleModelChange =(model) => {
     this.setState({
       model: model
     });
 
+    //console.log(document.getElementById('fr-video-by-url-layer-text-1'));
     console.log(this.state.model);
   }
 
@@ -45,6 +64,8 @@ class App extends Component {
             onModelChange={this.handleModelChange}
             config={this.config }
           />
+
+      
       </div>
     );
   }
