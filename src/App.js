@@ -18,22 +18,24 @@ class App extends Component {
     //   .then(users => this.setState({ users }));
   }
   config={
-   // videoUploadURL:'https://drive.google.com/drive/folders/1sVBa_EQLW3Wfvx69NNuH8DP2T8if40v3?usp=sharing',
-    
+
+    videoDefaultDisplay: 'inline',
+    videoAllowedTypes: ['mp4'],
+    videoUpload: true,
+    videoUploadMethod: 'POST',
+    videoUploadParam: 'file_name',
+    videoUploadURL: 'http://localhost:3000/editor/videoupload',
 
    imageUpload: true,
    imageUploadMethod: 'POST',
    imageUploadParam: 'file_name',
-   imageUploadParams: {
-    id: 'my_editor'
-  },
   imageUploadRemoteUrls: true,
-  imageUploadURL: 'http://localhost:3000/imageupload',
+  imageUploadURL: 'http://localhost:3000/editor/imageupload',
 
    fileUpload: true,
-   fileUploadURL: 'http://localhost:3000/fileupload',
-   fileUploadMethod: 'PUT',
-   fileUploadParam: 'filename',
+   fileUploadURL: 'http://localhost:3000/editor/fileupload',
+   fileUploadMethod: 'POST',
+   fileUploadParam: 'file_name',
    colorsDefaultTab: 'background',
     disableRightClick: true,
     codeMirror: false
