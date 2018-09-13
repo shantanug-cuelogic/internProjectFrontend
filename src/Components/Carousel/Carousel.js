@@ -1,6 +1,8 @@
 import React from 'react';
 import Slider from "react-slick";
 import classes from './Carousel.css'
+import Paper from '@material-ui/core/Paper';
+
 
 const carousel = (props) => {
     
@@ -9,7 +11,7 @@ const carousel = (props) => {
         centerMode: false,
         infinite: true,
         centerPadding: "60px",
-        slidesToShow: 1,
+        slidesToShow: 1 ,
         speed: 500,
         dots: true,
         autoplay: true,
@@ -20,45 +22,59 @@ const carousel = (props) => {
       };
 
     return(
-        <div className={classes.Container}>
+
+        <div className={classes.Container} style={{textAlign:'center' , marginTop:'50px'}}>
+        
             <Slider {...settings}>
-            <div className={classes.Carousel}>
-                <h1>Blog 1</h1>
-                <div>
-                    <img src="burger-logo.png"></img>
+            <Paper>
+                <div className={classes.Carousel}>
+                    <h1>Blog 1</h1>
+                    <div>
+                        <img src="burger-logo.png"></img>
+                    </div>
+                    <p>Blog content</p>
                 </div>
-                <p>Blog content</p>
-            </div>
-            <div className={classes.Carousel}>
-                <h1>Blog 2</h1>
-                <div>
-                    <img src="burger-logo.png"></img>
+            </Paper>
+            <Paper>
+                <div className={classes.Carousel}>
+                    <h1>Blog 1</h1>
+                    <div>
+                        <img src="burger-logo.png"></img>
+                    </div>
+                    <p>Blog content</p>
                 </div>
-                <p>Blog content</p>
-            </div>
-            <div className={classes.Carousel}>
-                <h1>Blog 3</h1>
-                <div>
-                    <img src="burger-logo.png"></img>
+            </Paper>
+            <Paper>
+                <div className={classes.Carousel}>
+                    <h1>Blog 1</h1>
+                    <div>
+                        <img src="burger-logo.png"></img>
+                    </div>
+                    <p>Blog content</p>
                 </div>
-                <p>Blog content</p>
-            </div>
-            <div className={classes.Carousel}>
-                <h1>Blog 4</h1>
-                <div>
-                    <img src="burger-logo.png"></img>
+            </Paper>
+            <Paper>
+                <div className={classes.Carousel}>
+                    <h1>Blog 1</h1>
+                    <div>
+                        <img src="burger-logo.png"></img>
+                    </div>
+                    <p>Blog content</p>
                 </div>
-                <p>Blog content</p>
-            </div>
-            <div className={classes.Carousel}>
-                <h1>Blog 5</h1>
-                <div>
-                    <img src="burger-logo.png"></img>
+            </Paper>
+            <Paper>
+                <div className={classes.Carousel}>
+                    <h1>Blog 1</h1>
+                    <div>
+                        <img src="burger-logo.png"></img>
+                    </div>
+                    <p>Blog content</p>
                 </div>
-                <p>Blog content</p>
-            </div>
+            </Paper>
             
         </Slider>
+        
+            
         </div>
         
         )   

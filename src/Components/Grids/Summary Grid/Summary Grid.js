@@ -6,13 +6,15 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import classess from './Summary Grid';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Editor from '../../Editor/Editor';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
     maxWidth: '100%',
     padding: theme.spacing.unit * 2,
-    margin:'10%'
+    margin:'3%'
     
   },
   image: {
@@ -25,12 +27,20 @@ const styles = theme => ({
     maxWidth: '100%',
     maxHeight: '100%',
   },
+  link:{
+    position: 'relative',
+    bottom: '',
+    right: '16px',
+    fontSize: '18px',
+    textDecoration :'none'
+  }
 });
 
 function ComplexGrid(props) {
   const { classes } = props;
+  
   return ( 
-    <div className = {classess.Container}>
+    <div className = {classess.Container} >
       <Paper className={classes.root}>
       <Grid container spacing={16}>
         <Grid item>
@@ -47,12 +57,23 @@ function ComplexGrid(props) {
               <Typography gutterBottom>{props.name}</Typography>
               <Typography color="textSecondary">{props.summary}</Typography>
             </Grid>
-            <Grid item>
-              <Typography style={{ cursor: 'pointer' }}>Remove</Typography>
-            </Grid>
+            
           </Grid>
           <Grid item>
             <Typography variant="subheading">{props.views}</Typography>
+          </Grid>
+          <Grid item>
+         <Router> 
+         <div>
+          <ul>
+            <li>
+            <Link to='/editor'>Continue Reading</Link>
+            </li>
+          </ul> 
+          
+          </div>
+          </Router>
+             
           </Grid>
         </Grid>
       </Grid>
