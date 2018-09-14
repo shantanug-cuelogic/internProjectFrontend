@@ -36,10 +36,13 @@ TabContainer.propTypes = {
 const styles = theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    width: '100%',
+    width: '80%',
     position: 'relative',
     minHeight: 200,
-    marginTop:"7%"
+    marginTop:"7%",
+    marginLeft:'10%',
+    marginRight:'10%'
+
   },
   fab: {
     position: 'absolute',
@@ -84,6 +87,7 @@ class FloatingActionButtonZoom extends React.Component {
         summary={"This is summary for the burger builder app"}
         views={"Views : "+element }
         click={this.editorHandler}
+        postId={isd}
     />
       ))
 
@@ -103,7 +107,7 @@ class FloatingActionButtonZoom extends React.Component {
             <Tab label="Most Liked" />
           </Tabs>
         </AppBar>
-              
+       
         <SwipeableViews
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
           index={this.state.value}
