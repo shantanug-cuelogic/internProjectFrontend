@@ -38,6 +38,7 @@ const styles = theme => ({
 
 function ComplexGrid(props) {
   const { classes } = props;
+  let url="/post/"+props.postId;
   
   return ( 
     <div className = {classess.Container} >
@@ -63,17 +64,13 @@ function ComplexGrid(props) {
             <Typography variant="subheading">{props.views}</Typography>
           </Grid>
           <Grid item>
-         <Router> 
          <div>
           <ul>
             <li>
-            <Link to='/editor'>Continue Reading</Link>
+            <Link to={url} >Continue Reading</Link>
             </li>
           </ul> 
-          
           </div>
-          </Router>
-             
           </Grid>
         </Grid>
       </Grid>

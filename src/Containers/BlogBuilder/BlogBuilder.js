@@ -10,22 +10,15 @@ import classes from './BlogBuilder.css'
 class BlogBuilder extends React.Component {
 
     editorHandler = () => {
-        
+
     }
 
     render() {
         return (
-            <Paper>
-                <div className={classes.Container}>
+            <div className={classes.Container}>
                 <Carousel />
                 <Menu />
-
-
-
-            </div>    
-            </Paper>
-            
-
+            </div>
         );
     }
 }
