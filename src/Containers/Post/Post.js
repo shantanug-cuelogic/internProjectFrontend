@@ -7,7 +7,6 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'font-awesome/css/font-awesome.css';
 import FroalaEditor from 'react-froala-wysiwyg';
 
-
 const style = theme => ({
 
     HeaderContainer: {
@@ -41,6 +40,7 @@ class Post extends Component {
         const config = {
             toolbarButtons :[]
         }
+
         return (
             <div>
                 <Paper>
@@ -57,7 +57,7 @@ class Post extends Component {
                       config ={config}
                       />
                     </Typography>
-                    </div>
+</div>
                 </Paper>
             </div>
 

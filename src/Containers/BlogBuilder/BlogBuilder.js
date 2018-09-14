@@ -21,8 +21,7 @@ class BlogBuilder extends React.Component {
                 
                 <Menu />
                 
-                
-            </div>
+</div>
         );
     }
 }

@@ -6,6 +6,7 @@ import BlogBuilder from './Containers/BlogBuilder/BlogBuilder';
 import Post from './Containers/Post/Post';
 import { StickyContainer, Sticky } from 'react-sticky';
 import Profile from './Components/Profile/Profile';
+
 import Editor from './Components/Editor/Editor';
 import ReactDOM from 'react-dom';
 import Paper from '@material-ui/core/Paper';
@@ -52,8 +53,6 @@ class App extends Component {
   }
 
   render() {
-
-
     return (
       <div className="App">
         <MuiThemeProvider theme={theme}>
