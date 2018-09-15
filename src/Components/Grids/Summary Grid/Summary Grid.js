@@ -4,17 +4,15 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import classess from './Summary Grid';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import Editor from '../../Editor/Editor';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
     maxWidth: '100%',
     padding: theme.spacing.unit * 2,
-    margin:'3%'
+    margin:'3%',
+    
     
   },
   image: {
@@ -41,27 +39,26 @@ function ComplexGrid(props) {
   let url="/post/"+props.postId;
   
   return ( 
-    <div className = {classess.Container} >
+    <div>
       <Paper className={classes.root}>
       <Grid container spacing={16}>
-        <Grid item>
-          <ButtonBase className={classes.image}>
-            <img className={classes.img} alt="complex" src="burger-logo.png" />
-          </ButtonBase>
-        </Grid>
+        
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={16}>
             <Grid item xs>
               <Typography gutterBottom variant="subheading">
                 {props.title}
               </Typography>
-              <Typography gutterBottom>{props.name}</Typography>
-              <Typography color="textSecondary">{props.summary}</Typography>
+              <Typography gutterBottom>{props.date}</Typography>
+              <Typography color="textSecondary"></Typography>
+          <div>{props.summary}</div>
+              
             </Grid>
             
           </Grid>
           <Grid item>
             <Typography variant="subheading">{props.views}</Typography>
+            <Typography variant="subheading">{props.likes}</Typography>
           </Grid>
           <Grid item>
          <div>

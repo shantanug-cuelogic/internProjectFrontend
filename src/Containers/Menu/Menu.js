@@ -1,22 +1,14 @@
 import React from 'react';
 import PropTypes, { element } from 'prop-types';
-import classNames from 'classnames';
 import SwipeableViews from 'react-swipeable-views';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Zoom from '@material-ui/core/Zoom';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 import green from '@material-ui/core/colors/green';
+import axios from 'axios';
 import SummaryGrid from '../../Components/Grids/Summary Grid/Summary Grid';
-import { StickyContainer, Sticky } from 'react-sticky';
-
-
 
 function TabContainer(props) {
   const { children, dir } = props;
@@ -53,19 +45,42 @@ const styles = theme => ({
     color: theme.palette.common.white,
     backgroundColor: green[500],
   },
+  header : {
+    
+  }
 });
 
 class FloatingActionButtonZoom extends React.Component {
   state = {
     value: 0,
-    abc : ['a','b','c','d']
+    recentlyUpdated :[],
+    new:[],
+    mostLiked:[]
   };
-
   componentDidMount(){
-    
-      
-  }
+    axios.get('/post/recent')
+    .then((response) =>{
+          this.setState({
+        new:response.data.result
+      })
 
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+
+    axios.get('/post/recentUpdated')
+    .then((response) =>{
+      this.setState({
+        recentlyUpdated : response.data.result
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+
+
+  }
   handleChange = (event, value) => {
     this.setState({ value });
   };
@@ -80,26 +95,40 @@ class FloatingActionButtonZoom extends React.Component {
   render() {
     const { classes, theme } = this.props;
 
-    var contain = this.state.abc.map((element,isd) =>(
-        <SummaryGrid
-        key={isd}
-        title={"The Burger Builder App"}
-        summary={"This is summary for the burger builder app"}
-        views={"Views : "+element }
-        click={this.editorHandler}
-        postId={isd}
-    />
-      ))
+    // var contain = this.state.abc.map((element,isd) =>(
+    //     <SummaryGrid
+    //     key={isd}
+    //     title={"The Burger Builder App"}
+    //     summary={"This is summary for the burger builder app"}
+    //     views={"Views : "+element }
+    //     click={this.editorHandler}
+    //     postId={isd}
+    // />
+    //   ))
+
+    const recentlyUpdatedPosts =[];
+    const newPosts = this.state.new.map((element , index) => (
+      <SummaryGrid
+          key={index}
+          title={element.title}
+          summary={element.postContent}
+          views={"Views : "+element.views }
+          likes ={"Likes"+element.likes}
+          postId={element.postId}
+          postDate={element.postDate}
+      /> 
+    ))
+    const mostLikedPosts =[];
 
     return (
       <div className={classes.root}>
        
-       <AppBar position="static" color="primary">
+       <AppBar position="static" color="primary" className={classes.header}>
           <Tabs
             value={this.state.value}
             onChange={this.handleChange}
             indicatorColor="secondary"
-            textColor="secondary"
+            textColor="inherit"
             fullWidth
           >
             <Tab label="Recently Updated" />
@@ -114,25 +143,13 @@ class FloatingActionButtonZoom extends React.Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <TabContainer dir={theme.direction}>
-                {contain}
+                {recentlyUpdatedPosts}
            </TabContainer>
           <TabContainer dir={theme.direction}>
-          
-                <SummaryGrid
-                    title={"The Burger Builder App"}
-                    summary={"This is summary for the burger builder app"}
-                    views={"Views :12212121"}
-                    onClick={this.editorHandler}
-                />
+                {newPosts}
           </TabContainer>
           <TabContainer dir={theme.direction}>
-            
-          <SummaryGrid
-                    title={"The Burger Builder App"}
-                    summary={"This is summary for the burger builder app"}
-                    views={"Views :12212121"}
-                    onClick={this.editorHandler}
-                />
+            {mostLikedPosts}
           </TabContainer>
         </SwipeableViews>
 

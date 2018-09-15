@@ -23,7 +23,8 @@ const style = theme => ({
     
     },
     ButtonContainer: {
-        float: 'right'
+        float: '',
+        display:'inline'
     },
     NavigationUl: {
         listStyle: 'none'
@@ -62,7 +63,11 @@ class Header extends React.Component {
                  </Typography>
                     <Grid container justify="flex-end" >
                     {this.props.auth ?
-                     <Avatar 
+                  <nav className={classes.ButtonContainer}>
+                       <Button color="inherit" size="small"  className={classes.button} component={Link} to="/"> Home</Button>
+                       <Button color="inherit" size="small"  className={classes.button} component={Link} to="/createpost"> Create Blog</Button>
+                       <Avatar
+                        sizes='small'
                         alt="Burger logo" 
                         src="burger-logo.png" 
                         className={classes.button} 
@@ -70,9 +75,15 @@ class Header extends React.Component {
                         aria-haspopup="true"
                         onClick={this.handleClick}>
                         </Avatar>
+                        
+                   
+                  </nav>
+                  
+                   
                     :<nav className={classes.ButtonContainer}>
                     <Button color="inherit" size="small"  className={classes.button} component={Link} to="/signin"> SignIn</Button>
                     <Button color="inherit" size="small"  className={classes.button} component={Link} to="/signup"> SIGNUP</Button>
+                    <Button color="inherit" size="small"  className={classes.button} component={Link} to="/"> Home</Button>
                 </nav> 
                     }
                     
@@ -82,8 +93,9 @@ class Header extends React.Component {
                         open={Boolean(this.state.anchorEl)}
                         onClose={this.handleClose}
                         >
-          <MenuItem onClick={this.handleClose}><Link to="dashnoard">Dashboard</Link></MenuItem>
-          <MenuItem onClick={this.handleClose}><Link to="profile" >Profile</Link></MenuItem>
+          <MenuItem onClick={this.handleClose}><Link to="/" >Home</Link></MenuItem>
+          <MenuItem onClick={this.handleClose}><Link to="/dashnoard">Dashboard</Link></MenuItem>
+          <MenuItem onClick={this.handleClose}><Link to="/profile" >Profile</Link></MenuItem>
           <MenuItem onClick={this.props.logout}><Link to="/">Logout</Link></MenuItem>
         </Menu>       
                          

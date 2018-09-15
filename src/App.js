@@ -48,6 +48,7 @@ class App extends Component {
                 <Route path='/signup' component={SignUp}></Route>
                 <Route path='/profile' component={Profile}></Route>
                 <Route path='/post/:id' component={Post} ></Route>
+                <Route path='/createpost' component={Editor} ></Route>
                 <Route path='/' exact component={BlogBuilder}></Route>
             </Switch>
           </div>

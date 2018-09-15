@@ -1,29 +1,26 @@
-import React, { NavLink } from 'react';
+import React from 'react';
 import Carousel from '../../Components/Carousel/Carousel';
-import { StickyContainer, Sticky } from 'react-sticky';
-
 import Menu from '../Menu/Menu';
-import Paper from '@material-ui/core/Paper';
-
-import classes from './BlogBuilder.css'
-
+import { withStyles } from '@material-ui/core/styles';
+import {Paper} from '@material-ui/core';
+const style = {
+    Container :{
+        marginTop:'10%'
+    }
+}
 
 class BlogBuilder extends React.Component {
 
-    editorHandler = () => {
-
-    }
 
     render() {
+const {classes} = this.props;
         return (
             <div className={classes.Container}>
-                <Carousel />
-                
-                <Menu />
-                
-</div>
+                <Paper><Carousel /> </Paper>
+                <Paper><Menu /></Paper>
+            </div>
         );
     }
 }
 
-export default BlogBuilder;
+export default withStyles(style)(BlogBuilder);
