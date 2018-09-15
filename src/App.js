@@ -4,24 +4,10 @@ import SignIn from './Components/SIgn In/Sign In';
 import SignUp from './Components/Sign Up/Sign Up';
 import BlogBuilder from './Containers/BlogBuilder/BlogBuilder';
 import Post from './Containers/Post/Post';
-import { StickyContainer, Sticky } from 'react-sticky';
 import Profile from './Components/Profile/Profile';
-
 import Editor from './Components/Editor/Editor';
-import ReactDOM from 'react-dom';
-import Paper from '@material-ui/core/Paper';
-
-
-import Button from '@material-ui/core/Button';
-import SummaryGrid from './Components/Grids/Summary Grid/Summary Grid';
-import Blog from './Components/Blog/Blog';
 import Layout from './Components/Layout/Layout';
-
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import purple from '@material-ui/core/colors/purple';
-
-
-
 
 const theme = createMuiTheme({
   palette: {
@@ -42,9 +28,6 @@ const theme = createMuiTheme({
 
 class App extends Component {
 
-  state = {
-    auth:true
-  }
 
   logout = () =>{
     this.setState({
@@ -57,13 +40,13 @@ class App extends Component {
       <div className="App">
         <MuiThemeProvider theme={theme}>
           
-          <Layout auth={this.state.auth} logout={this.logout}/>
+          <Layout  logout={this.logout}/>
          <div style={{ textAlign: 'center', width: '70%', marginLeft: '15%', marginRight: '15%' }}>
             <Switch>
                 <Route path='/signin' component={SignIn}></Route>
                 <Route path='/editor' component={Editor}></Route>
                 <Route path='/signup' component={SignUp}></Route>
-                <Route path='/profile' render={(props) => <Profile {...props} auth={this.state.auth} />}></Route>
+                <Route path='/profile' component={Profile}></Route>
                 <Route path='/post/:id' component={Post} ></Route>
                 <Route path='/' exact component={BlogBuilder}></Route>
             </Switch>

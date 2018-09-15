@@ -1,21 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import { BrowserRouter as Router, Route, Link, Switch,withRouter } from "react-router-dom";
-
+import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
+import * as actionTypes from '../../../Store/Actions/actionTypes';
 import Grid from '@material-ui/core/Grid';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
-import Routes from '../../../Routes';
-import SignIn from '../../SIgn In/Sign In';
-import SignUp from '../../Sign Up/Sign Up';
-import BlogBuilder from '../../../Containers/BlogBuilder/BlogBuilder';
 
 
 
@@ -52,6 +47,7 @@ class Header extends React.Component {
       };
     logOut = () =>{
         this.setState({ anchorEl: null });
+        this.props.logout;
     }
 
     render() {
@@ -99,4 +95,17 @@ class Header extends React.Component {
 }
 }
 
-export default withStyles(style)(Header);
+const mapStateToProps = state => {
+    return {
+        auth: state.auth
+    }
+};
+
+const mapDispatchToProps = dispatch =>{
+    return {
+        logout : () => dispatch({type: actionTypes.LOGOUT })
+    }
+}
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(style)(Header));

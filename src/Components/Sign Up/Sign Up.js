@@ -12,6 +12,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid';
 import { Paper } from '@material-ui/core';
+import axios from 'axios';
+
 
 const styles = theme => ({
   root: {
@@ -55,11 +57,30 @@ class SignUpProcess extends React.Component {
   state = {
     activeStep: 0,
     completed: {},
+    firstName: '',
+    lastName : '',
+    email:'',
+    password : ''
   };
 
   totalSteps = () => {
     return getSteps().length;
   };
+
+
+  signUpUser = () => {
+
+      let user = {
+        firstName: document.getElementById('firstName').value,
+        lastName : document.getElementById('lastName').value,
+        email:document.getElementById('email').value,
+        password : document.getElementById("password").value 
+      }
+
+      console.log("New user===>",user);
+
+     }
+
 
   handleNext = () => {
     let activeStep;
@@ -100,6 +121,10 @@ class SignUpProcess extends React.Component {
     this.setState({
       completed,
     });
+
+
+
+
     this.handleNext();
   };
 
@@ -136,7 +161,7 @@ class SignUpProcess extends React.Component {
             <Grid >
             <FormControl>
                 <InputLabel  >First Name</InputLabel>
-                <Input type='text'/>
+                <Input type='text' id="firstName" value={this.state.firstName}/>
                 <FormHelperText>Enter your First Name</FormHelperText>
             </FormControl>
 
@@ -144,7 +169,7 @@ class SignUpProcess extends React.Component {
         <Grid >
             <FormControl>
                 <InputLabel>Last Name</InputLabel>
-                <Input />
+                <Input type="text" id="lastName" value={this.state.lastName} />
                 <FormHelperText>Enter your Last Name</FormHelperText>
             </FormControl>
         </Grid>
@@ -158,7 +183,7 @@ class SignUpProcess extends React.Component {
                   <Grid item>
                             <FormControl>
                                 <InputLabel>Email</InputLabel>
-                                <Input type='email'/>
+                                <Input type='email' id="email" value={this.state.email} />
                                 <FormHelperText>Enter your Email</FormHelperText>
                             </FormControl>
                         </Grid>
@@ -166,7 +191,7 @@ class SignUpProcess extends React.Component {
                         <Grid item>
                             <FormControl>
                                 <InputLabel>Password</InputLabel>
-                                <Input type='password'/>
+                                <Input type='password' id="password" value={this.state.password}/>
                                 <FormHelperText>Enter your Password</FormHelperText>
                             </FormControl>
                         </Grid>
@@ -184,8 +209,7 @@ class SignUpProcess extends React.Component {
                                 <FormHelperText>Upload Your Photo To how off</FormHelperText>
                             </FormControl>
                         </Grid>
-    
-            </div>
+                </div>
         )
     }
 
@@ -218,9 +242,11 @@ class SignUpProcess extends React.Component {
           {this.allStepsCompleted() ? (
             <div>
               <Typography className={classes.instructions}>
-                All steps completed - you&quot;re finished
+                All steps completed - you&quot;re finished!!
+                Click SIGNUP 
               </Typography>
               <Button onClick={this.handleReset}>Reset</Button>
+              <Button variant="contained" color="primary" onClick={this.signUpUser}>SIGNUP</Button>
             </div>
           ) : (
             <div>
