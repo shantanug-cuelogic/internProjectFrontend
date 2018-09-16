@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Typography, Paper, withStyles } from '@material-ui/core';
-import renderHTML from 'react-render-html';
+import { Typography, Paper, Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import 'froala-editor/js/froala_editor.pkgd.min.js';
 import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
@@ -25,7 +25,9 @@ const style = theme => ({
 class Post extends Component {
     state = {
         model:' ',
-        postTitle : ''
+        postTitle : '',
+        postId: '',
+        userId: ''
     }
 
     componentDidMount(){
@@ -35,10 +37,12 @@ class Post extends Component {
         
         axios.get('/post/getpost/'+requiredUrl)
         .then((response) => {
-            console.log(response.data[0])
+            
             this.setState({
                 model : response.data[0].postContent,
                 postTitle : response.data[0].title,
+                postId :response.data[0].postId,
+                userId: response.data[0].userId
             })
         })
         .catch((error) => {
@@ -72,6 +76,11 @@ class Post extends Component {
             disableRightClick: true,
             codeMirror: false
         }
+            let button =null;
+        if(localStorage.getItem('userId') == this.state.userId) {
+            button =  <Button color="primary" variant="contained">Edit</Button>
+        
+        }
 
         return (
             <div>
@@ -84,12 +93,16 @@ class Post extends Component {
                     
                     <div className={classes.PostContainer}>
                     <Typography>
+                    <div>
                     <FroalaEditor
                       model = {this.state.model}
                       config ={config}
                       />
+                    </div>
+                    
                     </Typography>
-</div>
+                       {button}
+                    </div>
                 </Paper>
             </div>
 

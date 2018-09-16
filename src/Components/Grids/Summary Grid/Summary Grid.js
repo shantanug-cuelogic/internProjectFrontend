@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -37,7 +37,7 @@ const styles = theme => ({
 function ComplexGrid(props) {
   const { classes } = props;
   let url="/post/"+props.postId;
-  
+  let content = props.summary.substr(0,250);  
   return ( 
     <div>
       <Paper className={classes.root}>
@@ -51,7 +51,7 @@ function ComplexGrid(props) {
               </Typography>
               <Typography gutterBottom>{props.date}</Typography>
               <Typography color="textSecondary"></Typography>
-          <div>{props.summary}</div>
+          <div>{content}</div>
               
             </Grid>
             

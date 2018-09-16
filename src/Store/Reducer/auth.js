@@ -2,7 +2,7 @@ import  *  as actionTypes from '../Actions/actionTypes';
 
 
 const initialState = {
-    auth : false,
+    auth : true,
     authToken : "",
     userId: ""
 }
@@ -13,6 +13,7 @@ const reducer = (state = initialState , action) => {
 
             case actionTypes.LOGOUT :{
                localStorage.removeItem('authToken');
+               localStorage.removeItem('userId');
 
                 return {
                     ...state,

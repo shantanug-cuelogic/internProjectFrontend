@@ -1,13 +1,44 @@
 import React from 'react';
 import Slider from "react-slick";
-import classes from './Carousel.css'
 import axios from 'axios';
-import { Typography } from '@material-ui/core';
+import {  NavLink } from "react-router-dom";
+import { withStyles } from '@material-ui/core/styles';
+
+const style = {
+    Links :{
+        textDecoration : 'none'
+    }
+}
+
 
 class Carousel extends React.Component {
     
     state = {
-        popularPosts : []
+        popularPosts : [
+            {
+                title:"",
+                postId:""
+                
+            },
+            {
+                title:"",
+                postId:""                
+            },
+            {
+                title:"",
+                postId:""
+                
+            },
+            {
+                title:"",
+                postId:""
+                
+            },
+            {
+                title:"",
+                postId:""
+            }
+        ]
     }
 
     componentDidMount(){
@@ -17,7 +48,7 @@ class Carousel extends React.Component {
             this.setState({
                 popularPosts:response.data.result
             })
-            console.log(this.state.popularPosts[0].title)
+            
         })
         .catch((error)=>{
             console.log(error)
@@ -26,6 +57,9 @@ class Carousel extends React.Component {
 
 
     render() {
+
+        const {classes} = this.props;   
+
         const settings = {
             className: "center",
             centerMode: false,
@@ -40,48 +74,66 @@ class Carousel extends React.Component {
             adaptiveHeight: true,
             
           };
-    
+
+          let firstUrl = "/post/"+this.state.popularPosts[0].postId;
+          let secondUrl = "/post/"+this.state.popularPosts[1].postId;
+          let thirdUrl = "/post/"+this.state.popularPosts[2].postId;
+          let fourthUrl = "/post/"+this.state.popularPosts[3].postId;
+          let fifthUrl = "/post/"+this.state.popularPosts[4].postId;
         return(
-    
+            
             <div className={classes.Container} style={{textAlign:'center' , marginTop:'50px'}}>
             
                 <Slider {...settings}>
-{/*                  
-                    <div className={classes.Carousel}>
-                        <h1>{this.state.popularPosts[0].title}</h1>
+
+                    <NavLink to={firstUrl} className={classes.Links} >
+                    <div className={classes.Carousel} >
+                    
+                    <h1>{this.state.popularPosts[0].title}</h1>
                         <p>Blog content</p>
                         <p>Likes:{this.state.popularPosts[0].likes}</p>
                         <p>Views:{this.state.popularPosts[0].views}</p>
                         <p>Date:{this.state.popularPosts[0].postDate}</p>
-                    </div>  */}
-                    <div className={classes.Carousel}>
-                        <h1>Blog 1</h1>
-                        <div>
-                            <img src="burger-logo.png"></img>
-                        </div>
-                        <p>Blog content</p>
+                        
                     </div>
+                    </NavLink>
+                   <NavLink to={secondUrl} className={classes.Links} >  
                     <div className={classes.Carousel}>
-                        <h1>Blog 1</h1>
-                        <div>
-                            <img src="burger-logo.png"></img>
-                        </div>
+                        <h1>{this.state.popularPosts[1].title}</h1>
                         <p>Blog content</p>
-                    </div>
+                        <p>Likes:{this.state.popularPosts[1].likes}</p>
+                        <p>Views:{this.state.popularPosts[1].views}</p>
+                        <p>Date:{this.state.popularPosts[1].postDate}</p>
+                    </div>  
+                    </NavLink>
+                    <NavLink to={thirdUrl} className={classes.Links}>
                     <div className={classes.Carousel}>
-                        <h1>Blog 1</h1>
-                        <div>
-                            <img src="burger-logo.png"></img>
-                        </div>
+                        <h1>{this.state.popularPosts[2].title}</h1>
                         <p>Blog content</p>
-                    </div>
+                        <p>Likes:{this.state.popularPosts[2].likes}</p>
+                        <p>Views:{this.state.popularPosts[2].views}</p>
+                        <p>Date:{this.state.popularPosts[2].postDate}</p>
+                    </div>  
+                    </NavLink>
+                   
+                    <NavLink to={fourthUrl} className={classes.Links}>
                     <div className={classes.Carousel}>
-                        <h1>Blog 1</h1>
-                        <div>
-                            <img src="burger-logo.png"></img>
-                        </div>
+                        <h1>{this.state.popularPosts[3].title}</h1>
                         <p>Blog content</p>
+                        <p>Likes:{this.state.popularPosts[3].likes}</p>
+                        <p>Views:{this.state.popularPosts[3].views}</p>
+                        <p>Date:{this.state.popularPosts[3].postDate}</p>
+                    </div> 
+                    </NavLink >
+                    <NavLink to={fifthUrl} className={classes.Links}> 
+                    <div className={classes.Carousel}>
+                        <h1>{this.state.popularPosts[4].title}</h1>
+                        <p>Blog content</p>
+                        <p>Likes:{this.state.popularPosts[4].likes}</p>
+                        <p>Views:{this.state.popularPosts[4].views}</p>
+                        <p>Date:{this.state.popularPosts[4].postDate}</p>
                     </div>
+                    </NavLink>  
                 
             </Slider>
             
@@ -95,4 +147,4 @@ class Carousel extends React.Component {
 
 }
 
-export default Carousel;
+export default withStyles(style)(Carousel);

@@ -61,12 +61,26 @@ class Header extends React.Component {
                 <Typography variant="title" color="inherit">
                     Header
                  </Typography>
-                    <Grid container justify="flex-end" >
+                    <Grid container justify="flex-end" 
+                    
+                    >
                     {this.props.auth ?
+
                   <nav className={classes.ButtonContainer}>
-                       <Button color="inherit" size="small"  className={classes.button} component={Link} to="/"> Home</Button>
-                       <Button color="inherit" size="small"  className={classes.button} component={Link} to="/createpost"> Create Blog</Button>
-                       <Avatar
+                      <Grid container 
+                      direction="row"
+                    
+                      >
+                      <Grid item>
+                      <Button color="inherit" size="small"  className={classes.button} component={Link} to="/"> Home</Button>
+                      
+                      </Grid>
+                      <Grid item>
+                      <Button color="inherit" size="small"  className={classes.button} component={Link} to="/createpost"> Create Blog</Button>
+                      
+                      </Grid>
+                      <Grid item>
+                      <Avatar
                         sizes='small'
                         alt="Burger logo" 
                         src="burger-logo.png" 
@@ -75,6 +89,10 @@ class Header extends React.Component {
                         aria-haspopup="true"
                         onClick={this.handleClick}>
                         </Avatar>
+                      </Grid>
+                      </Grid>
+                      
+                      
                         
                    
                   </nav>

@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import green from '@material-ui/core/colors/green';
 import axios from 'axios';
 import SummaryGrid from '../../Components/Grids/Summary Grid/Summary Grid';
+import { Divider } from '@material-ui/core';
 
 function TabContainer(props) {
   const { children, dir } = props;
@@ -69,11 +70,23 @@ class FloatingActionButtonZoom extends React.Component {
       console.log(error)
     })
 
-    axios.get('/post/recentUpdated')
+    axios.get('/post/recentupdated')
     .then((response) =>{
       this.setState({
         recentlyUpdated : response.data.result
       })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+
+    
+    axios.get('/post/mostliked')
+    .then((response) =>{
+      this.setState({
+        mostLiked : response.data.result
+      })
+
     })
     .catch((error) => {
       console.log(error)
@@ -107,18 +120,34 @@ class FloatingActionButtonZoom extends React.Component {
     //   ))
 
     const recentlyUpdatedPosts =[];
-    const newPosts = this.state.new.map((element , index) => (
+    const newPosts = this.state.new.map((element, index) => (
+      <div key={index}>
       <SummaryGrid
-          key={index}
+          
           title={element.title}
           summary={element.postContent}
           views={"Views : "+element.views }
           likes ={"Likes"+element.likes}
           postId={element.postId}
           postDate={element.postDate}
-      /> 
-    ))
-    const mostLikedPosts =[];
+      />
+      <Divider />
+      </div> 
+    ));
+    const mostLikedPosts =this.state.mostLiked.map((element , index) => (
+      <div key={index}>
+      <SummaryGrid
+          
+          title={element.title}
+          summary={element.postContent}
+          views={"Views : "+element.views }
+          likes ={"Likes"+element.likes}
+          postId={element.postId}
+          postDate={element.postDate}
+      />
+      <Divider />
+      </div> 
+    ));
 
     return (
       <div className={classes.root}>
@@ -131,8 +160,8 @@ class FloatingActionButtonZoom extends React.Component {
             textColor="inherit"
             fullWidth
           >
-            <Tab label="Recently Updated" />
             <Tab label="New" />
+            <Tab label="Recently Updated" />
             <Tab label="Most Liked" />
           </Tabs>
         </AppBar>
@@ -143,10 +172,11 @@ class FloatingActionButtonZoom extends React.Component {
           onChangeIndex={this.handleChangeIndex}
         >
           <TabContainer dir={theme.direction}>
-                {recentlyUpdatedPosts}
+            {newPosts}
            </TabContainer>
           <TabContainer dir={theme.direction}>
-                {newPosts}
+          {recentlyUpdatedPosts}
+                
           </TabContainer>
           <TabContainer dir={theme.direction}>
             {mostLikedPosts}
