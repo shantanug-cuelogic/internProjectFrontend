@@ -3,102 +3,77 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
-import StepButton from '@material-ui/core/StepButton';
+import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl'
-import Grid from '@material-ui/core/Grid';
-import { Paper } from '@material-ui/core';
-
-
+import { Paper, TextField } from '@material-ui/core';
+import axios from 'axios';
 
 const styles = theme => ({
   root: {
     width: '90%',
     marginTop:'10%'
   },
-  button: {
+  backButton: {
     marginRight: theme.spacing.unit,
-  },
-  completed: {
-    display: 'inline-block',
   },
   instructions: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
   },
-  FormContainer : {
-      marginBottom:'7%',
-      marginTop:'3%'
-  }
 });
 
 function getSteps() {
-  return ['Enter Your Personal Details', 'Choose Your Email and Password', 'Finish'];
+  return ['Personal Details', 'Security Question ', 'Profile Photo'];
 }
 
-function getStepContent(step) {
-  switch (step) {
+function getStepContent(stepIndex) {
+  switch (stepIndex) {
     case 0:
-      return 'Step 1: Enter Your Personal Details...';
+      return 'Enter Your Personal Deatails';
     case 1:
-      return 'Step 2: Choose Your Email and Password';
+      return 'Choose Your Security Question';
     case 2:
-      return 'Step 3: Finish';
+      return 'Choose your Profile Picture';
     default:
-      return 'Unknown step';
+      return 'Uknown stepIndex';
   }
 }
 
 class SignUpProcess extends React.Component {
   state = {
     activeStep: 0,
-    completed: {},
-    firstName: '',
-    lastName : '',
-    email:'',
-    password : ''
+    firstName:"",
+    lastName:"",
+    email:"",
+    password:"",
+    question : "",
+    answer:""
+
   };
-
-  totalSteps = () => {
-    return getSteps().length;
-  };
-
-
-  signUpUser = () => {
-
-      let user = {
-        firstName: document.getElementById('firstName').value,
-        lastName : document.getElementById('lastName').value,
-        email:document.getElementById('email').value,
-        password : document.getElementById("password").value 
-      }
-
-      console.log("New user===>",user);
-
-     }
-
 
   handleNext = () => {
-    let activeStep;
+    const { activeStep } = this.state;
+    if(activeStep === 0) {
+      this.setState({
+        firstName:document.getElementById('firstName').value,
+        lastName:document.getElementById('lastName').value,
+        email:document.getElementById('email').value,
+        password:document.getElementById('password').value
 
-    if (this.isLastStep() && !this.allStepsCompleted()) {
-      // It's the last step, but not all steps have been completed,
-      // find the first step that has been completed
-      const steps = getSteps();
-      activeStep = steps.findIndex((step, i) => !(i in this.state.completed));
-    } else {
-      activeStep = this.state.activeStep + 1;
+      })
     }
+
+    if(activeStep === 1) {
+      this.setState({
+        question:document.getElementById('question').value,
+        answer:document.getElementById('answer').value
+      })
+    }
+    
     this.setState({
-      activeStep,
+      activeStep: activeStep + 1,
     });
-    
-    
-    
   };
 
   handleBack = () => {
@@ -108,145 +83,139 @@ class SignUpProcess extends React.Component {
     });
   };
 
-  handleStep = step => () => {
-    this.setState({
-      activeStep: step,
-    });
-    console.log(step);
-  };
-
-  handleComplete = () => {
-    const { completed } = this.state;
-    completed[this.state.activeStep] = true;
-    this.setState({
-      completed,
-    });
-
-
-
-
-    this.handleNext();
-  };
+  handleSignin = () => {
+    axios.post('/register',{
+      firstName:this.state.firstName,
+      lastName:this.state.lastName,
+      password: this.state.password,
+      isAdmin:false,
+      email:this.state.email,
+      securityQuestion:this.state.question,
+      securityAnswer:this.state.answer
+    })
+    .then((response)=>{
+      console.log(response.data)
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
+  }
 
   handleReset = () => {
     this.setState({
       activeStep: 0,
-      completed: {},
     });
   };
-
-  completedSteps() {
-    return Object.keys(this.state.completed).length;
-  }
-
-  isLastStep() {
-    return this.state.activeStep === this.totalSteps() - 1;
-  }
-
-  allStepsCompleted() {
-    return this.completedSteps() === this.totalSteps();
-  }
 
   render() {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
 
+    let forms=null;
+   if(activeStep ===0) {
+     forms=<div>
+                      <TextField
+            fullWidth
+            id="firstName"
+            type="text"
+            label="Firstname"
+            helperText="Enter Your First Name"
+            
+          >
+          </TextField>
+          
+          <TextField
+            fullWidth
+            id="lastName"
+            type="text"
+            label="Lastname"
+            helperText="Enter Your Last Name"
+          >
+          </TextField>
+          <TextField
+            fullWidth
+            id="email"
+            type="email"
+            label="Email"
+            helperText="Enter Your Email"
+          >
+          </TextField>
+          <TextField
+            fullWidth
+            id="password"
+            type="password"
+            label="Password"
+            helperText="Enter Your Password"
+          >
+          </TextField>
+          <TextField
+            fullWidth
+            id="confirmPassword"
+            type="password"
+            label=" Confirm Password"
+            helperText="Enter Your Password Again"
+          >
+          </TextField>     
+     </div>
+   }
 
-    var formContains=null;
-
-    if(this.state.activeStep === 0) {
-         formContains = (
-        <div>
-            <Grid >
-            <FormControl>
-                <InputLabel  >First Name</InputLabel>
-                <Input type='text' id="firstName" value={this.state.firstName}/>
-                <FormHelperText>Enter your First Name</FormHelperText>
-            </FormControl>
-
-        </Grid>
-        <Grid >
-            <FormControl>
-                <InputLabel>Last Name</InputLabel>
-                <Input type="text" id="lastName" value={this.state.lastName} />
-                <FormHelperText>Enter your Last Name</FormHelperText>
-            </FormControl>
-        </Grid>
-        </div>
-        
-        );
-    }
-    else if(this.state.activeStep === 1) {
-        formContains =(
-            <div >
-                  <Grid item>
-                            <FormControl>
-                                <InputLabel>Email</InputLabel>
-                                <Input type='email' id="email" value={this.state.email} />
-                                <FormHelperText>Enter your Email</FormHelperText>
-                            </FormControl>
-                        </Grid>
-    
-                        <Grid item>
-                            <FormControl>
-                                <InputLabel>Password</InputLabel>
-                                <Input type='password' id="password" value={this.state.password}/>
-                                <FormHelperText>Enter your Password</FormHelperText>
-                            </FormControl>
-                        </Grid>
-            </div>
-        )
-    }
-
-    else if(this.state.activeStep === 2) {
-        formContains =(
-            <div >
-                  <Grid item>
-                            <FormControl>
-                                <InputLabel>Profile Photo</InputLabel>
-                                <Input type='file'/>
-                                <FormHelperText>Upload Your Photo To how off</FormHelperText>
-                            </FormControl>
-                        </Grid>
-                </div>
-        )
-    }
+   else if(activeStep ===1 ){
+     forms = <div>
+       <TextField
+            fullWidth
+            id="question"
+            type="text"
+            label="Question"
+            helperText="Enter question"
+          >
+          </TextField>
+          <TextField
+            fullWidth
+            id="answer"
+            type="password"
+            label="Answer"
+            helperText="Enter Your Answer"
+          >
+          </TextField>
+     </div>
+   }
+   else if(activeStep === 2) {
+     forms = <div>
+       <TextField
+            fullWidth
+            id="profilepic"
+            type="file"
+            label=" Profile Picture"
+            helperText="Upload Yoour Profile Picture"
+          >
+          </TextField>
+     </div>
+     
+   }
 
 
 
     return (
       <div className={classes.root}>
-        <Stepper nonLinear activeStep={activeStep}>
-          {steps.map((label, index) => {
+        <Stepper activeStep={activeStep} alternativeLabel>
+          {steps.map(label => {
             return (
               <Step key={label}>
-                <StepButton
-                  onClick={this.handleStep(index)}
-                  completed={this.state.completed[index]}
-                >
-                  {label}
-                </StepButton>
+                <StepLabel>{label}</StepLabel>
               </Step>
             );
           })}
         </Stepper>
         <Paper>
-        <div className={classes.FormContainer}>
-                {formContains}
-          </div>
-         
+          {forms}
         </Paper>
-          
         <div>
-          {this.allStepsCompleted() ? (
+          {this.state.activeStep === steps.length ? (
             <div>
-              <Typography className={classes.instructions}>
-                All steps completed - you&quot;re finished!!
-                Click SIGNUP 
-              </Typography>
+              <Typography className={classes.instructions}>All steps completed</Typography>
               <Button onClick={this.handleReset}>Reset</Button>
-              <Button variant="contained" color="primary" onClick={this.signUpUser}>SIGNUP</Button>
+              <Button onClick={this.handleSignin}>Signin</Button>
             </div>
           ) : (
             <div>
@@ -255,32 +224,19 @@ class SignUpProcess extends React.Component {
                 <Button
                   disabled={activeStep === 0}
                   onClick={this.handleBack}
-                  className={classes.button}
+                  className={classes.backButton}
                 >
                   Back
                 </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.handleNext}
-                  className={classes.button}
-                >
-                  Next
+                <Button variant="contained" color="primary" onClick={this.handleNext}>
+                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                 </Button>
-                {activeStep !== steps.length &&
-                  (this.state.completed[this.state.activeStep] ? (
-                    <Typography variant="caption" className={classes.completed}>
-                      Step {activeStep + 1} already completed
-                    </Typography>
-                  ) : (
-                    <Button variant="contained" color="primary" onClick={this.handleComplete}>
-                      {this.completedSteps() === this.totalSteps() - 1 ? 'Finish' : 'Complete Step'}
-                    </Button>
-                  ))}
               </div>
             </div>
           )}
         </div>
+        <Typography>{this.state.firstName}</Typography>
+        <Typography>{this.state.question}</Typography>
       </div>
     );
   }
