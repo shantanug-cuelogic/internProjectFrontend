@@ -43,13 +43,15 @@ class Profile extends React.Component{
 
     componentDidMount() {
         axios.get('/userprofile/'+this.props.userId)
+
         .then((response)=>{
             console.log(response.data[0])
             this.setState({userdata : response.data[0]})
         })
         .catch((error)=>{
             console.log(error);
-        })
+        });
+        console.log('===>',this.props.userId)
     }
     
     render() {

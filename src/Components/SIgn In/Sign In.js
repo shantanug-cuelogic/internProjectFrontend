@@ -55,7 +55,7 @@ class SignIn extends React.Component {
                 localStorage.setItem("authToken",response.data.authToken);
                 localStorage.setItem('userId',response.data.userId);
                 this.props.handleSignInState(response.data.authToken,response.data.userId);
-                
+                window.location.href='/';                
             }
             else {
                 alert("failed");

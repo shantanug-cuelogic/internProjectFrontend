@@ -86,7 +86,7 @@ class Carousel extends React.Component {
             autoplay: true,
             autoplaySpeed: 2000,
             pauseOnHover: true,
-            adaptiveHeight: true,
+            adaptiveHeight: false,
             
           };
 

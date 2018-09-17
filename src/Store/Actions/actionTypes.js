@@ -1,2 +1,3 @@
 export const AUTHENTICATE = 'AUTHENTICATE ';
 export const LOGOUT = 'LOGOUT';
+export const AUTHENTICATE_ON_RELOAD = 'AUTHENTICATE_ON_RELOAD';

@@ -115,7 +115,8 @@ class Post extends Component {
             commentContent:comment
         })
         .then((response)=>{
-            
+            document.getElementById('comment').value="";
+            window.location.href='/post/'+this.state.postId
         })
         .catch((error)=>{
             console.log(error)
@@ -140,6 +141,8 @@ class Post extends Component {
         
          if(this.state.allcomments.length > 0) {
             comments = this.state.allcomments.map((comment,index) => {
+                console.log("props userid==>",this.props.userId);
+                console.log("comment user id ==>",comment.userId)
                return(
                 <Comment 
                 key={index}
@@ -147,12 +150,15 @@ class Post extends Component {
                 commentContent={comment.commentContent}
                 firstName ={comment.firstName}
                 lastName = {comment.lastName}
-                >
+                deleteButton ={comment.userId == this.props.userId ? true : false }
+                
+               >
                 </Comment>
                ) 
             })
          }
 
+       
         
 
         return (
@@ -217,7 +223,8 @@ class Post extends Component {
 
 const mapStateToProps = state =>{
     return {
-        auth:state.auth
+        auth:state.auth,
+        userId:state.userId
     }
 }
 

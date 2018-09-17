@@ -30,6 +30,15 @@ const reducer = (state = initialState , action) => {
                 }
                
             }
+            case actionTypes.AUTHENTICATE_ON_RELOAD : {
+                return {
+                    ...state,
+                    auth:action.status,
+                    authToken : action.authToken,
+                    userId : action.userId
+
+                }
+            }
 
             default : return state;
         } ;

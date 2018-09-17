@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch } from "react-router-dom";
+import { withRouter } from 'react-router'
 import SignIn from './Components/SIgn In/Sign In';
 import SignUp from './Components/Sign Up/Sign Up';
 import BlogBuilder from './Containers/BlogBuilder/BlogBuilder';
@@ -8,6 +9,11 @@ import Profile from './Components/Profile/Profile';
 import Editor from './Components/Editor/Editor';
 import Layout from './Components/Layout/Layout';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import axios from 'axios';
+import { connect } from 'react-redux';
+import * as actionTypes from './Store/Actions/actionTypes';
+import { stat } from 'fs';
+
 
 const theme = createMuiTheme({
   palette: {
@@ -28,13 +34,22 @@ const theme = createMuiTheme({
 
 class App extends Component {
 
+  componentDidMount(){
+    axios.post('/authenticate',{authToken:localStorage.getItem('authToken')})
+    .then((response) =>{
 
-  logout = () =>{
-    this.setState({
-      auth:false
+      if(response.data.success) {
+        this.props.authenticate(true,localStorage.getItem('authToken'),localStorage.getItem('userId'));
+      }
+      else if(!response.data.success) {
+        this.props.authenticate(false);
+      }
     })
-  }
+    .catch((error)=>{
 
+    });
+  }
+  
   render() {
     return (
       <div className="App">
@@ -59,4 +74,17 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state =>{
+  return {
+    auth : state.auth,
+    userId : state.userId
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return{
+    authenticate : (userStatus,token,id)=> dispatch({type:actionTypes.AUTHENTICATE_ON_RELOAD , status:userStatus , authToken:token, userId:id })
+  }
+}
+
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(App));
