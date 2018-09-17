@@ -3,10 +3,12 @@ import Slider from "react-slick";
 import axios from 'axios';
 import {  NavLink } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
+import renderHTML from 'react-render-html';
 
 const style = {
     Links :{
-        textDecoration : 'none'
+        textDecoration : 'none',
+        color:"black"
     }
 }
 
@@ -17,26 +19,31 @@ class Carousel extends React.Component {
         popularPosts : [
             {
                 title:"",
-                postId:""
+                postId:"",
+                postContent:''
                 
             },
             {
                 title:"",
-                postId:""                
+                postId:"",
+                postContent:''                
             },
             {
                 title:"",
-                postId:""
+                postId:"",
+                postContent:''
                 
             },
             {
                 title:"",
-                postId:""
+                postId:"",
+                postContent:''
                 
             },
             {
                 title:"",
-                postId:""
+                postId:"",
+                postContent:''
             }
         ]
     }
@@ -55,6 +62,14 @@ class Carousel extends React.Component {
         })
     }
 
+    getSmallContent = () =>{
+        let firstPostContent =  this.state.popularPosts[0].postContent.substr(0,500) + "...";
+          let secondPostContent =  this.state.popularPosts[1].postContent.substr(0,500) + "...";
+          let thirdPostContent =  this.state.popularPosts[2].postContent.substr(0,500) + "...";
+          let fourthPostContent =  this.state.popularPosts[3].postContent.substr(0,500) + "...";
+          let fifthPostContent =  this.state.popularPosts[4].postContent.substr(0,500) + "..."; 
+        return [firstPostContent,secondPostContent,thirdPostContent,fourthPostContent,fifthPostContent]
+        }   
 
     render() {
 
@@ -80,6 +95,11 @@ class Carousel extends React.Component {
           let thirdUrl = "/post/"+this.state.popularPosts[2].postId;
           let fourthUrl = "/post/"+this.state.popularPosts[3].postId;
           let fifthUrl = "/post/"+this.state.popularPosts[4].postId;
+
+           
+
+           let smallContentArray = this.getSmallContent();
+
         return(
             
             <div className={classes.Container} style={{textAlign:'center' , marginTop:'50px'}}>
@@ -90,7 +110,7 @@ class Carousel extends React.Component {
                     <div className={classes.Carousel} >
                     
                     <h1>{this.state.popularPosts[0].title}</h1>
-                        <p>Blog content</p>
+                        <p>{renderHTML(smallContentArray[0])}</p>
                         <p>Likes:{this.state.popularPosts[0].likes}</p>
                         <p>Views:{this.state.popularPosts[0].views}</p>
                         <p>Date:{this.state.popularPosts[0].postDate}</p>
@@ -100,7 +120,7 @@ class Carousel extends React.Component {
                    <NavLink to={secondUrl} className={classes.Links} >  
                     <div className={classes.Carousel}>
                         <h1>{this.state.popularPosts[1].title}</h1>
-                        <p>Blog content</p>
+                        <p>{renderHTML(smallContentArray[1])}</p>
                         <p>Likes:{this.state.popularPosts[1].likes}</p>
                         <p>Views:{this.state.popularPosts[1].views}</p>
                         <p>Date:{this.state.popularPosts[1].postDate}</p>
@@ -109,7 +129,7 @@ class Carousel extends React.Component {
                     <NavLink to={thirdUrl} className={classes.Links}>
                     <div className={classes.Carousel}>
                         <h1>{this.state.popularPosts[2].title}</h1>
-                        <p>Blog content</p>
+                        <p>{renderHTML(smallContentArray[2])}</p>
                         <p>Likes:{this.state.popularPosts[2].likes}</p>
                         <p>Views:{this.state.popularPosts[2].views}</p>
                         <p>Date:{this.state.popularPosts[2].postDate}</p>
@@ -119,7 +139,7 @@ class Carousel extends React.Component {
                     <NavLink to={fourthUrl} className={classes.Links}>
                     <div className={classes.Carousel}>
                         <h1>{this.state.popularPosts[3].title}</h1>
-                        <p>Blog content</p>
+                        <p>{renderHTML(smallContentArray[3])}</p>
                         <p>Likes:{this.state.popularPosts[3].likes}</p>
                         <p>Views:{this.state.popularPosts[3].views}</p>
                         <p>Date:{this.state.popularPosts[3].postDate}</p>
@@ -128,7 +148,7 @@ class Carousel extends React.Component {
                     <NavLink to={fifthUrl} className={classes.Links}> 
                     <div className={classes.Carousel}>
                         <h1>{this.state.popularPosts[4].title}</h1>
-                        <p>Blog content</p>
+                        <p>{renderHTML(smallContentArray[4])}</p>
                         <p>Likes:{this.state.popularPosts[4].likes}</p>
                         <p>Views:{this.state.popularPosts[4].views}</p>
                         <p>Date:{this.state.popularPosts[4].postDate}</p>

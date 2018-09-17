@@ -4,7 +4,7 @@ import { Paper, Grid, Typography, Button } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import {connect } from 'react-redux';
-import * as actionTypes from '../../Store/Actions/actionTypes';
+
 import axios from 'axios';
 
 const styles =  themes => ({

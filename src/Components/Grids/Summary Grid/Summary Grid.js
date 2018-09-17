@@ -4,8 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { Link } from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
+import renderHTML from 'react-render-html';
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -25,11 +25,8 @@ const styles = theme => ({
     maxWidth: '100%',
     maxHeight: '100%',
   },
-  link:{
-    position: 'relative',
-    bottom: '',
-    right: '16px',
-    fontSize: '18px',
+  Links:{
+    color:'black',
     textDecoration :'none'
   }
 });
@@ -37,7 +34,7 @@ const styles = theme => ({
 function ComplexGrid(props) {
   const { classes } = props;
   let url="/post/"+props.postId;
-  let content = props.summary.substr(0,250);  
+  let content = props.summary.substr(0,250) + "...";  
   return ( 
     <div>
       <Paper className={classes.root}>
@@ -51,7 +48,7 @@ function ComplexGrid(props) {
               </Typography>
               <Typography gutterBottom>{props.date}</Typography>
               <Typography color="textSecondary"></Typography>
-          <div>{content}</div>
+          <div>{renderHTML(content)}</div>
               
             </Grid>
             
@@ -64,7 +61,7 @@ function ComplexGrid(props) {
          <div>
           <ul>
             <li>
-            <Link to={url} >Continue Reading</Link>
+            <NavLink to={url} className={classes.Links} >Continue Reading</NavLink>
             </li>
           </ul> 
           </div>

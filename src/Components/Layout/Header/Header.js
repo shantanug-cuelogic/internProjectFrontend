@@ -2,10 +2,11 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { connect } from 'react-redux';
 import * as actionTypes from '../../../Store/Actions/actionTypes';
 import Grid from '@material-ui/core/Grid';
@@ -31,6 +32,10 @@ const style = theme => ({
     },
     NavigationLi: {
         display: 'inline'
+    },
+    Links : {
+        textDecoration:'none',
+        color:'black'
     }
 });
 
@@ -48,7 +53,7 @@ class Header extends React.Component {
       };
     logOut = () =>{
         this.setState({ anchorEl: null });
-        this.props.logout;
+        this.props.logout();
     }
 
     render() {
@@ -59,7 +64,7 @@ class Header extends React.Component {
         <AppBar position="fixed" color="primary" >
             <Toolbar>
                 <Typography variant="title" color="inherit">
-                    Header
+                    HEADER
                  </Typography>
                     <Grid container justify="flex-end" 
                     
@@ -67,23 +72,20 @@ class Header extends React.Component {
                     {this.props.auth ?
 
                   <nav className={classes.ButtonContainer}>
-                      <Grid container 
-                      direction="row"
                     
-                      >
+                      <Grid container 
+                      direction="row">
                       <Grid item>
-                      <Button color="inherit" size="small"  className={classes.button} component={Link} to="/"> Home</Button>
-                      
+                      <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/"> Home</Button>
                       </Grid>
                       <Grid item>
-                      <Button color="inherit" size="small"  className={classes.button} component={Link} to="/createpost"> Create Blog</Button>
-                      
+                      <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/createpost"> Create Blog</Button>
                       </Grid>
                       <Grid item>
                       <Avatar
                         sizes='small'
                         alt="Burger logo" 
-                        src="burger-logo.png" 
+                        src="/images/user-img.jpg" 
                         className={classes.button} 
                         aria-owns={this.state.anchorEl ? 'simple-menu' : null}
                         aria-haspopup="true"
@@ -99,9 +101,9 @@ class Header extends React.Component {
                   
                    
                     :<nav className={classes.ButtonContainer}>
-                    <Button color="inherit" size="small"  className={classes.button} component={Link} to="/signin"> SignIn</Button>
-                    <Button color="inherit" size="small"  className={classes.button} component={Link} to="/signup"> SIGNUP</Button>
-                    <Button color="inherit" size="small"  className={classes.button} component={Link} to="/"> Home</Button>
+                    <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/signin"> SignIn</Button>
+                    <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/signup"> SIGNUP</Button>
+                    <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/"> Home</Button>
                 </nav> 
                     }
                     
@@ -111,10 +113,13 @@ class Header extends React.Component {
                         open={Boolean(this.state.anchorEl)}
                         onClose={this.handleClose}
                         >
-          <MenuItem onClick={this.handleClose}><Link to="/" >Home</Link></MenuItem>
-          <MenuItem onClick={this.handleClose}><Link to="/dashnoard">Dashboard</Link></MenuItem>
-          <MenuItem onClick={this.handleClose}><Link to="/profile" >Profile</Link></MenuItem>
-          <MenuItem onClick={this.props.logout}><Link to="/">Logout</Link></MenuItem>
+          <NavLink to="/" className={classes.Links} ><MenuItem onClick={this.handleClose}>Home</MenuItem></NavLink>
+          <Divider />
+          <NavLink to="/dashnoard" className={classes.Links}><MenuItem onClick={this.handleClose}>Dashboard</MenuItem></NavLink>
+          <Divider />
+          <NavLink to="/profile" className={classes.Links} ><MenuItem onClick={this.handleClose}>Profile</MenuItem></NavLink>
+          <Divider />
+          <NavLink to="/" className={classes.Links}><MenuItem onClick={this.props.logout}>Logout</MenuItem></NavLink>
         </Menu>       
                          
                     </Grid>

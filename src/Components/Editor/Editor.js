@@ -13,26 +13,26 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 
 
-const styles ={
-    button:{
-        marginTop:'3%',
-        marginBotttom : '3%'
+const styles = {
+    button: {
+        marginTop: '3%',
+        marginBotttom: '3%'
     },
-    TitleContainer:{
-        padding:'5%'
+    TitleContainer: {
+        padding: '5%'
     }
 }
 
 class Editor extends Component {
     state = {
-        model: '' 
+        model: ''
     }
 
     config = {
         codeMirrorOptions: {
             tabSize: 4
         },
-        
+
         videoDefaultDisplay: 'inline',
         videoAllowedTypes: ['mp4'],
         videoUpload: true,
@@ -63,43 +63,43 @@ class Editor extends Component {
     }
 
     handlePost = () => {
-        axios.post('post/create',{
-            title:document.getElementById('postTitle').value,
-            postContent:this.state.model,
-            category:'someCategory',
-            authToken:localStorage.getItem('authToken')
+        axios.post('post/create', {
+            title: document.getElementById('postTitle').value,
+            postContent: this.state.model,
+            category: 'someCategory',
+            authToken: localStorage.getItem('authToken')
         })
-        .then((response)=>{
-            console.log(response)
-        })
-        .catch((error)=>{
-            console.log(error)
-        })
+            .then((response) => {
+                console.log(response)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     render() {
-       
+
         const { classes } = this.props;
         return (
-            <div style={{marginTop:'10%'}}>
-            <Paper>
-                <div className={classes.TitleContainer}>
-                <FormControl className={classes.formControl} aria-describedby="PostTitle" fullWidth>
-                    <InputLabel htmlFor="postTitle">Post Title</InputLabel>
-                    <Input id="postTitle" value={this.state.name} onChange={this.handleChange} />
-                    <FormHelperText id="postTitle"> Your Post Title Goes Here</FormHelperText>
-                </FormControl>
-                </div>
-                     
-            <FroalaEditor tag='textarea'
-                    model={this.state.model}
-                    onModelChange={this.handleModelChange}
-                    config={this.config}
+            <div style={{ marginTop: '10%' }}>
+                <Paper>
+                    <div className={classes.TitleContainer}>
+                        <FormControl className={classes.formControl} aria-describedby="PostTitle" fullWidth>
+                            <InputLabel htmlFor="postTitle">Post Title</InputLabel>
+                            <Input id="postTitle" value={this.state.name} onChange={this.handleChange} />
+                            <FormHelperText id="postTitle"> Your Post Title Goes Here</FormHelperText>
+                        </FormControl>
+                    </div>
 
-                />
-                <Button variant="contained" color="primary" className={classes.button} onClick={this.handlePost}>Post</Button>
-            </Paper>
-                
+                    <FroalaEditor tag='textarea'
+                        model={this.state.model}
+                        onModelChange={this.handleModelChange}
+                        config={this.config}
+
+                    />
+                    <Button variant="contained" color="primary" className={classes.button} onClick={this.handlePost}>Post</Button>
+                </Paper>
+
 
             </div>
 
