@@ -84,8 +84,8 @@ class Profile extends React.Component{
 
 const mapStateToProps = state => {
     return {
-    auth: state.auth,
-    userId: state.userId
+    auth: state.authReducer.auth,
+    userId: state.authReducer.userId
     }
 }
 

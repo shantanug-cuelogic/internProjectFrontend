@@ -12,7 +12,6 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actionTypes from './Store/Actions/actionTypes';
-import { stat } from 'fs';
 
 
 const theme = createMuiTheme({
@@ -50,6 +49,7 @@ class App extends Component {
     });
   }
   
+  
   render() {
     return (
       <div className="App">
@@ -76,8 +76,8 @@ class App extends Component {
 
 const mapStateToProps = state =>{
   return {
-    auth : state.auth,
-    userId : state.userId
+    auth : state.authReducer.auth,
+    userId : state.authReducer.userId
   }
 }
 

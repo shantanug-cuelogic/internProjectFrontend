@@ -55,7 +55,7 @@ class SignIn extends React.Component {
                 localStorage.setItem("authToken",response.data.authToken);
                 localStorage.setItem('userId',response.data.userId);
                 this.props.handleSignInState(response.data.authToken,response.data.userId);
-                window.location.href='/';                
+                this.props.history.push('/');               
             }
             else {
                 alert("failed");
@@ -81,7 +81,7 @@ class SignIn extends React.Component {
                     direction="column"
                     spacing={24}            
                 >
-                    <Grid item xs={18}>
+                    <Grid item >
                     <div  className={classes.InputContainer}>
                         <FormControl fullWidth>
                             <InputLabel>Email</InputLabel>
@@ -114,8 +114,8 @@ class SignIn extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        auth : state.auth,
-        authToken : state.authToken
+        auth : state.authReducer.auth,
+        authToken : state.authReducer.authToken
     }
 }
 
