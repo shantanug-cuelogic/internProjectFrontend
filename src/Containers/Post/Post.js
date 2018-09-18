@@ -53,16 +53,12 @@ const style = theme => ({
             maxWidth: '100%'
         }
     }
-
-})
-
-
+});
 
 class Post extends Component {
     state = {
         firstName : '',
         lastName : ''
-      
     }
 
     componentDidMount() {
@@ -80,7 +76,14 @@ class Post extends Component {
              
                  axios.get('/post/comment/' + response.data[0].postId)
                     .then((allcomments) => {
-                        this.props.handleFetchPost(postId,userId,postTitle,postContent,allcomments.data.result)
+                        if(allcomments.data.success) {
+                            this.props.handleFetchPost(postId,userId,postTitle,postContent,allcomments.data.result)
+                        }
+                        else {
+                            let array = []
+                            this.props.handleFetchPost(postId,userId,postTitle,postContent,array)
+                        }
+                        
                 
                         axios.get('/userprofile/' + localStorage.getItem('userId'))
                         .then((response) => {
@@ -101,7 +104,7 @@ class Post extends Component {
             .catch((error) => {
                 console.log(error)
             });
-            console.log("===>",this.props.userId);
+
         
     }
 
@@ -126,7 +129,7 @@ class Post extends Component {
                     let updatedAllComments = [...this.props.allcomments];
                     updatedAllComments.push(updatedCommentData);
                     document.getElementById('comment').value = "";
-                   this.props.postCommentToReducer(updatedCommentData);
+                //    this.props.postCommentToReducer(updatedCommentData);
                 }
                 
                
@@ -161,7 +164,7 @@ class Post extends Component {
         let comments = <LinearProgress />
       
 
-        console.log("checker==> ",typeof(this.props.allcomments))
+        console.log("checker==> ",this.props.allcomments.length);
 
         if (this.props.allcomments.length > 0) {
             comments = this.props.allcomments.map((comment, index) => {
