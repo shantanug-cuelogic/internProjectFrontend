@@ -54,6 +54,7 @@ class Header extends React.Component {
     logOut = () =>{
         this.setState({ anchorEl: null });
         this.props.logout();
+        this.props.resetPostReducer();
     }
 
     render() {
@@ -119,7 +120,7 @@ class Header extends React.Component {
           <Divider />
           <NavLink to="/profile" className={classes.Links} ><MenuItem onClick={this.handleClose}>Profile</MenuItem></NavLink>
           <Divider />
-          <NavLink to="/" className={classes.Links}><MenuItem onClick={this.props.logout}>Logout</MenuItem></NavLink>
+          <NavLink to="/" className={classes.Links}><MenuItem onClick={this.logOut}>Logout</MenuItem></NavLink>
         </Menu>       
                          
                     </Grid>
@@ -138,7 +139,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch =>{
     return {
-        logout : () => dispatch({type: actionTypes.LOGOUT })
+        logout : () => dispatch({type: actionTypes.LOGOUT }),
+        resetPostReducer : () => dispatch({type:actionTypes.RESET_POST_CONTENT})
     }
 }
 

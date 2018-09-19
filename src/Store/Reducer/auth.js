@@ -26,7 +26,7 @@ const reducer = (state = initialState , action) => {
                     ...state,
                     auth : true,
                     authToken : action.authToken,
-                    userId : action.userId
+                    userId : parseInt(action.userId)
                 }
                
             }
@@ -35,7 +35,7 @@ const reducer = (state = initialState , action) => {
                     ...state,
                     auth:action.status,
                     authToken : action.authToken,
-                    userId : action.userId
+                    userId : parseInt(action.userId)
 
                 }
             }

@@ -34,8 +34,8 @@ const styles = theme => ({
     minHeight: 200,
     marginTop:"7%",
     marginLeft:'10%',
-    marginRight:'10%'
-
+    marginRight:'10%',
+  
   },
   fab: {
     position: 'absolute',
@@ -47,7 +47,10 @@ const styles = theme => ({
     backgroundColor: green[500],
   },
   header : {
-    
+    position: 'sticky' ,
+    top: '63px',
+     
+
   }
 });
 
@@ -68,7 +71,7 @@ class FloatingActionButtonZoom extends React.Component {
     })
     .catch((error) => {
       console.log(error)
-    })
+    });
 
     axios.get('/post/recentupdated')
     .then((response) =>{
@@ -78,7 +81,8 @@ class FloatingActionButtonZoom extends React.Component {
     })
     .catch((error) => {
       console.log(error)
-    })
+    });
+
 
     
     axios.get('/post/mostliked')
@@ -119,7 +123,7 @@ class FloatingActionButtonZoom extends React.Component {
     // />
     //   ))
 
-    const recentlyUpdatedPosts =[];
+   
     const newPosts = this.state.new.map((element, index) => (
       <div key={index}>
       <SummaryGrid
@@ -149,9 +153,24 @@ class FloatingActionButtonZoom extends React.Component {
       </div> 
     ));
 
+    const recentlyUpdatedPosts =this.state.recentlyUpdated.map((element , index) => (
+      <div key={index}>
+      <SummaryGrid
+          
+          title={element.title}
+          summary={element.postContent}
+          views={"Views : "+element.views }
+          likes ={"Likes :"+element.likes}
+          postId={element.postId}
+          postDate={element.postDate}
+      />
+      <Divider />
+      </div> 
+    ));
+
     return (
       <div className={classes.root}>
-       
+       <div className={classes.StickyHeader}>
        <AppBar position="static" color="primary" className={classes.header}>
           <Tabs
             value={this.state.value}
@@ -182,7 +201,7 @@ class FloatingActionButtonZoom extends React.Component {
             {mostLikedPosts}
           </TabContainer>
         </SwipeableViews>
-
+       </div>
       </div>
     );
   }

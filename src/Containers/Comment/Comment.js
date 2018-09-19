@@ -2,6 +2,8 @@ import React from 'react';
 import { Typography, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import * as actionTypes from '../../Store/Actions/actionTypes';
 
 
 const style = theme =>({
@@ -36,27 +38,14 @@ const style = theme =>({
 class Comment extends React.Component {
 
     handleDeleteButton = () =>{
-       console.log(localStorage.getItem('authToken'))
-        axios.put('/post/comment/delete',{
-            commentIdtoDelete: this.props.commentId,
-            authToken:localStorage.getItem('authToken')
-            
-        })
-        .then((response)=>{
-            if(response.data.success) {
-                
-            }
-        })
-        .catch((error)=>{
-            console.log(error)
-        })
+       
     }
 
     render() {
         const { classes } =this.props;
         let deleteButton = null;
         if (this.props.deleteButton) {
-            deleteButton = <Typography variant="caption" className={classes.DeleteButton} onClick={this.handleDeleteButton} >DELETE COMMENT</Typography>
+            deleteButton = <Typography variant="caption" className={classes.DeleteButton} onClick={this.props.click} >DELETE COMMENT</Typography>
         }
         return (
             <Paper>
@@ -72,6 +61,18 @@ class Comment extends React.Component {
             </Paper>
         );
     }
-
 }
-export default withStyles(style)(Comment);
+
+const mapStateToProps = state => {
+    return {
+        auth: state.authReducer.auth,
+        userId: state.authReducer.userId,
+        postContent: state.postReducer.postContent,
+        postTitle: state.postReducer.postTitle,
+        postId: state.postReducer.postId,
+        postUserId: state.postReducer.userId,
+        allcomments: state.postReducer.allcomments,
+    }
+}
+
+export default connect(mapStateToProps)(withStyles(style)(Comment));

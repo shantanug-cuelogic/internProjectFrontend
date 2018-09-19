@@ -7,7 +7,8 @@ import * as actionTypes from '../../Store/Actions/actionTypes';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Comment from '../Comment/Comment'
 import renderHTML from 'react-render-html';
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router';
+import { NavLink } from "react-router-dom";
 
 
 
@@ -22,11 +23,18 @@ const style = theme => ({
         marginTop: '5%',
     },
     EditButtonContainer: {
-        marginTop: '2%'
+        marginTop: '2%',
+        position: 'sticky',
+        top: '63px',
+        zIndex: 1000
+    },
+    EditButton: {
+        padding: '2%'
     },
     CommentContainer: {
         marginBottom: '5%',
-        padding: '3%'
+        padding: '3%',
+        marginTop:'5%'
 
     },
     Comments: {
@@ -49,52 +57,58 @@ const style = theme => ({
         padding: '5%'
     },
     myDynamicContent: {
-        img: {
-            maxWidth: '100%'
-        }
+        paddingLeft:'5%',
+        paddingRight:'5%',
+        paddingTop:'5%',
+        paddingBottom :'3%'
     }
 });
 
 class Post extends Component {
     state = {
-        firstName : '',
-        lastName : ''
+        firstName: '',
+        lastName: ''
     }
 
     componentDidMount() {
-        console.log("incomponentdidmount")
-        let url = window.location.href;
-        let requiredUrl = url.substr(27);
+
+        let requiredUrl = this.props.match.params.id;
 
         axios.get('/post/getpost/' + requiredUrl)
             .then((response) => {
-        
-                let postContent= response.data[0].postContent;
-                let postTitle= response.data[0].title;
-                let postId= response.data[0].postId;
-                let userId =response.data[0].userId;
-             
-                 axios.get('/post/comment/' + response.data[0].postId)
+
+                let postContent = response.data[0].postContent;
+                let postTitle = response.data[0].title;
+                let postId = parseInt(response.data[0].postId);
+                let userId = response.data[0].userId;
+
+                axios.get('/post/comment/' + response.data[0].postId)
                     .then((allcomments) => {
-                        if(allcomments.data.success) {
-                            this.props.handleFetchPost(postId,userId,postTitle,postContent,allcomments.data.result)
+
+                        if (allcomments.data.success) {
+
+                            this.props.handleFetchPost(postId, userId, postTitle, postContent, allcomments.data.result)
                         }
                         else {
                             let array = []
-                            this.props.handleFetchPost(postId,userId,postTitle,postContent,array)
+                            this.props.handleFetchPost(postId, userId, postTitle, postContent, array)
                         }
-                        
-                
+
+
                         axios.get('/userprofile/' + localStorage.getItem('userId'))
-                        .then((response) => {
-                            this.setState({
-                                firstName: response.data[0].firstName ,
-                                lastName : response.data[0].lastName
+                            .then((response) => {
+
+                                if(response.data.success) {
+                                    this.setState({
+                                        firstName: response.data[0].firstName,
+                                        lastName: response.data[0].lastName
+                                    })
+                                }
+                                
                             })
-                        })
-                        .catch((error) => {
-                            console.log(error)
-                        });
+                            .catch((error) => {
+                                console.log(error)
+                            });
 
                     })
                     .catch((error) => {
@@ -105,7 +119,7 @@ class Post extends Component {
                 console.log(error)
             });
 
-        
+
     }
 
     handlePostComment = () => {
@@ -116,59 +130,82 @@ class Post extends Component {
             commentContent: comment
         })
             .then((response) => {
-                if(response.data.success) {
+                if (response.data.success) {
                     let updatedCommentData = {
-                        firstName : this.state.firstName,
-                        lastName : this.state.lastName,
-                        userId : this.props.userId,
-                        commentId : response.data.message.ininsertId,
-                        commentContent : comment 
-                        
+                        firstName: this.state.firstName,
+                        lastName: this.state.lastName,
+                        userId: parseInt(this.props.userId),
+                        commentId: response.data.message.insertId,
+                        commentContent: comment
+
                     }
 
-                    let updatedAllComments = [...this.props.allcomments];
-                    updatedAllComments.push(updatedCommentData);
                     document.getElementById('comment').value = "";
-                //    this.props.postCommentToReducer(updatedCommentData);
+                    this.props.postCommentToReducer(updatedCommentData);
                 }
-                
-               
+
+
             })
             .catch((error) => {
                 console.log(error)
             })
-   
-        
+        //console.log("in post comment", typeof());
+
     }
 
     handleEditPost = () => {
-        // this.setState({
-        //     editable: true
-        // })
-        // this.config.toolbarButtons = null;
+
     }
 
-    handleDeleteClick = (cid) =>{
-      //  alert(cid);
+    handleDeleteClick = (commentId) => {
+
+        axios.put('/post/comment/delete', {
+            commentIdtoDelete: commentId,
+            authToken: localStorage.getItem('authToken')
+
+        })
+            .then((response) => {
+                if (response.data.success) {
+                    this.props.allcomments.map((commentData, id) => {
+                        if (commentData.commentId === commentId) {
+                            this.props.deleteCommentToReducer(id);
+                        }
+                    });
+
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+
+
+
     }
 
     render() {
         const { classes } = this.props;
 
+        let editPostUrl = '/editpost/' + this.props.postId
         let button = null;
-        if (localStorage.getItem('userId') === this.props.userId) {
-            button = <Button color="primary" variant="contained" onClick={this.handleEditPost}>Edit</Button>
-
+        console.log(this.props.postUserId);
+        console.log(this.props.userId);
+        if (this.props.postUserId === this.props.userId) {
+            button = <Paper className={classes.EditButtonContainer}>
+                <div className={classes.EditButton}>
+                    <Button color="primary" variant="contained" component={NavLink} to={editPostUrl}>Edit Post</Button>
+                </div>
+            </Paper>
         }
 
-        let comments = <LinearProgress />
-      
 
-        console.log("checker==> ",this.props.allcomments.length);
+        let comments = null;
+        if (this.props.allcomments.length === 0) {
+            comments = <LinearProgress />
+        }
 
-        if (this.props.allcomments.length > 0) {
+        else {
             comments = this.props.allcomments.map((comment, index) => {
-             
+
                 return (
                     <div>
                         <Comment
@@ -178,6 +215,7 @@ class Post extends Component {
                             firstName={comment.firstName}
                             lastName={comment.lastName}
                             deleteButton={comment.userId == this.props.userId ? true : false}
+                            click={() => this.handleDeleteClick(comment.commentId)}
                         >
                         </Comment>
                         <Divider />
@@ -187,40 +225,42 @@ class Post extends Component {
         }
 
 
+
         return (
             <div>
                 <Paper>
                     <div className={classes.HeaderContainer}>
-                        <Typography variant="title"> {this.state.postTitle} </Typography>
+                        <Typography variant="display2"> {this.props.postTitle} </Typography>
                     </div>
-                       
-                </Paper>
-                <Paper>
 
+                </Paper>
+                {button}
+                <Paper>
                     <div className={classes.PostContainer}>
                         <Typography>
                             <div className={classes.myDynamicContent}>
-                                <style jsx>
-                                {`
+                                <style jsx="true">
+                                    {`
                                     img {
                                     max-width : 100%
                                          }
+                                    
                                 `}
                                 </style>
                                 {renderHTML(this.props.postContent)}
+                                
                             </div>
 
                         </Typography>
+                        <Divider />
+                        asdasdasdas
                     </div>
                 </Paper>
-                <div className={classes.EditButtonContainer}>
-                    {button}
-                </div>
 
                 {this.props.auth ? <Paper>
                     <div className={classes.CommentContainer}>
                         <Paper className={classes.Comments}>
-                            <Typography variant="caption" className={classes.UserName}>{this.state.firstName+ " " + this.state.lastName}</Typography>
+                            <Typography variant="caption" className={classes.UserName}>{this.state.firstName + " " + this.state.lastName}</Typography>
                             <TextField
                                 id="comment"
                                 label="Comment"
@@ -256,7 +296,7 @@ const mapStateToProps = state => {
     return {
         auth: state.authReducer.auth,
         userId: state.authReducer.userId,
-        postContent:state.postReducer.postContent,
+        postContent: state.postReducer.postContent,
         postTitle: state.postReducer.postTitle,
         postId: state.postReducer.postId,
         postUserId: state.postReducer.userId,
@@ -266,22 +306,28 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        handleFetchPost : (postId,userId,postTitle,postContent,allcomments)=>dispatch(
+        handleFetchPost: (postId, userId, postTitle, postContent, allcomments) => dispatch(
             {
-            type:actionTypes.FETCH_POST,
-            postId:postId,
-            userId:userId,
-            postTitle:postTitle,
-            postContent:postContent,
-          
-            allcomments:allcomments
-         }),
-    
-    postCommentToReducer : (updatedAllComments) => dispatch({
-        type:actionTypes.FETCH_POST,
-        updatedAllComments : updatedAllComments
-    })
-}
+                type: actionTypes.FETCH_POST,
+                postId: postId,
+                userId: userId,
+                postTitle: postTitle,
+                postContent: postContent,
+
+                allcomments: allcomments
+            }),
+
+        postCommentToReducer: (updateCommentData) => dispatch({
+            type: actionTypes.POST_COMMENT,
+            updateCommentData: updateCommentData
+        }),
+
+        deleteCommentToReducer: (index) => dispatch({
+            type: actionTypes.DELETE_COMMENT,
+            index: index
+        }),
+
+    }
 }
 
-export default withRouter(connect(mapStateToProps,mapDispatchToProps)(withStyles(style)(Post)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(style)(Post)));

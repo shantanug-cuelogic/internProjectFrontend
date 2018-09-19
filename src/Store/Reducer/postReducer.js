@@ -1,4 +1,5 @@
-import  *  as actionTypes from '../Actions/actionTypes';
+import *  as actionTypes from '../Actions/actionTypes';
+import { stat } from 'fs';
 
 
 const initialState = {
@@ -6,40 +7,76 @@ const initialState = {
     postTitle: '',
     postId: '',
     userId: '',
-   toggle : false,
+    toggle: false,
     allcomments: [],
 }
 
-const reducer = (state = initialState , action) => {
-    
-    switch(action.type) {
-        
-        case actionTypes.FETCH_POST : {
-            
+const reducer = (state = initialState, action) => {
+
+    switch (action.type) {
+
+        case actionTypes.FETCH_POST: {
+
             return {
-                ...this.state,
-                postId:action.postId,
-                postTitle:action.postTitle,
-                postContent:action.postContent,
-                userId:action.userId,
-            
-                allcomments:action.allcomments
+                ...state,
+                postId: action.postId,
+                postTitle: action.postTitle,
+                postContent: action.postContent,
+                userId: action.userId,
+
+                allcomments: action.allcomments
             }
-            
+
         }
-        case actionTypes.TOGGLE : {
+        case actionTypes.TOGGLE: {
             return {
-                ...this.state,
-                toggle : !state.toggle
+                ...state,
+                toggle: !state.toggle
             }
-        }
-        case actionTypes.POST_COMMENT : 
-        {
-            
         }
 
-        default : return state;
-    } 
+        case actionTypes.RESET_POST_CONTENT: {
+            
+            console.log("======================>logout")
+            return {
+                ...state,
+                postContent: ' ',
+                postTitle: '',
+                postId: '',
+                userId: '',
+                toggle: false,
+                allcomments: [],
+            }
+        }
+        case actionTypes.POST_COMMENT:
+            {
+                let updatedComments = [...state.allcomments];
+                updatedComments.push(action.updateCommentData);
+                return {
+                    ...state,
+                    allcomments: [...updatedComments]
+                }
+
+            }
+        case actionTypes.DELETE_COMMENT:
+            {
+                let updatedComments = [...state.allcomments];
+                updatedComments.splice(action.index, 1);
+                return {
+                    ...state,
+                    allcomments: [...updatedComments]
+                }
+            }
+        case actionTypes.UPDATE_POST: {
+            return {
+                ...state,
+                postContent: action.postContent,
+                postTitle: action.postTitle
+            }
+        }
+
+        default: return state;
+    }
 
 
 }

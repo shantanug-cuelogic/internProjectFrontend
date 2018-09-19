@@ -54,7 +54,7 @@ class SignIn extends React.Component {
             if(response.data.success) {
                 localStorage.setItem("authToken",response.data.authToken);
                 localStorage.setItem('userId',response.data.userId);
-                this.props.handleSignInState(response.data.authToken,response.data.userId);
+                this.props.handleSignInState(response.data.authToken,parseInt(response.data.userId));
                 this.props.history.push('/');               
             }
             else {
