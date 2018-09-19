@@ -48,7 +48,8 @@ class SignUpProcess extends React.Component {
     email:"",
     password:"",
     question : "",
-    answer:""
+    answer:"",
+    image:""
 
   };
 
@@ -70,6 +71,13 @@ class SignUpProcess extends React.Component {
         answer:document.getElementById('answer').value
       })
     }
+    if(activeStep === 2) {
+      this.setState({
+        image:document.getElementById('profilepic').files[0],
+        
+      })
+    }
+    
     
     this.setState({
       activeStep: activeStep + 1,
@@ -84,6 +92,11 @@ class SignUpProcess extends React.Component {
   };
 
   handleSignin = () => {
+
+    const formData = new FormData();
+    formData.append('file',formData,this.state.image)
+
+
     axios.post('/register',{
       firstName:this.state.firstName,
       lastName:this.state.lastName,
@@ -91,7 +104,10 @@ class SignUpProcess extends React.Component {
       isAdmin:false,
       email:this.state.email,
       securityQuestion:this.state.question,
-      securityAnswer:this.state.answer
+      securityAnswer:this.state.answer,
+      headers: {
+        'content-type': 'multipart/form-data'
+              }
     })
     .then((response)=>{
       console.log(response.data)
@@ -188,6 +204,7 @@ class SignUpProcess extends React.Component {
             type="file"
             label=" Profile Picture"
             helperText="Upload Yoour Profile Picture"
+            name="profilePicture"
           >
           </TextField>
      </div>

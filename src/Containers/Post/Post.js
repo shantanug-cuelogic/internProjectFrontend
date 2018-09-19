@@ -9,6 +9,9 @@ import Comment from '../Comment/Comment'
 import renderHTML from 'react-render-html';
 import { withRouter } from 'react-router';
 import { NavLink } from "react-router-dom";
+import LikeIcon from '@material-ui/icons/ThumbUp';
+import UnlikeIcon from '@material-ui/icons/ThumbDown';
+import Visibility from '@material-ui/icons/Visibility';
 
 
 
@@ -29,7 +32,8 @@ const style = theme => ({
         zIndex: 1000
     },
     EditButton: {
-        padding: '2%'
+        padding: '2%',
+        display:'inline'
     },
     CommentContainer: {
         marginBottom: '5%',
@@ -61,13 +65,21 @@ const style = theme => ({
         paddingRight:'5%',
         paddingTop:'5%',
         paddingBottom :'3%'
+    },
+    LikeButton : {
+        
+    },
+    DeleteButton : {
+        backgroundColor : 'red',
+        marginLeft:"20px"
     }
 });
 
 class Post extends Component {
     state = {
         firstName: '',
-        lastName: ''
+        lastName: '',
+        likeAllowed : true
     }
 
     componentDidMount() {
@@ -157,6 +169,25 @@ class Post extends Component {
 
     }
 
+    handleDeletePost =() => {
+       axios.post('/post/delete',{
+           authToken:localStorage.getItem('authToken'),
+           postIdtoDelete: this.props.postId
+       }) 
+       .then((response) => {
+            if(response.data.success) {
+                this.props.deletePostToReducer();
+                this.props.history.push('/');               
+
+            }
+       })
+       .catch((error)=>{
+
+       })
+    }
+
+
+
     handleDeleteClick = (commentId) => {
 
         axios.put('/post/comment/delete', {
@@ -177,26 +208,27 @@ class Post extends Component {
             .catch((error) => {
                 console.log(error)
             })
-
-
-
     }
+
+handleLike = () => {
+    this.setState({
+        likeAllowed:!this.state.likeAllowed
+    })
+}
 
     render() {
         const { classes } = this.props;
 
         let editPostUrl = '/editpost/' + this.props.postId
-        let button = null;
-        console.log(this.props.postUserId);
-        console.log(this.props.userId);
-        if (this.props.postUserId === this.props.userId) {
-            button = <Paper className={classes.EditButtonContainer}>
-                <div className={classes.EditButton}>
-                    <Button color="primary" variant="contained" component={NavLink} to={editPostUrl}>Edit Post</Button>
-                </div>
-            </Paper>
-        }
+        let editDeleteButton = null;
 
+        if (this.props.postUserId === this.props.userId) {
+            editDeleteButton = <div className={classes.EditButton}>
+                <Button color="primary" variant="contained" component={NavLink} to={editPostUrl}>Edit Post</Button>
+                <Button  variant="contained" className={classes.DeleteButton} onClick={this.handleDeletePost} >Delete Post</Button>
+                </div>
+        }
+        
 
         let comments = null;
         if (this.props.allcomments.length === 0) {
@@ -234,11 +266,25 @@ class Post extends Component {
                     </div>
 
                 </Paper>
-                {button}
+                <Paper className={classes.EditButtonContainer}>
+                     {editDeleteButton}
+                     {this.state.likeAllowed ? <Button >
+                            <LikeIcon className={classes.LikeButton} color="primary" onClick={this.handleLike} />
+                     </Button>
+                     :
+                     <Button >
+                            <UnlikeIcon className={classes.LikeButton} onClick={this.handleLike} />
+                     </Button>}
+                     <Button >
+                            <Visibility className={classes.LikeButton} />
+                     </Button>
+                </Paper>
+                
                 <Paper>
                     <div className={classes.PostContainer}>
-                        <Typography>
                             <div className={classes.myDynamicContent}>
+                            <Typography>
+
                                 <style jsx="true">
                                     {`
                                     img {
@@ -248,12 +294,12 @@ class Post extends Component {
                                 `}
                                 </style>
                                 {renderHTML(this.props.postContent)}
+                                </Typography>
                                 
                             </div>
 
-                        </Typography>
                         <Divider />
-                        asdasdasdas
+                        
                     </div>
                 </Paper>
 
@@ -326,6 +372,10 @@ const mapDispatchToProps = dispatch => {
             type: actionTypes.DELETE_COMMENT,
             index: index
         }),
+
+        deletePostToReducer : () => dispatch ({
+            type: actionTypes.DELETE_POST
+        })
 
     }
 }

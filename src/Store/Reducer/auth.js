@@ -16,7 +16,7 @@ const reducer = (state = initialState , action) => {
                localStorage.removeItem('userId');
 
                 return {
-                    ...state,
+                    userId:null,
                     auth : false
                 }
             } 

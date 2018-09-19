@@ -6,6 +6,8 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import HomeIcon from '@material-ui/icons/Home';
+
 import { NavLink } from "react-router-dom";
 import { connect } from 'react-redux';
 import * as actionTypes from '../../../Store/Actions/actionTypes';
@@ -36,6 +38,9 @@ const style = theme => ({
     Links : {
         textDecoration:'none',
         color:'black'
+    },
+    IconLeft : {
+
     }
 });
 
@@ -77,7 +82,9 @@ class Header extends React.Component {
                       <Grid container 
                       direction="row">
                       <Grid item>
-                      <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/"> Home</Button>
+                      <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/"> Home
+                        <HomeIcon />
+                      </Button>
                       </Grid>
                       <Grid item>
                       <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/createpost"> Create Blog</Button>
@@ -104,7 +111,10 @@ class Header extends React.Component {
                     :<nav className={classes.ButtonContainer}>
                     <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/signin"> SignIn</Button>
                     <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/signup"> SIGNUP</Button>
-                    <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/"> Home</Button>
+                    <Button color="inherit" size="small"  className={classes.button} component={NavLink} to="/"> 
+                    <HomeIcon className={classes.IconLeft} />
+                    Home
+                    </Button>
                 </nav> 
                     }
                     

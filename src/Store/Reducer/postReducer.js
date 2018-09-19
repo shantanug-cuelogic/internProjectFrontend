@@ -36,14 +36,13 @@ const reducer = (state = initialState, action) => {
         }
 
         case actionTypes.RESET_POST_CONTENT: {
-            
-            console.log("======================>logout")
+
             return {
-                ...state,
+                
                 postContent: ' ',
                 postTitle: '',
                 postId: '',
-                userId: '',
+                userId: null,
                 toggle: false,
                 allcomments: [],
             }
@@ -72,6 +71,13 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 postContent: action.postContent,
                 postTitle: action.postTitle
+            }
+        }
+
+        case actionTypes.DELETE_POST : {
+         // console.log("in resucer");
+            return {
+                ...initialState
             }
         }
 
