@@ -3,9 +3,10 @@ import Carousel from '../../Components/Carousel/Carousel';
 import Menu from '../Menu/Menu';
 import { withStyles } from '@material-ui/core/styles';
 import {Paper} from '@material-ui/core';
+import SubHeader from '../../Components/Layout/SubHeader/SubHeader';
 const style = {
     Container :{
-        marginTop:'10%'
+        marginTop:'1%'
     }
 }
 
@@ -16,6 +17,7 @@ class BlogBuilder extends React.Component {
 const {classes} = this.props;
         return (
             <div className={classes.Container}>
+                <SubHeader />
                 <Paper><Carousel /> </Paper>
                 <Paper><Menu /></Paper>
             </div>

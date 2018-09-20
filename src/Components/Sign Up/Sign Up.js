@@ -12,8 +12,9 @@ import ProfileUpload  from './ProfileImageUpload/ProfileImageUpload';
 
 const styles = theme => ({
   root: {
-    width: '90%',
-    marginTop:'10%'
+    width:'80%',
+    marginTop:'8%',
+    marginLeft:'10%'
   },
   backButton: {
     marginRight: theme.spacing.unit,

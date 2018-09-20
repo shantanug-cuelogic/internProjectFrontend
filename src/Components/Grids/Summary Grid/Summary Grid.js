@@ -13,7 +13,7 @@ const styles = theme => ({
     maxWidth: '100%',
     padding: theme.spacing.unit * 2,
     margin:'3%',
-    
+    height:'200px'
     
   },
   image: {
@@ -29,7 +29,8 @@ const styles = theme => ({
   Links:{
     color:'black',
     textDecoration :'none'
-  }
+  },
+
 });
 
 
@@ -81,7 +82,7 @@ function ComplexGrid(props) {
   return ( 
     <div>
       <Paper className={classes.root}>
-      <Grid container spacing={16}>
+      {/* <Grid container spacing={16}>
         
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={16}>
@@ -110,7 +111,45 @@ function ComplexGrid(props) {
           </div>
           </Grid>
         </Grid>
-      </Grid>
+      </Grid> */}
+      <div className={classes.PostContainer}>
+        <Grid container
+        direction="row"
+        
+        alignItems="stretch" >
+        <Grid item xs={12} sm={6}>
+        <div className={classes.PostTextContainer} style={{display:"inline"}}>
+             <Typography gutterBottom variant="headline" style={{display:"inline"}}>
+                {props.title}
+              </Typography>
+              <Paper style={{display:'inline'}}>
+                {ReactHtmlParser(content,options)}
+              </Paper>
+        </div>
+        <Grid item>
+         <div>
+          <ul>
+            <li>
+            <NavLink to={url} className={classes.Links} >Continue Reading</NavLink>
+            </li>
+          </ul> 
+          </div>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+        <div className={classes.ThumbnailContainer}>
+          <Paper>
+            <div className={classes.Thumbnail}>
+              
+            </div>
+          </Paper>
+        </div>
+        </Grid>    
+        
+        </Grid>
+        
+      </div>
+
     </Paper>
     </div>
     

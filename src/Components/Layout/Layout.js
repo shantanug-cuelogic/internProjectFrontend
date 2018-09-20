@@ -3,7 +3,11 @@ import Header from './Header/Header';
 
 const layout = (props) => {
     return(       
-             <Header auth={props.auth} logout={props.logout} />
+            <div>
+              <Header auth={props.auth} logout={props.logout} />
+              
+            </div>
+             
   );
 }
 export default layout;

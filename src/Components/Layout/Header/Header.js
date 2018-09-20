@@ -7,7 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import HomeIcon from '@material-ui/icons/Home';
-
+import SearchIcon from '@material-ui/icons/Search';
+import Input from '@material-ui/core/Input';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import { NavLink } from "react-router-dom";
 import { connect } from 'react-redux';
 import * as actionTypes from '../../../Store/Actions/actionTypes';
@@ -41,7 +43,48 @@ const style = theme => ({
     },
     IconLeft : {
 
-    }
+    },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+          backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+          marginLeft: theme.spacing.unit,
+          width: 'auto',
+        },
+      },
+      searchIcon: {
+        width: theme.spacing.unit * 9,
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      inputRoot: {
+        color: 'inherit',
+        width: '100%',
+      },
+      inputInput: {
+        paddingTop: theme.spacing.unit,
+        paddingRight: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit,
+        paddingLeft: theme.spacing.unit * 10,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+          width: 120,
+          '&:focus': {
+            width: 400,
+          },
+        },
+      },
 });
 
 class Header extends React.Component {
@@ -72,9 +115,27 @@ class Header extends React.Component {
                 <Typography variant="title" color="inherit">
                     HEADER
                  </Typography>
+                 
+
+
                     <Grid container justify="flex-end" 
                     
                     >
+                    <div className={classes.grow} />
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <Input
+              placeholder="Search…"
+              disableUnderline
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+            />
+          </div> 
+
                     {this.props.auth ?
 
                   <nav className={classes.ButtonContainer}>
@@ -133,7 +194,7 @@ class Header extends React.Component {
           <NavLink to="/" className={classes.Links}><MenuItem onClick={this.logOut}>Logout</MenuItem></NavLink>
         </Menu>       
                          
-                    </Grid>
+        </Grid>
                     
             </Toolbar>
         </AppBar>

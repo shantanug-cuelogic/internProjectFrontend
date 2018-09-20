@@ -10,6 +10,8 @@ import { Typography, Button} from '@material-ui/core';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
+import Snackbar from '@material-ui/core/Snackbar';
+import Slide from '@material-ui/core/Slide';
 
 
 
@@ -37,8 +39,13 @@ const styles = theme => ({
 
 class SignIn extends React.Component {
 
+state = {
+    open:false
+}
+TransitionUp =(props)=> {
+    return <Slide {...props} direction="up" />;
+  }
 
-    
      handleReset = () =>{
         document.getElementById('email').value="";
         document.getElementById('password').value = ""
@@ -52,10 +59,16 @@ class SignIn extends React.Component {
     })
         .then((response)=>{
             if(response.data.success) {
+                this.setState({
+                    open:true
+                });
+                
                 localStorage.setItem("authToken",response.data.authToken);
                 localStorage.setItem('userId',response.data.userId);
                 this.props.handleSignInState(response.data.authToken,parseInt(response.data.userId));
-                this.props.history.push('/');               
+                
+                this.props.history.push('/');   
+                            
             }
             else {
                 alert("failed");
@@ -67,7 +80,13 @@ class SignIn extends React.Component {
         })    
     
     }
-
+    handleCloseSnackBar =(event,reason)=>{
+        if (reason === 'clickaway') {
+            return;
+          }
+      
+          this.setState({ open: false });   
+    }
     render() {
         const { classes } = this.props;
     return (
@@ -106,6 +125,22 @@ class SignIn extends React.Component {
                 <Button variant="outlined" color="primary" onClick={this.handleReset} className={classes.Button}>reset</Button>
                 </div>
                 </Paper>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    open={this.state.open}
+                    TransitionComponent={this.TransitionUp}
+                    variant="error"
+                    autoHideDuration={6000}
+                    onClose={this.handleCloseSnackBar}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Comment Deleted</span>}
+                    
+                 />
         </div>
     )
     }

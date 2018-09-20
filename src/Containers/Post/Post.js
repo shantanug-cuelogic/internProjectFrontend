@@ -12,9 +12,8 @@ import LikeIcon from '@material-ui/icons/ThumbUp';
 import UnlikeIcon from '@material-ui/icons/ThumbDown';
 import Visibility from '@material-ui/icons/Visibility';
 import ReactHtmlParser , {convertNodeToElement} from 'react-html-parser';
-
-
-
+import Snackbar from '@material-ui/core/Snackbar';
+import Slide from '@material-ui/core/Slide';
 
 
 const style = theme => ({
@@ -77,11 +76,15 @@ const style = theme => ({
     }
 });
 
+
+  
+
 class Post extends Component {
     state = {
         firstName: '',
         lastName: '',
-        likeAllowed: true
+        likeAllowed: true,
+        open: false,
     }
 
     componentDidMount() {
@@ -181,6 +184,11 @@ class Post extends Component {
             });
     }
 
+    TransitionUp =(props)=> {
+        return <Slide {...props} direction="up" />;
+      }
+
+
     handlePostComment = () => {
         let comment = document.getElementById('comment').value;
         axios.put('/post/comment/', {
@@ -227,6 +235,14 @@ class Post extends Component {
             })
     }
 
+    handleCloseSnackBar = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        this.setState({ open: false });
+      };
+
     handleDeleteClick = (commentId) => {
 
         axios.put('/post/comment/delete', {
@@ -239,6 +255,9 @@ class Post extends Component {
                     this.props.allcomments.map((commentData, id) => {
                         if (commentData.commentId === commentId) {
                             this.props.deleteCommentToReducer(id);
+                            this.setState ({
+                                open:true
+                            })
                         }
                     });
 
@@ -442,7 +461,22 @@ class Post extends Component {
                 </Paper>
                     : <p style={{ color: 'red' }}>YOU NEED TO SIGNIN TO COMMENT</p>
                 }
-
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    open={this.state.open}
+                    TransitionComponent={this.TransitionUp}
+                    variant="error"
+                    autoHideDuration={6000}
+                    onClose={this.handleCloseSnackBar}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Comment Deleted</span>}
+                    
+                 />
 
                 <Paper>
                     <div className={classes.AllCommentsContainer}>

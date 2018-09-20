@@ -4,12 +4,29 @@ import axios from 'axios';
 import {  NavLink } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
 import ReactHtmlParser from 'react-html-parser';
+import { Grid , Paper } from '@material-ui/core';
 
 const style = {
     Links :{
         textDecoration : 'none',
         color:"black"
+    },
+    CarouselContainer : {
+        height:'500px'
+    },
+    ThumbnailContainer : {
+        backgroundColor:'black',
+        height:'500px',
+        width:'40%',
+        float:'right'
+    },
+    PostText : {
+        float : 'left'
+    },
+    Container : {
+        marginTop:'10%'
     }
+
 }
 
 
@@ -69,11 +86,49 @@ class Carousel extends React.Component {
           let fourthPostContent =  this.state.popularPosts[3].postContent.substr(0,500) + "...";
           let fifthPostContent =  this.state.popularPosts[4].postContent.substr(0,500) + "..."; 
         return [firstPostContent,secondPostContent,thirdPostContent,fourthPostContent,fifthPostContent]
-        }   
+        } 
+          
 
     render() {
-
         const {classes} = this.props;   
+  
+        const options = {
+            decodeEntities: true,
+            transform 
+          };
+          
+          function transform(node, index) {
+          
+            // return null to block certain elements
+            // don't allow <span> elements
+            if (node.type === 'tag' && node.name === 'img') {
+              return null;
+            }
+            if (node.type === 'tag' && node.name === 'video') {
+              return null;
+            }
+          
+            // Transform <ul> into <ol>
+            // A node can be modified and passed to the convertNodeToElement function which will continue to render it and it's children
+            // if (node.type === 'tag' && node.name === 'ul') {
+            //   node.name = 'ol';
+            //   return convertNodeToElement(node, index, transform);
+            // }
+          
+            // return an <i> element for every <b>
+            // a key must be included for all elements
+            // if (node.type === 'tag' && node.name === 'b') {
+            //   return <i key={index}>I am now in italics, not bold</i>;
+            // }
+          
+            // all links must open in a new window
+            // if (node.type === 'tag' && node.name === 'a') {
+            //   node.attribs.target = '_blank';
+            //   return convertNodeToElement(node, index, transform);
+            
+          
+          }
+        
 
         const settings = {
             className: "center",
@@ -81,7 +136,7 @@ class Carousel extends React.Component {
             infinite: true,
             centerPadding: "60px",
             slidesToShow: 1 ,
-            speed: 500,
+            speed: 6000,
             dots: true,
             autoplay: true,
             autoplaySpeed: 2000,
@@ -102,58 +157,106 @@ class Carousel extends React.Component {
 
         return(
             
-            <div className={classes.Container} style={{textAlign:'center' , marginTop:'50px'}}>
+            <div className={classes.Container}>
             
-                <Slider {...settings}>
+                <Slider {...settings} className={classes.CarouselContainer} >
 
                     <NavLink to={firstUrl} className={classes.Links} >
                     <div className={classes.Carousel} >
-                    
-                    <h1>{this.state.popularPosts[0].title}</h1>
-                        <p>{ReactHtmlParser(smallContentArray[0])}</p>
-                        <p>Likes:{this.state.popularPosts[0].likes}</p>
-                        <p>Views:{this.state.popularPosts[0].views}</p>
-                        <p>Date:{this.state.popularPosts[0].postDate}</p>
+                        
+                            <div className={classes.PostText}>
+                            <h1>{this.state.popularPosts[0].title}</h1>
+                            <p>{ReactHtmlParser(smallContentArray[0],options)}</p>
+                            <p>Views:{this.state.popularPosts[0].views}</p>
+                            </div>
+                            
+                            <div className={classes.ThumbnailContainer}>
+                                <Paper>
+                                    <div>
+                                        
+                                    </div>
+                                </Paper>
+                            </div>
                         
                     </div>
                     </NavLink>
-                   <NavLink to={secondUrl} className={classes.Links} >  
-                    <div className={classes.Carousel}>
-                        <h1>{this.state.popularPosts[1].title}</h1>
-                        <p>{ReactHtmlParser(smallContentArray[1])}</p>
-                        <p>Likes:{this.state.popularPosts[1].likes}</p>
-                        <p>Views:{this.state.popularPosts[1].views}</p>
-                        <p>Date:{this.state.popularPosts[1].postDate}</p>
-                    </div>  
-                    </NavLink>
-                    <NavLink to={thirdUrl} className={classes.Links}>
-                    <div className={classes.Carousel}>
-                        <h1>{this.state.popularPosts[2].title}</h1>
-                        <p>{ReactHtmlParser(smallContentArray[2])}</p>
-                        <p>Likes:{this.state.popularPosts[2].likes}</p>
-                        <p>Views:{this.state.popularPosts[2].views}</p>
-                        <p>Date:{this.state.popularPosts[2].postDate}</p>
-                    </div>  
-                    </NavLink>
                    
-                    <NavLink to={fourthUrl} className={classes.Links}>
-                    <div className={classes.Carousel}>
-                        <h1>{this.state.popularPosts[3].title}</h1>
-                        <p>{ReactHtmlParser(smallContentArray[3])}</p>
-                        <p>Likes:{this.state.popularPosts[3].likes}</p>
-                        <p>Views:{this.state.popularPosts[3].views}</p>
-                        <p>Date:{this.state.popularPosts[3].postDate}</p>
-                    </div> 
-                    </NavLink >
-                    <NavLink to={fifthUrl} className={classes.Links}> 
-                    <div className={classes.Carousel}>
-                        <h1>{this.state.popularPosts[4].title}</h1>
-                        <p>{ReactHtmlParser(smallContentArray[4])}</p>
-                        <p>Likes:{this.state.popularPosts[4].likes}</p>
-                        <p>Views:{this.state.popularPosts[4].views}</p>
-                        <p>Date:{this.state.popularPosts[4].postDate}</p>
+                    <NavLink to={secondUrl} className={classes.Links} >
+                    <div className={classes.Carousel} >
+                        
+                            <div className={classes.PostText}>
+                            <h1>{this.state.popularPosts[1].title}</h1>
+                            <p>{ReactHtmlParser(smallContentArray[1],options)}</p>
+                            <p>Views:{this.state.popularPosts[1].views}</p>
+                            </div>
+                            
+                            <div className={classes.ThumbnailContainer}>
+                                <Paper>
+                                    <div>
+
+                                    </div>
+                                </Paper>
+                            </div>
+                        
                     </div>
-                    </NavLink>  
+                    </NavLink> 
+                    <NavLink to={thirdUrl} className={classes.Links} >
+                    <div className={classes.Carousel} >
+                        
+                            <div className={classes.PostText}>
+                            <h1>{this.state.popularPosts[2].title}</h1>
+                            <p>{ReactHtmlParser(smallContentArray[2],options)}</p>
+                            <p>Views:{this.state.popularPosts[2].views}</p>
+                            </div>
+                            
+                            <div className={classes.ThumbnailContainer}>
+                                <Paper>
+                                    <div>
+
+                                    </div>
+                                </Paper>
+                            </div>
+                        
+                    </div>
+                    </NavLink>
+                    <NavLink to={fourthUrl} className={classes.Links} >
+                    <div className={classes.Carousel} >
+                        
+                            <div className={classes.PostText}>
+                            <h1>{this.state.popularPosts[3].title}</h1>
+                            <p>{ReactHtmlParser(smallContentArray[3],options)}</p>
+                            <p>Views:{this.state.popularPosts[3].views}</p>
+                            </div>
+                            
+                            <div className={classes.ThumbnailContainer}>
+                                <Paper>
+                                    <div>
+
+                                    </div>
+                                </Paper>
+                            </div>
+                        
+                    </div>
+                    </NavLink>
+                    <NavLink to={fifthUrl} className={classes.Links} >
+                    <div className={classes.Carousel} >
+                        
+                            <div className={classes.PostText}>
+                            <h1>{this.state.popularPosts[4].title}</h1>
+                            <p>{ReactHtmlParser(smallContentArray[4],options)}</p>
+                            <p>Views:{this.state.popularPosts[4].views}</p>
+                            </div>
+                            
+                            <div className={classes.ThumbnailContainer}>
+                                <Paper>
+                                    <div>
+
+                                    </div>
+                                </Paper>
+                            </div>
+                        
+                    </div>
+                    </NavLink>    
                 
             </Slider>
             

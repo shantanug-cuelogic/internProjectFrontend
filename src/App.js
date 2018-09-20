@@ -42,23 +42,28 @@ class App extends Component {
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#37474f',
-
+      light: '#757ce8',
+      main: '#3f50b5',
+      dark: '#002884',
+      contrastText: '#fff',
     },
     secondary: {
+      light: '#ff7961',
       main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
     },
-   
   },
 })
 
 
     return (
+      <MuiThemeProvider theme={theme}>
       <div className="App">
-        <MuiThemeProvider theme={theme}>
+        
           
           <Layout  logout={this.logout}/>
-         <div style={{ textAlign: 'center', width: '70%', marginLeft: '15%', marginRight: '15%' }}>
+         <div style={{ textAlign: 'center', width: '90%', marginLeft: '5%', marginRight: '5%' }}>
             <Switch>
                 <Route path='/signin' component={SignIn}></Route>
                 <Route path='/editor' component={Editor}></Route>
@@ -71,8 +76,9 @@ const theme = createMuiTheme({
             </Switch>
           </div>
           
-        </MuiThemeProvider>
+        
       </div>
+      </MuiThemeProvider>
     );
   }
 }
