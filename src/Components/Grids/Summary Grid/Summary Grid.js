@@ -5,7 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { NavLink } from "react-router-dom";
-import renderHTML from 'react-render-html';
+import ReactHtmlParser from 'react-html-parser';
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -31,10 +32,52 @@ const styles = theme => ({
   }
 });
 
+
+const options = {
+  decodeEntities: true,
+  transform 
+};
+
+function transform(node, index) {
+
+  // return null to block certain elements
+  // don't allow <span> elements
+  if (node.type === 'tag' && node.name === 'img') {
+    return null;
+  }
+  if (node.type === 'tag' && node.name === 'video') {
+    return null;
+  }
+
+  // Transform <ul> into <ol>
+  // A node can be modified and passed to the convertNodeToElement function which will continue to render it and it's children
+  // if (node.type === 'tag' && node.name === 'ul') {
+  //   node.name = 'ol';
+  //   return convertNodeToElement(node, index, transform);
+  // }
+
+  // return an <i> element for every <b>
+  // a key must be included for all elements
+  // if (node.type === 'tag' && node.name === 'b') {
+  //   return <i key={index}>I am now in italics, not bold</i>;
+  // }
+
+  // all links must open in a new window
+  // if (node.type === 'tag' && node.name === 'a') {
+  //   node.attribs.target = '_blank';
+  //   return convertNodeToElement(node, index, transform);
+  
+
+}
+
+
+
+
+
 function ComplexGrid(props) {
   const { classes } = props;
   let url="/post/"+props.postId;
-  let content = props.summary.substr(0,250) + "...";  
+  let content = props.summary.substr(0,1000) + "...";  
   return ( 
     <div>
       <Paper className={classes.root}>
@@ -48,7 +91,7 @@ function ComplexGrid(props) {
               </Typography>
               <Typography gutterBottom>{props.date}</Typography>
               <Typography color="textSecondary"></Typography>
-          <div>{renderHTML(content)}</div>
+          <div>{ReactHtmlParser(content,options)}</div>
               
             </Grid>
             

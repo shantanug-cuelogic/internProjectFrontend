@@ -112,16 +112,6 @@ class FloatingActionButtonZoom extends React.Component {
   render() {
     const { classes, theme } = this.props;
 
-    // var contain = this.state.abc.map((element,isd) =>(
-    //     <SummaryGrid
-    //     key={isd}
-    //     title={"The Burger Builder App"}
-    //     summary={"This is summary for the burger builder app"}
-    //     views={"Views : "+element }
-    //     click={this.editorHandler}
-    //     postId={isd}
-    // />
-    //   ))
 
    
     const newPosts = this.state.new.map((element, index) => (

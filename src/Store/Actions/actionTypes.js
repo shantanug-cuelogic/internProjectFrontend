@@ -7,7 +7,13 @@ export const UPDATE_POST = 'UPDATE_POST';
 export const RESET_POST_CONTENT = 'RESET_POST_CONTENT';
 export const DELETE_POST = "DELETE_POST";
 
+export const ALLOWED_TO_LIKE_POST = "ALLOWED_TO_LIKE_POST";
+export const TOTAL_LIKE_TO_POST = "TOTAL_LIKE_TO_POST";
+
+export const TOTAL_VIEWS_TO_POST = "TOTAL_VIEWS_TO_POST";
+
 export const TOGGLE ='TOGGLE';
+export const IMAGE_FILE = 'IMAGE_FILE'; 
 
 export const POST_COMMENT = 'POST_COMMENT';
 export const DELETE_COMMENT = 'DELETE_COMMENT';

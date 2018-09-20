@@ -8,8 +8,9 @@ import { Provider } from 'react-redux';
 import { createStore, combineReducers } from 'redux';
 import authReducer from './Store/Reducer/auth';
 import postReducer from './Store/Reducer/postReducer';
+import signUpReducer from './Store/Reducer/signUp';
 
-const store = createStore(combineReducers({authReducer:authReducer,postReducer:postReducer}));
+const store = createStore(combineReducers({ authReducer: authReducer, postReducer: postReducer, signUpReducer: signUpReducer }));
 
 const app = (
     <Provider store={store}>
@@ -19,5 +20,5 @@ const app = (
     </Provider>
 );
 
-ReactDOM.render( app, document.getElementById('root'));
+ReactDOM.render(app, document.getElementById('root'));
 registerServiceWorker();

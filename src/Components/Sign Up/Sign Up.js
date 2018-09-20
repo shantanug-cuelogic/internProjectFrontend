@@ -6,8 +6,9 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { Paper, TextField } from '@material-ui/core';
+import { Paper, TextField, Input, Grid , Avatar, Divider } from '@material-ui/core';
 import axios from 'axios';
+import ProfileUpload  from './ProfileImageUpload/ProfileImageUpload';
 
 const styles = theme => ({
   root: {
@@ -21,6 +22,24 @@ const styles = theme => ({
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
   },
+  FormContainer : {
+    padding:'5%'
+  },
+  paper :{
+    height:200,
+    width:200
+},
+
+ProfileContainer : {
+    margin:'10%'
+},
+
+ProfileAvatar : {
+    marginTop:'',
+    marginLeft:25,
+    height:150,
+    width:150
+},
 });
 
 function getSteps() {
@@ -184,6 +203,7 @@ class SignUpProcess extends React.Component {
             type="text"
             label="Question"
             helperText="Enter question"
+            
           >
           </TextField>
           <TextField
@@ -197,22 +217,36 @@ class SignUpProcess extends React.Component {
      </div>
    }
    else if(activeStep === 2) {
-     forms = <div>
-       <TextField
-            fullWidth
-            id="profilepic"
-            type="file"
-            label=" Profile Picture"
-            helperText="Upload Yoour Profile Picture"
-            name="profilePicture"
-          >
-          </TextField>
-     </div>
+    //  forms = <div>
+       
+    //    <Grid 
+    //             container
+    //             justify="center"
+    //             >
+    //                 <Grid item style = {{marginBottom:20}}>
+    //                     <Paper className={classes.paper}>
+    //                         <Avatar src="/images/default-user.png" className={classes.ProfileAvatar} />
+    //                     </Paper>
+    //                 </Grid>
+    //             </Grid>
+    //             <Divider /> 
+    //  <form  action="/profilePicUpload" method="POST" enctype="multipart/form-data">
+    //    <Input
+    //         fullWidth
+    //         id="profilepic"
+    //         type="file"
+    //         label=" Profile Picture"
+    //         helperText="Upload Yoour Profile Picture"
+    //         name="profilePicture"
+    //       >
+    //       </Input>
+    //       <Divider />
+    //       <Button color="primary" variant="contained" > Upload</Button>
+    //       </form>
+    //  </div>
+    forms = <ProfileUpload />
      
    }
-
-
-
     return (
       <div className={classes.root}>
         <Stepper activeStep={activeStep} alternativeLabel>
@@ -225,7 +259,10 @@ class SignUpProcess extends React.Component {
           })}
         </Stepper>
         <Paper>
+          <div className={classes.FormContainer}>
           {forms}
+          </div>
+          
         </Paper>
         <div>
           {this.state.activeStep === steps.length ? (

@@ -6,12 +6,14 @@ import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Comment from '../Comment/Comment'
-import renderHTML from 'react-render-html';
 import { withRouter } from 'react-router';
 import { NavLink } from "react-router-dom";
 import LikeIcon from '@material-ui/icons/ThumbUp';
 import UnlikeIcon from '@material-ui/icons/ThumbDown';
 import Visibility from '@material-ui/icons/Visibility';
+import ReactHtmlParser , {convertNodeToElement} from 'react-html-parser';
+
+
 
 
 
@@ -33,12 +35,12 @@ const style = theme => ({
     },
     EditButton: {
         padding: '2%',
-        display:'inline'
+        display: 'inline'
     },
     CommentContainer: {
         marginBottom: '5%',
         padding: '3%',
-        marginTop:'5%'
+        marginTop: '5%'
 
     },
     Comments: {
@@ -61,17 +63,17 @@ const style = theme => ({
         padding: '5%'
     },
     myDynamicContent: {
-        paddingLeft:'5%',
-        paddingRight:'5%',
-        paddingTop:'5%',
-        paddingBottom :'3%'
+        paddingLeft: '5%',
+        paddingRight: '5%',
+        paddingTop: '5%',
+        paddingBottom: '3%'
     },
-    LikeButton : {
-        
+    LikeButton: {
+
     },
-    DeleteButton : {
-        backgroundColor : 'red',
-        marginLeft:"20px"
+    DeleteButton: {
+
+        marginLeft: "20px"
     }
 });
 
@@ -79,7 +81,7 @@ class Post extends Component {
     state = {
         firstName: '',
         lastName: '',
-        likeAllowed : true
+        likeAllowed: true
     }
 
     componentDidMount() {
@@ -107,21 +109,68 @@ class Post extends Component {
                         }
 
 
-                        axios.get('/userprofile/' + localStorage.getItem('userId'))
+                        axios.get('/userprofile/' + this.props.userId)
                             .then((response) => {
 
-                                if(response.data.success) {
+                                console.log(response.data[0].firstName);
+                                if (response.data.success) {
                                     this.setState({
                                         firstName: response.data[0].firstName,
                                         lastName: response.data[0].lastName
                                     })
                                 }
-                                
                             })
                             .catch((error) => {
                                 console.log(error)
                             });
 
+                        axios.get('/post/like/totallikes/' + response.data[0].postId)
+                            .then((response) => {
+                                if (response.data.success) {
+                                    this.props.totalLikesToPostReducer(response.data.count)
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+
+                        axios.post('/post/like/allowed', {
+                            authToken: localStorage.getItem('authToken'),
+                            postIdToLike: response.data[0].postId
+                        })
+                            .then((response) => {
+                                if (response.data.success) {
+                                    this.props.allowToLikePostReducer(true);
+
+                                }
+                                else {
+                                    this.props.allowToLikePostReducer(false);
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            });
+
+                        axios.post('/post/view/add', {
+                            authToken: localStorage.getItem("authToken"),
+                            postIdToView: requiredUrl
+                        })
+                            .then((response) => {
+                                console.log(response.data);
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            });
+
+                        axios.get('/post/view/totalviews/' + requiredUrl)
+                            .then((response) => {
+                                if (response.data.success) {
+                                    this.props.totalViewsToPostReducer(response.data.count);
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            })
                     })
                     .catch((error) => {
                         console.log(error)
@@ -130,8 +179,6 @@ class Post extends Component {
             .catch((error) => {
                 console.log(error)
             });
-
-
     }
 
     handlePostComment = () => {
@@ -149,44 +196,36 @@ class Post extends Component {
                         userId: parseInt(this.props.userId),
                         commentId: response.data.message.insertId,
                         commentContent: comment
-
                     }
-
                     document.getElementById('comment').value = "";
                     this.props.postCommentToReducer(updatedCommentData);
                 }
-
-
             })
             .catch((error) => {
                 console.log(error)
             })
-        //console.log("in post comment", typeof());
-
     }
 
     handleEditPost = () => {
 
     }
 
-    handleDeletePost =() => {
-       axios.post('/post/delete',{
-           authToken:localStorage.getItem('authToken'),
-           postIdtoDelete: this.props.postId
-       }) 
-       .then((response) => {
-            if(response.data.success) {
-                this.props.deletePostToReducer();
-                this.props.history.push('/');               
+    handleDeletePost = () => {
+        axios.post('/post/delete', {
+            authToken: localStorage.getItem('authToken'),
+            postIdtoDelete: this.props.postId
+        })
+            .then((response) => {
+                if (response.data.success) {
+                    this.props.deletePostToReducer();
+                    this.props.history.push('/');
 
-            }
-       })
-       .catch((error)=>{
+                }
+            })
+            .catch((error) => {
 
-       })
+            })
     }
-
-
 
     handleDeleteClick = (commentId) => {
 
@@ -210,11 +249,65 @@ class Post extends Component {
             })
     }
 
-handleLike = () => {
-    this.setState({
-        likeAllowed:!this.state.likeAllowed
-    })
-}
+    handleLike = () => {
+
+        if (this.props.allowedToLike) {
+            axios.post('/post/like/add', {
+                postIdToLike: this.props.postId,
+                authToken: localStorage.getItem('authToken')
+            })
+                .then((response) => {
+                    if (response.data.success) {
+
+                        axios.get('/post/like/totallikes/' + this.props.postId)
+                            .then((response) => {
+                                if (response.data.success) {
+                                    this.props.totalLikesToPostReducer(response.data.count)
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+
+                        this.props.allowToLikePostReducer(false);
+
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+
+        else if (!this.props.allowedToLike) {
+            axios.put('/post/like/remove', {
+                postIdToUnlike: this.props.postId,
+                authToken: localStorage.getItem('authToken')
+            })
+                .then((response) => {
+                    if (response.data.success) {
+
+                        axios.get('/post/like/totallikes/' + this.props.postId)
+                            .then((response) => {
+                                if (response.data.success) {
+                                    this.props.totalLikesToPostReducer(response.data.count)
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                        this.props.allowToLikePostReducer(true);
+
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+
+
+        console.log(this.props.allowedToLike);
+        this.props.allowToLikePostReducer(!this.props.allowedToLike);
+    }
 
     render() {
         const { classes } = this.props;
@@ -225,10 +318,10 @@ handleLike = () => {
         if (this.props.postUserId === this.props.userId) {
             editDeleteButton = <div className={classes.EditButton}>
                 <Button color="primary" variant="contained" component={NavLink} to={editPostUrl}>Edit Post</Button>
-                <Button  variant="contained" className={classes.DeleteButton} onClick={this.handleDeletePost} >Delete Post</Button>
-                </div>
+                <Button variant="outlined" className={classes.DeleteButton} onClick={this.handleDeletePost} >Delete Post</Button>
+            </div>
         }
-        
+
 
         let comments = null;
         if (this.props.allcomments.length === 0) {
@@ -256,6 +349,29 @@ handleLike = () => {
             })
         }
 
+    //    let reg = /src=\".+\.jpg\"/;
+    //    let string = this.props.postContent;
+
+    //     var matches = string.match(reg);
+    //     console.log(matches);
+
+    //var str = "<img alt='' src='http://api.com/images/UID' /><br/>Some plain text<br/><a href='http://www.google.com'>http://www.google.com</a>";
+    //var str = this.props.postContent;  
+    // let str =  new String(this.props.postContent.substr(0,25)) 
+    // console.log(typeof(str),"=====================================================================================================================================================>")
+    // var regex = /<img.*?src='(.*?)'/;
+    // var src = regex.exec(str);
+    
+
+
+
+
+
+
+
+
+      
+         // ReactHtmlParser(this.props.postContent,options)
 
 
         return (
@@ -267,22 +383,25 @@ handleLike = () => {
 
                 </Paper>
                 <Paper className={classes.EditButtonContainer}>
-                     {editDeleteButton}
-                     {this.state.likeAllowed ? <Button >
-                            <LikeIcon className={classes.LikeButton} color="primary" onClick={this.handleLike} />
-                     </Button>
-                     :
-                     <Button >
-                            <UnlikeIcon className={classes.LikeButton} onClick={this.handleLike} />
-                     </Button>}
-                     <Button >
-                            <Visibility className={classes.LikeButton} />
-                     </Button>
+                    {editDeleteButton}
+                    {this.props.allowedToLike ? <Button onClick={this.handleLike}>
+                        <LikeIcon className={classes.LikeButton} color="primary" />
+                        Likes: {this.props.likes}
+                    </Button>
+                        :
+                        <Button onClick={this.handleLike}>
+                            <UnlikeIcon className={classes.LikeButton} color="primary" />
+                            Likes: {this.props.likes}
+                        </Button>}
+                    <Button >
+                        <Visibility className={classes.LikeButton} color="primary" disabled />
+                        {this.props.views}
+                    </Button>
                 </Paper>
-                
+
                 <Paper>
                     <div className={classes.PostContainer}>
-                            <div className={classes.myDynamicContent}>
+                        <div className={classes.myDynamicContent}>
                             <Typography>
 
                                 <style jsx="true">
@@ -290,16 +409,17 @@ handleLike = () => {
                                     img {
                                     max-width : 100%
                                          }
-                                    
                                 `}
                                 </style>
-                                {renderHTML(this.props.postContent)}
-                                </Typography>
-                                
-                            </div>
+                                {/* {renderHTML(this.props.postContent)} */}
+                                {ReactHtmlParser(this.props.postContent)}
+                                {/* {ReactHtmlParser(this.props.postContent,options)} */}
+                            </Typography>
+
+                        </div>
 
                         <Divider />
-                        
+
                     </div>
                 </Paper>
 
@@ -347,6 +467,9 @@ const mapStateToProps = state => {
         postId: state.postReducer.postId,
         postUserId: state.postReducer.userId,
         allcomments: state.postReducer.allcomments,
+        allowedToLike: state.postReducer.allowedToLike,
+        likes: state.postReducer.likes,
+        views: state.postReducer.views
     }
 }
 
@@ -373,9 +496,26 @@ const mapDispatchToProps = dispatch => {
             index: index
         }),
 
-        deletePostToReducer : () => dispatch ({
+        deletePostToReducer: () => dispatch({
             type: actionTypes.DELETE_POST
+        }),
+
+        allowToLikePostReducer: (status) => dispatch({
+            type: actionTypes.ALLOWED_TO_LIKE_POST,
+            allowToLike: status
+        }),
+
+        totalLikesToPostReducer: (likes) => dispatch({
+            type: actionTypes.TOTAL_LIKE_TO_POST,
+            totalLikes: likes
+        }),
+
+        totalViewsToPostReducer: (views) => dispatch({
+            type: actionTypes.TOTAL_VIEWS_TO_POST,
+            views: views
         })
+
+
 
     }
 }

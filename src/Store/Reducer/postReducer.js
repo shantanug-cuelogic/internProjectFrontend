@@ -1,5 +1,5 @@
 import *  as actionTypes from '../Actions/actionTypes';
-import { stat } from 'fs';
+
 
 
 const initialState = {
@@ -9,6 +9,9 @@ const initialState = {
     userId: '',
     toggle: false,
     allcomments: [],
+    allowedToLike : false,
+    likes : 0,
+    views: 0
 }
 
 const reducer = (state = initialState, action) => {
@@ -75,9 +78,30 @@ const reducer = (state = initialState, action) => {
         }
 
         case actionTypes.DELETE_POST : {
-         // console.log("in resucer");
+        
             return {
                 ...initialState
+            }
+        }
+
+        case actionTypes.ALLOWED_TO_LIKE_POST : {
+            return {
+                ...state,
+                allowedToLike : action.allowToLike
+            }
+        }
+
+        case actionTypes.TOTAL_LIKE_TO_POST : {
+            return {
+                ...state,
+                likes: action.totalLikes
+            }
+        }
+
+        case actionTypes.TOTAL_VIEWS_TO_POST : {
+            return {
+                ...state,
+                views : action.views
             }
         }
 

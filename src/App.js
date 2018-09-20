@@ -15,20 +15,6 @@ import * as actionTypes from './Store/Actions/actionTypes';
 import EditPost from './Containers/Post/EditPost';
 
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#004D40',
-
-    },
-    secondary: {
-      main: '#f44336',
-    },
-    mycolor: {
-      main: '#263238'
-    },
-  },
-});
 
 
 
@@ -52,6 +38,21 @@ class App extends Component {
   
   
   render() {
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#37474f',
+
+    },
+    secondary: {
+      main: '#f44336',
+    },
+   
+  },
+})
+
+
     return (
       <div className="App">
         <MuiThemeProvider theme={theme}>
