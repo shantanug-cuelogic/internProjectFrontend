@@ -6,7 +6,7 @@ import {Paper} from '@material-ui/core';
 import SubHeader from '../../Components/Layout/SubHeader/SubHeader';
 const style = {
     Container :{
-        marginTop:'1%'
+     
     }
 }
 

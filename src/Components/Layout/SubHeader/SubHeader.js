@@ -20,7 +20,7 @@ import { Paper } from '@material-ui/core';
 
 const style = theme => ({
     SubHeaderContainer : {
-       
+       marginTop:'1%'
     },
     SubHeader:{
         marginTop:'60px',
@@ -46,12 +46,12 @@ class Header extends React.Component {
             >
          
         <Paper className = {classes.SubHeader} position="static">
-        <Button variant="text" color="primary"> Technology</Button>
-        <Button variant="text" color="primary"> Travel </Button>
-        <Button variant="text" color="primary"> Style </Button>
-        <Button variant="text" color="primary"> Business </Button>
-        <Button variant="text" color="primary"> Politics </Button>
-        <Button variant="text" color="primary"> Science </Button>
+        <Button variant="text" color="primary" component={NavLink} to='/category/technology'> Technology</Button>
+        <Button variant="text" color="primary" component={NavLink} to='/category/travel'> Travel </Button>
+        <Button variant="text" color="primary" component={NavLink} to='/category/style'> Style </Button>
+        <Button variant="text" color="primary" component={NavLink} to='/category/buisness'> Business </Button>
+        <Button variant="text" color="primary" component={NavLink} to='/category/politics'> Politics </Button>
+        <Button variant="text" color="primary" component={NavLink} to='/category/science'> Science </Button>
             
         </Paper>
             

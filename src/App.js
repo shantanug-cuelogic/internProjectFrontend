@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import * as actionTypes from './Store/Actions/actionTypes';
 import EditPost from './Containers/Post/EditPost';
 import Dashboard from './Components/Dashboard/Dashboard';
+import Category from './Components/Category/Category';
 
 
 
@@ -73,6 +74,7 @@ const theme = createMuiTheme({
                 <Route path = '/editpost/:id' component={EditPost}></Route>
                 <Route path='/createpost' component={Editor} ></Route>
                 <Route path = '/dashboard' component = {Dashboard} ></Route>
+                <Route path='/category/:id' component = {Category} ></Route>
                 <Route path='/' exact component={BlogBuilder}></Route>
             </Switch>
           </div>
