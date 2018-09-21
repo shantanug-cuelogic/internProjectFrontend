@@ -4,7 +4,12 @@ import  *  as actionTypes from '../Actions/actionTypes';
 const initialState = {
     auth : false,
     authToken : "",
-    userId: ""
+    userId: "",
+    firstName:"",
+    lastName:"",
+    profileImage:"",
+    isAdmin:false,
+    email:""
 }
 
 const reducer = (state = initialState , action) => {
@@ -17,7 +22,9 @@ const reducer = (state = initialState , action) => {
 
                 return {
                     userId:null,
-                    auth : false
+                    auth : false,
+                   
+
                 }
             } 
 
@@ -26,7 +33,12 @@ const reducer = (state = initialState , action) => {
                     ...state,
                     auth : true,
                     authToken : action.authToken,
-                    userId : parseInt(action.userId)
+                    userId : parseInt(action.userId),
+                    firstName:action.firstName,
+                    lastName:action.lastName,
+                    profileImage:action.profileImage,
+                    isAdmin:action.isAdmin,
+                    email:action.email
                 }
                
             }

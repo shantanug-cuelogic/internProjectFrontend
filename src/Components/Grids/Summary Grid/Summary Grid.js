@@ -13,7 +13,7 @@ const styles = theme => ({
     maxWidth: '100%',
     padding: theme.spacing.unit * 2,
     margin:'3%',
-    height:'200px'
+    // height:'200px'
     
   },
   image: {
@@ -117,7 +117,7 @@ function ComplexGrid(props) {
         direction="row"
         
         alignItems="stretch" >
-        <Grid item xs={12} sm={6}>
+        <Grid item  sm={7}>
         <div className={classes.PostTextContainer} style={{display:"inline"}}>
              <Typography gutterBottom variant="headline" style={{display:"inline"}}>
                 {props.title}

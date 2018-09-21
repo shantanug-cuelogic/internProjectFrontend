@@ -80,11 +80,11 @@ class Carousel extends React.Component {
     }
 
     getSmallContent = () =>{
-        let firstPostContent =  this.state.popularPosts[0].postContent.substr(0,500) + "...";
-          let secondPostContent =  this.state.popularPosts[1].postContent.substr(0,500) + "...";
-          let thirdPostContent =  this.state.popularPosts[2].postContent.substr(0,500) + "...";
-          let fourthPostContent =  this.state.popularPosts[3].postContent.substr(0,500) + "...";
-          let fifthPostContent =  this.state.popularPosts[4].postContent.substr(0,500) + "..."; 
+        let firstPostContent =  this.state.popularPosts[0].postContent.substr(0,1000) + "...";
+          let secondPostContent =  this.state.popularPosts[1].postContent.substr(0,1000) + "...";
+          let thirdPostContent =  this.state.popularPosts[2].postContent.substr(0,1000) + "...";
+          let fourthPostContent =  this.state.popularPosts[3].postContent.substr(0,1000) + "...";
+          let fifthPostContent =  this.state.popularPosts[4].postContent.substr(0,1000) + "..."; 
         return [firstPostContent,secondPostContent,thirdPostContent,fourthPostContent,fifthPostContent]
         } 
           
@@ -162,101 +162,121 @@ class Carousel extends React.Component {
                 <Slider {...settings} className={classes.CarouselContainer} >
 
                     <NavLink to={firstUrl} className={classes.Links} >
-                    <div className={classes.Carousel} >
+                    <Grid 
+                    container
+                    direction="row"
+                    className={classes.Carousel} 
+                    >
                         
-                            <div className={classes.PostText}>
-                            <h1>{this.state.popularPosts[0].title}</h1>
-                            <p>{ReactHtmlParser(smallContentArray[0],options)}</p>
+                            <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
+                            <h1 style={{display:'inline'}}>{this.state.popularPosts[0].title}</h1>
+                            <p style={{display:'inline'}}>{ReactHtmlParser(smallContentArray[0],options)}</p>
                             <p>Views:{this.state.popularPosts[0].views}</p>
-                            </div>
+                            </Grid>
                             
-                            <div className={classes.ThumbnailContainer}>
+                            <Grid item className={classes.ThumbnailContainer}>
                                 <Paper>
                                     <div>
                                         
                                     </div>
                                 </Paper>
-                            </div>
+                            </Grid>
                         
-                    </div>
+                    </Grid>
                     </NavLink>
-                   
                     <NavLink to={secondUrl} className={classes.Links} >
-                    <div className={classes.Carousel} >
+                    <Grid 
+                    container
+                    direction="row"
+                    className={classes.Carousel} 
+                    >
                         
-                            <div className={classes.PostText}>
-                            <h1>{this.state.popularPosts[1].title}</h1>
-                            <p>{ReactHtmlParser(smallContentArray[1],options)}</p>
+                            <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
+                            <h1 style={{display:'inline'}}>{this.state.popularPosts[1].title}</h1>
+                            <p style={{display:'inline'}}>{ReactHtmlParser(smallContentArray[1],options)}</p>
                             <p>Views:{this.state.popularPosts[1].views}</p>
-                            </div>
+                            </Grid>
                             
-                            <div className={classes.ThumbnailContainer}>
+                            <Grid item className={classes.ThumbnailContainer}>
                                 <Paper>
                                     <div>
-
+                                        
                                     </div>
                                 </Paper>
-                            </div>
+                            </Grid>
                         
-                    </div>
-                    </NavLink> 
+                    </Grid>
+                    </NavLink>
                     <NavLink to={thirdUrl} className={classes.Links} >
-                    <div className={classes.Carousel} >
+                    <Grid 
+                    container
+                    direction="row"
+                    className={classes.Carousel} 
+                    >
                         
-                            <div className={classes.PostText}>
-                            <h1>{this.state.popularPosts[2].title}</h1>
-                            <p>{ReactHtmlParser(smallContentArray[2],options)}</p>
+                            <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
+                            <h1 style={{display:'inline'}}>{this.state.popularPosts[2].title}</h1>
+                            <p style={{display:'inline'}}>{ReactHtmlParser(smallContentArray[2],options)}</p>
                             <p>Views:{this.state.popularPosts[2].views}</p>
-                            </div>
+                            </Grid>
                             
-                            <div className={classes.ThumbnailContainer}>
+                            <Grid item className={classes.ThumbnailContainer}>
                                 <Paper>
                                     <div>
-
+                                        
                                     </div>
                                 </Paper>
-                            </div>
+                            </Grid>
                         
-                    </div>
+                    </Grid>
                     </NavLink>
                     <NavLink to={fourthUrl} className={classes.Links} >
-                    <div className={classes.Carousel} >
+                    <Grid 
+                    container
+                    direction="row"
+                    className={classes.Carousel} 
+                    >
                         
-                            <div className={classes.PostText}>
-                            <h1>{this.state.popularPosts[3].title}</h1>
-                            <p>{ReactHtmlParser(smallContentArray[3],options)}</p>
+                            <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
+                            <h1 style={{display:'inline'}}>{this.state.popularPosts[3].title}</h1>
+                            <p style={{display:'inline'}}>{ReactHtmlParser(smallContentArray[3],options)}</p>
                             <p>Views:{this.state.popularPosts[3].views}</p>
-                            </div>
+                            </Grid>
                             
-                            <div className={classes.ThumbnailContainer}>
+                            <Grid item className={classes.ThumbnailContainer}>
                                 <Paper>
                                     <div>
-
+                                        
                                     </div>
                                 </Paper>
-                            </div>
+                            </Grid>
                         
-                    </div>
+                    </Grid>
                     </NavLink>
                     <NavLink to={fifthUrl} className={classes.Links} >
-                    <div className={classes.Carousel} >
+                    <Grid 
+                    container
+                    direction="row"
+                    className={classes.Carousel} 
+                    >
                         
-                            <div className={classes.PostText}>
-                            <h1>{this.state.popularPosts[4].title}</h1>
-                            <p>{ReactHtmlParser(smallContentArray[4],options)}</p>
+                            <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
+                            <h1 style={{display:'inline'}}>{this.state.popularPosts[4].title}</h1>
+                            <p style={{display:'inline'}}>{ReactHtmlParser(smallContentArray[4],options)}</p>
                             <p>Views:{this.state.popularPosts[4].views}</p>
-                            </div>
+                            </Grid>
                             
-                            <div className={classes.ThumbnailContainer}>
+                            <Grid item className={classes.ThumbnailContainer}>
                                 <Paper>
                                     <div>
-
+                                        
                                     </div>
                                 </Paper>
-                            </div>
+                            </Grid>
                         
-                    </div>
-                    </NavLink>    
+                    </Grid>
+                    </NavLink>
+
                 
             </Slider>
             

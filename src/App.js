@@ -13,7 +13,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actionTypes from './Store/Actions/actionTypes';
 import EditPost from './Containers/Post/EditPost';
-
+import Dashboard from './Components/Dashboard/Dashboard';
 
 
 
@@ -72,6 +72,7 @@ const theme = createMuiTheme({
                 <Route path='/post/:id' component={Post} ></Route>
                 <Route path = '/editpost/:id' component={EditPost}></Route>
                 <Route path='/createpost' component={Editor} ></Route>
+                <Route path = '/dashboard' component = {Dashboard} ></Route>
                 <Route path='/' exact component={BlogBuilder}></Route>
             </Switch>
           </div>

@@ -4,14 +4,15 @@ import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'font-awesome/css/font-awesome.css';
 import FroalaEditor from 'react-froala-wysiwyg';
-import { Button, Paper } from '@material-ui/core';
+import { Button, Paper, TextField, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
-
+import Thumbnail from '../ImageUploadPreviev/ImageUploadPreview';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const styles = {
     button: {
@@ -20,12 +21,55 @@ const styles = {
     },
     TitleContainer: {
         padding: '5%'
+    },
+    ThumbnailContainer: {
+        paddingLeft: '5%',
+        paddingRight: '5%',
+
+    },
+    EditorContainer: {
+        padding: '5%'
+    },
+    CategoryContainer: {
+        paddingLeft: '5%',
+        paddingRight: '5%',
+        paddingBottom: '5%'
     }
+
 }
+
+const categories = [
+    {
+        value: 'TECHNOLOGY',
+        label: 'TECHNOLOGY'
+    },
+    {
+        value: 'TRAVEL',
+        label: 'TRAVEL'
+    },
+    {
+        value: 'STYLE',
+        label: 'STYLE'
+    },
+    {
+        value: 'BUSINESS',
+        label: 'BUSINESS'
+    },
+    {
+        value: 'POLITICS',
+        label: 'POLITICS'
+    },
+    {
+        value: 'SCIENCE',
+        label: 'SCIENCE'
+    },
+
+];
 
 class Editor extends Component {
     state = {
-        model: ''
+        model: '',
+        Category: 'Technology'
     }
 
     config = {
@@ -62,6 +106,13 @@ class Editor extends Component {
 
     }
 
+    handleCategoryChange = name => event => {
+console.log(name)
+        this.setState({
+        Category: event.target.value,
+        });
+    };
+
     handlePost = () => {
         axios.post('post/create', {
             title: document.getElementById('postTitle').value,
@@ -86,17 +137,50 @@ class Editor extends Component {
                     <div className={classes.TitleContainer}>
                         <FormControl className={classes.formControl} aria-describedby="PostTitle" fullWidth>
                             <InputLabel htmlFor="postTitle">Post Title</InputLabel>
-                            <Input id="postTitle" value={this.state.name} onChange={this.handleChange} />
+                            <Input id="postTitle"  onChange={this.handleChange} />
                             <FormHelperText id="postTitle"> Your Post Title Goes Here</FormHelperText>
                         </FormControl>
                     </div>
 
-                    <FroalaEditor tag='textarea'
-                        model={this.state.model}
-                        onModelChange={this.handleModelChange}
-                        config={this.config}
+                    <div className={classes.CategoryContainer}>
+                        <TextField
+                            select
+                            fullWidth
+                            // className={classNames(classes.margin, classes.textField)}
+                            variant="outlined"
+                            label="With Select"
+                            value={this.state.Category}
+                            onChange={this.handleCategoryChange('Catergory')}
+                            InputProps={{
+                                startAdornment: <InputAdornment position="start">Category</InputAdornment>,
+                            }}
+                        >
+                            {categories.map(option => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </div>
 
-                    />
+
+                    <div className={classes.ThumbnailContainer}>
+                        <InputLabel>Upload Your Thumbnail</InputLabel>
+                        <Thumbnail />
+                    </div>
+
+
+
+                    <div className={classes.EditorContainer}>
+                        <FroalaEditor tag='textarea'
+                            model={this.state.model}
+                            onModelChange={this.handleModelChange}
+                            config={this.config}
+
+                        />
+                    </div>
+
+
                     <Button variant="contained" color="primary" className={classes.button} onClick={this.handlePost}>Post</Button>
                 </Paper>
 

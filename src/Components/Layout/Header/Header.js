@@ -85,6 +85,9 @@ const style = theme => ({
           },
         },
       },
+      HeaderContainer:{
+          zIndex:1000
+      }
 });
 
 class Header extends React.Component {
@@ -110,7 +113,7 @@ class Header extends React.Component {
    
         const { classes } = this.props;
     return (
-        <AppBar position="fixed" color="primary" >
+        <AppBar position="fixed" color="primary" className={classes.HeaderContainer} >
             <Toolbar>
                 <Typography variant="title" color="inherit">
                     HEADER
@@ -187,7 +190,7 @@ class Header extends React.Component {
                         >
           <NavLink to="/" className={classes.Links} ><MenuItem onClick={this.handleClose}>Home</MenuItem></NavLink>
           <Divider />
-          <NavLink to="/dashnoard" className={classes.Links}><MenuItem onClick={this.handleClose}>Dashboard</MenuItem></NavLink>
+          <NavLink to="/dashboard" className={classes.Links}><MenuItem onClick={this.handleClose}>Dashboard</MenuItem></NavLink>
           <Divider />
           <NavLink to="/profile" className={classes.Links} ><MenuItem onClick={this.handleClose}>Profile</MenuItem></NavLink>
           <Divider />

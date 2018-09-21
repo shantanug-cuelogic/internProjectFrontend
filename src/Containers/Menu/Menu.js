@@ -52,12 +52,7 @@ const styles = theme => ({
      
 
   },
-  PostContainer:{
-    overflowy: 'auto',
-    height:'auto',
-    width:'100%'
 
-  }
 });
 
 class FloatingActionButtonZoom extends React.Component {
@@ -186,14 +181,14 @@ class FloatingActionButtonZoom extends React.Component {
           index={this.state.value}
           onChangeIndex={this.handleChangeIndex}
         >
-          <TabContainer dir={theme.direction} className={classes.PostContainer}>
+          <TabContainer dir={theme.direction} >
             {newPosts}
            </TabContainer>
-          <TabContainer dir={theme.direction} className={classes.PostContainer}>
+          <TabContainer dir={theme.direction} >
           {recentlyUpdatedPosts}
                 
           </TabContainer>
-          <TabContainer dir={theme.direction} className={classes.PostContainer}>
+          <TabContainer dir={theme.direction} s>
             {mostLikedPosts}
           </TabContainer>
         </SwipeableViews>

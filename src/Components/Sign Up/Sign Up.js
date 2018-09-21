@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { Paper, TextField, Input, Grid , Avatar, Divider } from '@material-ui/core';
 import axios from 'axios';
-import ProfileUpload  from './ProfileImageUpload/ProfileImageUpload';
+import ProfileUpload  from '../ImageUploadPreviev/ImageUploadPreview';
 
 const styles = theme => ({
   root: {
@@ -72,6 +72,12 @@ class SignUpProcess extends React.Component {
     image:""
 
   };
+
+  handleAnswer = (event) => {
+    this.setState({
+      answer : event.target.value
+    })
+  }
 
   handleNext = () => {
     const { activeStep } = this.state;
@@ -213,6 +219,8 @@ class SignUpProcess extends React.Component {
             type="password"
             label="Answer"
             helperText="Enter Your Answer"
+            onChange={this.handleAnswer}
+            value={this.state.answer}
           >
           </TextField>
      </div>
@@ -290,8 +298,7 @@ class SignUpProcess extends React.Component {
             </div>
           )}
         </div>
-        <Typography>{this.state.firstName}</Typography>
-        <Typography>{this.state.question}</Typography>
+      
       </div>
     );
   }

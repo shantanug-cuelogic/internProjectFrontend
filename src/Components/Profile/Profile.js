@@ -37,22 +37,7 @@ Divider : {
 
 class Profile extends React.Component{
 
-    state = {
-        userdata : {}
-    }
-
-    componentDidMount() {
-        axios.get('/userprofile/'+this.props.userId)
-
-        .then((response)=>{
-            console.log(response.data[0])
-            this.setState({userdata : response.data[0]})
-        })
-        .catch((error)=>{
-            console.log(error);
-        });
-        console.log('===>',this.props.userId)
-    }
+   
     
     render() {
         const {classes} = this.props;
@@ -64,16 +49,16 @@ class Profile extends React.Component{
                 >
                     <Grid item style = {{marginBottom:20}}>
                         <Paper className={classes.paper}>
-                            <Avatar src="burger-logo.png" className={classes.ProfileAvatar} />
+                            <Avatar src={this.props.profileImage} className={classes.ProfileAvatar} />
                         </Paper>
                     </Grid>
                 </Grid>
                 <Divider className={classes.Divider} />
-                <Typography variant="display2" > {this.state.userdata.firstName +" "+this.state.userdata.lastName}</Typography>
+                <Typography variant="display2" > {this.props.firstName +" "+this.props.lastName}</Typography>
                 <Divider className={classes.Divider} />
                 <Typography variant="display1" >No of Post: 99 </Typography>
                 <Divider className={classes.Divider} />
-                <Typography variant="title" > {this.state.userdata.email}</Typography>
+                <Typography variant="title" > {this.props.email}</Typography>
                 <Divider className={classes.Divider} />
                 { this.props.auth ? <Button color="primary" variant="contained"> Edit</Button> :null}
                 
@@ -85,7 +70,12 @@ class Profile extends React.Component{
 const mapStateToProps = state => {
     return {
     auth: state.authReducer.auth,
-    userId: state.authReducer.userId
+    userId: state.authReducer.userId.email,
+    firstName:state.authReducer.firstName,
+    lastName:state.authReducer.lastName,
+    email:state.authReducer.email,
+    profileImage:state.authReducer.profileImage,
+    isAdmin: state.authReducer.isAdmin
     }
 }
 

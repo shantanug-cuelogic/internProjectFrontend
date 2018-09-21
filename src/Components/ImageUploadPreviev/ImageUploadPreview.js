@@ -2,7 +2,7 @@ import React from 'react';
 import { Paper, TextField, Input, Grid , Avatar, Divider, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import {connect } from 'react-redux';
-import * as actionTypes from '../../../Store/Actions/actionTypes';
+import * as actionTypes from '../../Store/Actions/actionTypes';
 const styles = theme => ({
     root: {
       width: '90%',
@@ -33,6 +33,9 @@ const styles = theme => ({
       height:150,
       width:150
   },
+  Input : {
+    
+    }
   });
 
 
@@ -79,9 +82,10 @@ class Upload extends React.Component {
         helperText="Upload Yoour Profile Picture"
         name="profilePicture"
         onChange={this.handleChange}
+        className={classes.Input}
       >
       </Input>
-      <Divider />
+ 
    
  </div>
     );
