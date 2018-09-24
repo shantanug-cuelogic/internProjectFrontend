@@ -107,7 +107,6 @@ class Editor extends Component {
     }
 
     handleCategoryChange = name => event => {
-console.log(name)
         this.setState({
         Category: event.target.value,
         });
@@ -117,7 +116,7 @@ console.log(name)
         axios.post('post/create', {
             title: document.getElementById('postTitle').value,
             postContent: this.state.model,
-            category: 'someCategory',
+            category: this.state.Category,
             authToken: localStorage.getItem('authToken')
         })
             .then((response) => {

@@ -9,8 +9,14 @@ import { createStore, combineReducers } from 'redux';
 import authReducer from './Store/Reducer/auth';
 import postReducer from './Store/Reducer/postReducer';
 import signUpReducer from './Store/Reducer/signUp';
+import categoryPostReducer from './Store/Reducer/categoryPostReducer';
 
-const store = createStore(combineReducers({ authReducer: authReducer, postReducer: postReducer, signUpReducer: signUpReducer }));
+const store = createStore(combineReducers(
+    { authReducer: authReducer,
+         postReducer: postReducer, 
+         signUpReducer: signUpReducer ,
+         categoryPostReducer:categoryPostReducer   
+        }));
 
 const app = (
     <Provider store={store}>

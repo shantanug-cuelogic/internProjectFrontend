@@ -4,7 +4,7 @@ import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'font-awesome/css/font-awesome.css';
 import FroalaEditor from 'react-froala-wysiwyg';
-import { Button, Paper } from '@material-ui/core';
+import { Button, Paper,TextField, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import Input from '@material-ui/core/Input';
@@ -14,6 +14,8 @@ import FormControl from '@material-ui/core/FormControl';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import { NavLink } from "react-router-dom";
+import InputAdornment from '@material-ui/core/InputAdornment';
+
 
 const styles = {
     button: {
@@ -22,8 +24,42 @@ const styles = {
     },
     TitleContainer: {
         padding: '5%'
+    },
+    CategoryContainer: {
+        paddingLeft: '5%',
+        paddingRight: '5%',
+        paddingBottom: '5%'
     }
 }
+
+const categories = [
+    {
+        value: 'TECHNOLOGY',
+        label: 'TECHNOLOGY'
+    },
+    {
+        value: 'TRAVEL',
+        label: 'TRAVEL'
+    },
+    {
+        value: 'STYLE',
+        label: 'STYLE'
+    },
+    {
+        value: 'BUSINESS',
+        label: 'BUSINESS'
+    },
+    {
+        value: 'POLITICS',
+        label: 'POLITICS'
+    },
+    {
+        value: 'SCIENCE',
+        label: 'SCIENCE'
+    },
+
+];
+
 class EditPost extends React.Component {
 
     state = {
@@ -61,16 +97,22 @@ class EditPost extends React.Component {
     handleModelChange = (model) => {
         this.setState({
             model: model,
-            
+            Category: 'Technology'
         });
     }
+
+    handleCategoryChange = name => event => {
+        this.setState({
+        Category: event.target.value,
+        });
+    };
     
     handleUpdatePost = () => {
         axios.put('/post/update',{
         postIdtoUpdate :this.props.postId,
 	    title : this.state.postTitle,
 	    postContent : this.state.model,
-	    category: "Updated category",
+	    category: this.state.Category,
 	     authToken: localStorage.getItem('authToken')
         })
         .then((response) => {
@@ -105,7 +147,26 @@ class EditPost extends React.Component {
                         <FormHelperText id="postTitle"> Update Your Post Title Here</FormHelperText>
                     </FormControl>
                 </div>
-
+                <div className={classes.CategoryContainer}>
+                        <TextField
+                            select
+                            fullWidth
+                            // className={classNames(classes.margin, classes.textField)}
+                            variant="outlined"
+                            label="With Select"
+                            value={this.state.Category}
+                            onChange={this.handleCategoryChange('Catergory')}
+                            InputProps={{
+                                startAdornment: <InputAdornment position="start">Category</InputAdornment>,
+                            }}
+                        >
+                            {categories.map(option => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </div>    
                 <FroalaEditor tag='textarea'
                     model={this.state.model}
                     onModelChange={this.handleModelChange}

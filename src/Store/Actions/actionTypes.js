@@ -17,3 +17,5 @@ export const IMAGE_FILE = 'IMAGE_FILE';
 
 export const POST_COMMENT = 'POST_COMMENT';
 export const DELETE_COMMENT = 'DELETE_COMMENT';
+
+export const FETCH_POST_CATEGORY = "FETCH_POST_CATEGORY";
