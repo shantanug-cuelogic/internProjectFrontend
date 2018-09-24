@@ -51,6 +51,22 @@ class Category extends React.Component {
     //     })
     // }
 
+    //  componentShouldUpdate() {
+    //     axios.get('/post/category/'+this.props.match.params.id)
+    //     .then((response)=>{
+        
+    //         if(response.data.success) {
+                   
+    //             this.props.categoryFetchPostReducer(response.data.result);
+    //             return true
+    //         }
+            
+    //     })
+    //     .catch((error)=>{
+    //         console.log(error);
+    //         return false;
+    //     })
+    // }
 render() {
 
 

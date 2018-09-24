@@ -15,6 +15,7 @@ import * as actionTypes from './Store/Actions/actionTypes';
 import EditPost from './Containers/Post/EditPost';
 import Dashboard from './Components/Dashboard/Dashboard';
 import Category from './Components/Category/Category';
+import SearchPost from './Components/SearchPost/SearchPost';
 
 
 
@@ -75,6 +76,7 @@ const theme = createMuiTheme({
                 <Route path='/createpost' component={Editor} ></Route>
                 <Route path = '/dashboard' component = {Dashboard} ></Route>
                 <Route path='/category/:id' component = {Category} ></Route>
+                <Route path ='/search' component={SearchPost} ></Route>
                 <Route path='/' exact component={BlogBuilder}></Route>
             </Switch>
           </div>

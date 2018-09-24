@@ -11,7 +11,8 @@ import ReactHtmlParser from 'react-html-parser';
 import { NavLink } from "react-router-dom";
 const styles = {
   card: {
-    maxWidth: 345,
+    width: 345,
+    height:330  
     
   },
   media: {
@@ -20,6 +21,9 @@ const styles = {
   Links:{
       textDecoration:'none',
       color:'black'
+  },
+  Divider : {
+    margin:'0'
   }
 };
 
@@ -56,13 +60,15 @@ const categoryGrid =(props) => {
           </Typography>
           <Typography component="p">
            
-           {ReactHtmlParser(props.postContent.substr(0,200),options)}
+           {ReactHtmlParser(props.postContent.substr(0,150),options)}
 
           </Typography>
         </CardContent>
       </CardActionArea>
-      <Divider />
+      <div className={classes.Divider}>
       Likes : {props.likes} Views : {props.views}
+      </div>
+      
       
     </Card>
     </NavLink>

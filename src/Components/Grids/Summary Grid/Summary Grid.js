@@ -30,7 +30,13 @@ const styles = theme => ({
     color: 'black',
     textDecoration: 'none'
   },
-
+  ThumbnailContainer : {
+    height:230,
+    width:400
+  },
+  Thumbnail:{
+    height:'23'
+  }
 });
 
 
@@ -145,7 +151,7 @@ function ComplexGrid(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <div className={classes.ThumbnailContainer}>
-                <img src={props.thumbnail}></img>
+                <img src={props.thumbnail} style={{height:230}}></img>
               </div>
             </Grid>
 

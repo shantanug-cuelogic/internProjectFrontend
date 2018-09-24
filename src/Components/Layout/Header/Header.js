@@ -17,6 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import axios from 'axios';
+import { withRouter } from 'react-router'
 
 
 const style = theme => ({
@@ -91,6 +92,7 @@ const style = theme => ({
 });
 
 class Header extends React.Component {
+   
     state = {
         anchorEl: null,
       };
@@ -108,14 +110,20 @@ class Header extends React.Component {
         this.props.resetPostReducer();
     }
 
-    handleSearch(e) {
+    handleSearch =(e) => {
         if(e.keyCode === 13 ) {
             let search = e.target.value;
             let url = '/post/search/?search='+search;
             axios.get(url)
             .then((response)=>{
                
-                console.log(response.data);
+             
+                this.props.history.push('/signin');
+                this.props.history.push({
+                    pathname: '/search',
+                    search: '?search='+search,
+                    state: { searchResult: response.data }
+                  })
                 
             })
             .catch((error)=>{
@@ -240,4 +248,4 @@ const mapDispatchToProps = dispatch =>{
 }
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(style)(Header));
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(withStyles(style)(Header)));
