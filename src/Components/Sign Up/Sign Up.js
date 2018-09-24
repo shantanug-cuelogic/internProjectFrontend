@@ -131,12 +131,13 @@ class SignUpProcess extends React.Component {
       email:this.state.email,
       securityQuestion:this.state.question,
       securityAnswer:this.state.answer,
-      headers: {
-        'content-type': 'multipart/form-data'
-              }
+     
     })
     .then((response)=>{
       console.log(response.data)
+      if(response.data.success) {
+        this.props.history.push('/signin');
+      }
     })
     .catch((error)=>{
       console.log(error);

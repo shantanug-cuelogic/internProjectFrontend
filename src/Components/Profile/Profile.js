@@ -60,7 +60,7 @@ class Profile extends React.Component{
                 <Divider className={classes.Divider} />
                 <Typography variant="title" > {this.props.email}</Typography>
                 <Divider className={classes.Divider} />
-                { this.props.auth ? <Button color="primary" variant="contained"> Edit</Button> :null}
+                {/* { this.props.auth ? <Button color="primary" variant="contained"> Edit</Button> :null} */}
                 
             </div>
         );

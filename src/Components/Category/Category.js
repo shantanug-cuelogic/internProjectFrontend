@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import CategoryGrid from '../Grids/Category Grid/CategoryGrid';
 import {Grid} from '@material-ui/core';
+import { withRouter } from 'react-router'
 
 
 
@@ -35,37 +36,45 @@ class Category extends React.Component {
         })
     }
 
-    componentDidUpdate() {
-        axios.get('/post/category/'+this.props.match.params.id)
-        .then((response)=>{
+    // componentDidUpdate() {
+    //     axios.get('/post/category/'+this.props.match.params.id)
+    //     .then((response)=>{
         
-            if(response.data.success) {
+    //         if(response.data.success) {
                    
-                this.props.categoryFetchPostReducer(response.data.result);
-            }
+    //             this.props.categoryFetchPostReducer(response.data.result);
+    //         }
             
-        })
-        .catch((error)=>{
-            console.log(error);
-        })
-    }
+    //     })
+    //     .catch((error)=>{
+    //         console.log(error);
+    //     })
+    // }
 
 render() {
-    let posts = null;
-     posts =  this.props.categoryPosts.map((post,index)=>{
-        return (
-            <Grid item>
-            <CategoryGrid
-            key={index}
-            postTitle = {post.title}
-            postContent = {post.postContent}
-            postId={post.postId}
-            likes={post.likes}
-            views ={post.views}
-            />
-            </Grid>
-        );
-    });
+
+
+    let posts =null ;
+    if(this.props.categoryPosts.length === 0 ) {
+        posts = <p>NO POST AVAILABLE FOR CURRENT CATEGORY</p>
+    }
+    else {
+        posts =  this.props.categoryPosts.map((post,index)=>{
+            return (
+                <Grid item>
+                <CategoryGrid
+                key={index}
+                postTitle = {post.title}
+                postContent = {post.postContent}
+                postId={post.postId}
+                likes={post.likes}
+                views ={post.views}
+                />
+                </Grid>
+            );
+        });
+    }
+     
     
         const {classes} = this.props;
         return(
@@ -110,4 +119,4 @@ const mapDispatchToProps = dispatch =>{
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Category));
+export default withRouter (connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Category)));

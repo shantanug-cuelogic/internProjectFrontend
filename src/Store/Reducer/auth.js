@@ -29,6 +29,7 @@ const reducer = (state = initialState , action) => {
             } 
 
             case actionTypes.AUTHENTICATE : {
+               
                 return {
                     ...state,
                     auth : true,

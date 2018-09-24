@@ -16,7 +16,7 @@ import * as actionTypes from '../../../Store/Actions/actionTypes';
 import Grid from '@material-ui/core/Grid';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
+import axios from 'axios';
 
 
 const style = theme => ({
@@ -108,9 +108,26 @@ class Header extends React.Component {
         this.props.resetPostReducer();
     }
 
+    handleSearch(e) {
+        if(e.keyCode === 13 ) {
+            let search = e.target.value;
+            let url = '/post/search/?search='+search;
+            axios.get(url)
+            .then((response)=>{
+               
+                console.log(response.data);
+                
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+            
+        }
+    }
+
+
     render() {
-        
-   
+       
         const { classes } = this.props;
     return (
         <AppBar position="fixed" color="primary" className={classes.HeaderContainer} >
@@ -136,6 +153,9 @@ class Header extends React.Component {
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
+              class="search"
+              id="searchString"
+              onKeyDown={this.handleSearch}
             />
           </div> 
 
