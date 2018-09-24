@@ -113,14 +113,25 @@ class Editor extends Component {
     };
 
     handlePost = () => {
-        axios.post('post/create', {
-            title: document.getElementById('postTitle').value,
-            postContent: this.state.model,
-            category: this.state.Category,
-            authToken: localStorage.getItem('authToken')
+       console.log(localStorage.getItem('authToken'));
+        const formData = new FormData();
+        formData.append('file',  document.getElementById('profilepic').files[0]);
+        formData.append('title', document.getElementById('postTitle').value);
+        formData.append('postContent', this.state.model);
+        formData.append('category', this.state.Category);
+        formData.append('authToken', localStorage.getItem('authToken'));
+        formData.append('userId',localStorage.getItem('userId'));
+   
+        
+        axios.post('post/create', formData,{
+          headers: {
+            'accept': 'application/json',
+            'Accept-Language': 'en-US,en;q=0.8',
+            'Content-Type': `multipart/form-data;`,
+          }
         })
             .then((response) => {
-                console.log(response)
+                console.log(response.data)
             })
             .catch((error) => {
                 console.log(error)

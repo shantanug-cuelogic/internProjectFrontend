@@ -6,15 +6,15 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { Paper, TextField, Input, Grid , Avatar, Divider } from '@material-ui/core';
+import { Paper, TextField, Input, Grid, Avatar, Divider } from '@material-ui/core';
 import axios from 'axios';
-import ProfileUpload  from '../ImageUploadPreviev/ImageUploadPreview';
+import ProfileUpload from '../ImageUploadPreviev/ImageUploadPreview';
 
 const styles = theme => ({
   root: {
-    width:'80%',
-    marginTop:'8%',
-    marginLeft:'10%'
+    width: '80%',
+    marginTop: '8%',
+    marginLeft: '10%'
   },
   backButton: {
     marginRight: theme.spacing.unit,
@@ -23,24 +23,24 @@ const styles = theme => ({
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit,
   },
-  FormContainer : {
-    padding:'5%'
+  FormContainer: {
+    padding: '5%'
   },
-  paper :{
-    height:200,
-    width:200
-},
+  paper: {
+    height: 200,
+    width: 200
+  },
 
-ProfileContainer : {
-    margin:'10%'
-},
+  ProfileContainer: {
+    margin: '10%'
+  },
 
-ProfileAvatar : {
-    marginTop:'',
-    marginLeft:25,
-    height:150,
-    width:150
-},
+  ProfileAvatar: {
+    marginTop: '',
+    marginLeft: 25,
+    height: 150,
+    width: 150
+  },
 });
 
 function getSteps() {
@@ -63,48 +63,48 @@ function getStepContent(stepIndex) {
 class SignUpProcess extends React.Component {
   state = {
     activeStep: 0,
-    firstName:"",
-    lastName:"",
-    email:"",
-    password:"",
-    question : "",
-    answer:"",
-    image:""
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    question: "",
+    answer: "",
+    image: ""
 
   };
 
   handleAnswer = (event) => {
     this.setState({
-      answer : event.target.value
+      answer: event.target.value
     })
   }
 
   handleNext = () => {
     const { activeStep } = this.state;
-    if(activeStep === 0) {
+    if (activeStep === 0) {
       this.setState({
-        firstName:document.getElementById('firstName').value,
-        lastName:document.getElementById('lastName').value,
-        email:document.getElementById('email').value,
-        password:document.getElementById('password').value
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
 
       })
     }
 
-    if(activeStep === 1) {
+    if (activeStep === 1) {
       this.setState({
-        question:document.getElementById('question').value,
-        answer:document.getElementById('answer').value
+        question: document.getElementById('question').value,
+        answer: document.getElementById('answer').value
       })
     }
-    if(activeStep === 2) {
+    if (activeStep === 2) {
       this.setState({
-        image:document.getElementById('profilepic').files[0],
-        
+        image: document.getElementById('profilepic').files[0],
+
       })
     }
-    
-    
+
+
     this.setState({
       activeStep: activeStep + 1,
     });
@@ -120,28 +120,41 @@ class SignUpProcess extends React.Component {
   handleSignin = () => {
 
     const formData = new FormData();
-    formData.append('file',formData,this.state.image)
+    formData.append('file', this.state.image);
+    formData.append('firstName', "shantanu");
+    formData.append('lastName', this.state.lastName);
+    formData.append('isAdmin', false);
+    formData.append('email', this.state.email);
+    formData.append('securityQuestion', this.state.question);
+    formData.append('securityAnswer', this.state.answer);
+    formData.append('password', this.state.password);
 
 
-    axios.post('/register',{
-      firstName:this.state.firstName,
-      lastName:this.state.lastName,
-      password: this.state.password,
-      isAdmin:false,
-      email:this.state.email,
-      securityQuestion:this.state.question,
-      securityAnswer:this.state.answer,
-     
-    })
-    .then((response)=>{
-      console.log(response.data)
-      if(response.data.success) {
-        this.props.history.push('/signin');
-      }
-    })
-    .catch((error)=>{
-      console.log(error);
-    })
+
+    axios.post('/register', formData,
+      // firstName:this.state.firstName,
+      // lastName:this.state.lastName,
+      // password: this.state.password,
+      // isAdmin:false,
+      // email:this.state.email,
+      // securityQuestion:this.state.question,
+      // securityAnswer:this.state.answer,
+      {
+        headers: {
+          'accept': 'application/json',
+          'Accept-Language': 'en-US,en;q=0.8',
+          'Content-Type': `multipart/form-data;`,
+        }
+      })
+      .then((response) => {
+        console.log(response.data)
+        if (response.data) {
+          //this.props.history.push('/signin');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
   handleReset = () => {
@@ -155,108 +168,108 @@ class SignUpProcess extends React.Component {
     const steps = getSteps();
     const { activeStep } = this.state;
 
-    let forms=null;
-   if(activeStep ===0) {
-     forms=<div>
-                      <TextField
-            fullWidth
-            id="firstName"
-            type="text"
-            label="Firstname"
-            helperText="Enter Your First Name"
-            
-          >
-          </TextField>
-          
-          <TextField
-            fullWidth
-            id="lastName"
-            type="text"
-            label="Lastname"
-            helperText="Enter Your Last Name"
-          >
-          </TextField>
-          <TextField
-            fullWidth
-            id="email"
-            type="email"
-            label="Email"
-            helperText="Enter Your Email"
-          >
-          </TextField>
-          <TextField
-            fullWidth
-            id="password"
-            type="password"
-            label="Password"
-            helperText="Enter Your Password"
-          >
-          </TextField>
-          <TextField
-            fullWidth
-            id="confirmPassword"
-            type="password"
-            label=" Confirm Password"
-            helperText="Enter Your Password Again"
-          >
-          </TextField>     
-     </div>
-   }
+    let forms = null;
+    if (activeStep === 0) {
+      forms = <div>
+        <TextField
+          fullWidth
+          id="firstName"
+          type="text"
+          label="Firstname"
+          helperText="Enter Your First Name"
 
-   else if(activeStep ===1 ){
-     forms = <div>
-       <TextField
-            fullWidth
-            id="question"
-            type="text"
-            label="Question"
-            helperText="Enter question"
-            
-          >
-          </TextField>
-          <TextField
-            fullWidth
-            id="answer"
-            type="password"
-            label="Answer"
-            helperText="Enter Your Answer"
-            onChange={this.handleAnswer}
-            value={this.state.answer}
-          >
-          </TextField>
-     </div>
-   }
-   else if(activeStep === 2) {
-    //  forms = <div>
-       
-    //    <Grid 
-    //             container
-    //             justify="center"
-    //             >
-    //                 <Grid item style = {{marginBottom:20}}>
-    //                     <Paper className={classes.paper}>
-    //                         <Avatar src="/images/default-user.png" className={classes.ProfileAvatar} />
-    //                     </Paper>
-    //                 </Grid>
-    //             </Grid>
-    //             <Divider /> 
-    //  <form  action="/profilePicUpload" method="POST" enctype="multipart/form-data">
-    //    <Input
-    //         fullWidth
-    //         id="profilepic"
-    //         type="file"
-    //         label=" Profile Picture"
-    //         helperText="Upload Yoour Profile Picture"
-    //         name="profilePicture"
-    //       >
-    //       </Input>
-    //       <Divider />
-    //       <Button color="primary" variant="contained" > Upload</Button>
-    //       </form>
-    //  </div>
-    forms = <ProfileUpload />
-     
-   }
+        >
+        </TextField>
+
+        <TextField
+          fullWidth
+          id="lastName"
+          type="text"
+          label="Lastname"
+          helperText="Enter Your Last Name"
+        >
+        </TextField>
+        <TextField
+          fullWidth
+          id="email"
+          type="email"
+          label="Email"
+          helperText="Enter Your Email"
+        >
+        </TextField>
+        <TextField
+          fullWidth
+          id="password"
+          type="password"
+          label="Password"
+          helperText="Enter Your Password"
+        >
+        </TextField>
+        <TextField
+          fullWidth
+          id="confirmPassword"
+          type="password"
+          label=" Confirm Password"
+          helperText="Enter Your Password Again"
+        >
+        </TextField>
+      </div>
+    }
+
+    else if (activeStep === 1) {
+      forms = <div>
+        <TextField
+          fullWidth
+          id="question"
+          type="text"
+          label="Question"
+          helperText="Enter question"
+
+        >
+        </TextField>
+        <TextField
+          fullWidth
+          id="answer"
+          type="password"
+          label="Answer"
+          helperText="Enter Your Answer"
+          onChange={this.handleAnswer}
+          value={this.state.answer}
+        >
+        </TextField>
+      </div>
+    }
+    else if (activeStep === 2) {
+      //  forms = <div>
+
+      //    <Grid 
+      //             container
+      //             justify="center"
+      //             >
+      //                 <Grid item style = {{marginBottom:20}}>
+      //                     <Paper className={classes.paper}>
+      //                         <Avatar src="/images/default-user.png" className={classes.ProfileAvatar} />
+      //                     </Paper>
+      //                 </Grid>
+      //             </Grid>
+      //             <Divider /> 
+      //  <form  action="/profilePicUpload" method="POST" enctype="multipart/form-data">
+      //    <Input
+      //         fullWidth
+      //         id="profilepic"
+      //         type="file"
+      //         label=" Profile Picture"
+      //         helperText="Upload Yoour Profile Picture"
+      //         name="profilePicture"
+      //       >
+      //       </Input>
+      //       <Divider />
+      //       <Button color="primary" variant="contained" > Upload</Button>
+      //       </form>
+      //  </div>
+      forms = <ProfileUpload />
+
+    }
     return (
       <div className={classes.root}>
         <Stepper activeStep={activeStep} alternativeLabel>
@@ -270,9 +283,9 @@ class SignUpProcess extends React.Component {
         </Stepper>
         <Paper>
           <div className={classes.FormContainer}>
-          {forms}
+            {forms}
           </div>
-          
+
         </Paper>
         <div>
           {this.state.activeStep === steps.length ? (
@@ -282,24 +295,24 @@ class SignUpProcess extends React.Component {
               <Button onClick={this.handleSignin}>Signin</Button>
             </div>
           ) : (
-            <div>
-              <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
               <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={this.handleBack}
-                  className={classes.backButton}
-                >
-                  Back
+                <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                <div>
+                  <Button
+                    disabled={activeStep === 0}
+                    onClick={this.handleBack}
+                    className={classes.backButton}
+                  >
+                    Back
                 </Button>
-                <Button variant="contained" color="primary" onClick={this.handleNext}>
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
+                  <Button variant="contained" color="primary" onClick={this.handleNext}>
+                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
-      
+
       </div>
     );
   }

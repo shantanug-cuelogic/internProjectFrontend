@@ -18,7 +18,8 @@ const style = {
         backgroundColor:'black',
         height:'500px',
         width:'40%',
-        float:'right'
+        float:'right',
+        textAlign:'center'
     },
     PostText : {
         float : 'left'
@@ -37,30 +38,35 @@ class Carousel extends React.Component {
             {
                 title:"",
                 postId:"",
-                postContent:''
+                postContent:'',
+                thumbnail:''
                 
             },
             {
                 title:"",
                 postId:"",
-                postContent:''                
+                postContent:'' ,
+                thumbnail:''               
             },
             {
                 title:"",
                 postId:"",
-                postContent:''
+                postContent:'',
+                thumbnail:''
                 
             },
             {
                 title:"",
                 postId:"",
-                postContent:''
+                postContent:'',
+                thumbnail:''
                 
             },
             {
                 title:"",
                 postId:"",
-                postContent:''
+                postContent:'',
+                thumbnail:''
             }
         ]
     }
@@ -138,7 +144,7 @@ class Carousel extends React.Component {
             slidesToShow: 1 ,
             speed: 6000,
             dots: true,
-            autoplay: true,
+            autoplay: false,
             autoplaySpeed: 2000,
             pauseOnHover: true,
             adaptiveHeight: false,
@@ -175,11 +181,10 @@ class Carousel extends React.Component {
                             </Grid>
                             
                             <Grid item className={classes.ThumbnailContainer}>
-                                <Paper>
-                                    <div>
-                                        
-                                    </div>
-                                </Paper>
+                             
+                                 
+                                        <img src={this.state.popularPosts[0].thumbnail}></img>
+                                    
                             </Grid>
                         
                     </Grid>

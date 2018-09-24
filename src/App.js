@@ -22,19 +22,19 @@ import Category from './Components/Category/Category';
 class App extends Component {
 
   componentDidMount(){
-    axios.post('/authenticate',{authToken:localStorage.getItem('authToken')})
-    .then((response) =>{
+    // axios.post('/authenticate',{authToken:localStorage.getItem('authToken')})
+    // .then((response) =>{
 
-      if(response.data.success) {
-        this.props.authenticate(true,localStorage.getItem('authToken'),localStorage.getItem('userId'));
-      }
-      else if(!response.data.success) {
-        this.props.authenticate(false);
-      }
-    })
-    .catch((error)=>{
+    //   if(response.data.success) {
+    //     this.props.authenticate(true,localStorage.getItem('authToken'),localStorage.getItem('userId'));
+    //   }
+    //   else if(!response.data.success) {
+    //     this.props.authenticate(false);
+    //   }
+    // })
+    // .catch((error)=>{
 
-    });
+    // });
   }
   
   

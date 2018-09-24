@@ -10,6 +10,8 @@ import green from '@material-ui/core/colors/green';
 import axios from 'axios';
 import SummaryGrid from '../../Components/Grids/Summary Grid/Summary Grid';
 import { Divider } from '@material-ui/core';
+import { connect } from 'react-redux';
+
 
 function TabContainer(props) {
   const { children, dir } = props;
@@ -125,6 +127,7 @@ class FloatingActionButtonZoom extends React.Component {
           likes ={"Likes"+element.likes}
           postId={element.postId}
           postDate={element.postDate}
+          thumbnail={element.thumbnail}
       />
       <Divider />
       </div> 
@@ -139,6 +142,7 @@ class FloatingActionButtonZoom extends React.Component {
           likes ={"Likes"+element.likes}
           postId={element.postId}
           postDate={element.postDate}
+          thumbnail={element.thumbnail}
       />
       <Divider />
       </div> 
@@ -154,6 +158,7 @@ class FloatingActionButtonZoom extends React.Component {
           likes ={"Likes :"+element.likes}
           postId={element.postId}
           postDate={element.postDate}
+          thumbnail={element.thumbnail}
       />
       <Divider />
       </div> 
@@ -203,4 +208,20 @@ FloatingActionButtonZoom.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(FloatingActionButtonZoom);
+
+const mapStateToProps = state => {
+  return {
+      auth: state.authReducer.auth,
+      userId: state.authReducer.userId,
+      postContent: state.postReducer.postContent,
+      postTitle: state.postReducer.postTitle,
+      postId: state.postReducer.postId,
+      postUserId: state.postReducer.userId,
+      allcomments: state.postReducer.allcomments,
+      allowedToLike: state.postReducer.allowedToLike,
+      likes: state.postReducer.likes,
+      views: state.postReducer.views
+  }
+}
+
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(FloatingActionButtonZoom));

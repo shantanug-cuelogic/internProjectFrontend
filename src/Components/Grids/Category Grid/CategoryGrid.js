@@ -47,7 +47,7 @@ const categoryGrid =(props) => {
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image="/blackimage.jpg"
+          image={props.thumbnail}
           title={props.postTitle}
         />
         <CardContent>
