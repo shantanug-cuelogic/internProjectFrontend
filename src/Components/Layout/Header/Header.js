@@ -177,7 +177,7 @@ class Header extends React.Component {
                       <Avatar
                         sizes='small'
                         alt="Burger logo" 
-                        src="/images/user-img.jpg" 
+                        src={this.props.profileImage} 
                         className={classes.button} 
                         aria-owns={this.state.anchorEl ? 'simple-menu' : null}
                         aria-haspopup="true"
@@ -227,7 +227,8 @@ class Header extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        auth: state.authReducer.auth
+        auth: state.authReducer.auth,
+        profileImage : state.authReducer.profileImage
     }
 };
 

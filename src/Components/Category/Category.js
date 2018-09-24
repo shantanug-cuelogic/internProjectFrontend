@@ -69,6 +69,7 @@ render() {
                 postId={post.postId}
                 likes={post.likes}
                 views ={post.views}
+                thumbnail={post.thumbnail}
                 />
                 </Grid>
             );
