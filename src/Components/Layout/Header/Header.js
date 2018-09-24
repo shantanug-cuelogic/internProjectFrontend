@@ -18,6 +18,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import axios from 'axios';
 import { withRouter } from 'react-router'
+import Switch from '@material-ui/core/Switch';
 
 
 const style = theme => ({
@@ -79,10 +80,12 @@ const style = theme => ({
         paddingLeft: theme.spacing.unit * 10,
         transition: theme.transitions.create('width'),
         width: '100%',
+        height:30,
         [theme.breakpoints.up('sm')]: {
           width: 120,
           '&:focus': {
             width: 400,
+            
           },
         },
       },
@@ -133,6 +136,12 @@ class Header extends React.Component {
         }
     }
 
+    handleChangeTheme =() => {
+        console.log(this.props.isDark);
+        this.props.changeThemeReducer(!this.props.isDark);
+
+    }
+
 
     render() {
        
@@ -166,6 +175,14 @@ class Header extends React.Component {
               onKeyDown={this.handleSearch}
             />
           </div> 
+          <Switch
+          checked={this.state.checkedB}
+            onChange={this.handleChangeTheme}          
+              checked={!this.props.isDark}
+            color="primary"
+        />
+
+
 
                     {this.props.auth ?
 
@@ -236,14 +253,16 @@ class Header extends React.Component {
 const mapStateToProps = state => {
     return {
         auth: state.authReducer.auth,
-        profileImage : state.authReducer.profileImage
+        profileImage : state.authReducer.profileImage,
+        isDark : state.themeReducer.isDark
     }
 };
 
 const mapDispatchToProps = dispatch =>{
     return {
         logout : () => dispatch({type: actionTypes.LOGOUT }),
-        resetPostReducer : () => dispatch({type:actionTypes.RESET_POST_CONTENT})
+        resetPostReducer : () => dispatch({type:actionTypes.RESET_POST_CONTENT}),
+        changeThemeReducer : (status) => dispatch({type:actionTypes.THEME_HANDLER ,ChangeTheme:status })
     }
 }
 

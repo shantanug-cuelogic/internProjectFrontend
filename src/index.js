@@ -10,12 +10,14 @@ import authReducer from './Store/Reducer/auth';
 import postReducer from './Store/Reducer/postReducer';
 import signUpReducer from './Store/Reducer/signUp';
 import categoryPostReducer from './Store/Reducer/categoryPostReducer';
+import themeReducer from './Store/Reducer/themeReducer';
 
 const store = createStore(combineReducers(
     { authReducer: authReducer,
          postReducer: postReducer, 
          signUpReducer: signUpReducer ,
-         categoryPostReducer:categoryPostReducer   
+         categoryPostReducer:categoryPostReducer,
+         themeReducer:themeReducer   
         }));
 
 const app = (

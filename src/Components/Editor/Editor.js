@@ -113,8 +113,7 @@ class Editor extends Component {
     };
 
     handlePost = () => {
-       console.log(localStorage.getItem('authToken'));
-        const formData = new FormData();
+       const formData = new FormData();
         formData.append('file',  document.getElementById('profilepic').files[0]);
         formData.append('title', document.getElementById('postTitle').value);
         formData.append('postContent', this.state.model);

@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Card , Divider } from '@material-ui/core';
 import CardActionArea from '@material-ui/core/CardActionArea';
-
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import ReactHtmlParser from 'react-html-parser';
 import { NavLink } from "react-router-dom";
+import { withRouter } from 'react-router'
+
 const styles = {
   card: {
     width: 345,
@@ -17,6 +18,7 @@ const styles = {
   },
   media: {
     height: 140,
+    width:345
   },
   Links:{
       textDecoration:'none',
@@ -79,4 +81,4 @@ categoryGrid.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(categoryGrid);
+export default withRouter(withStyles(styles)(categoryGrid));

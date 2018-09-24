@@ -15,11 +15,12 @@ const style = {
         height:'500px'
     },
     ThumbnailContainer : {
-        backgroundColor:'black',
+        
         height:'500px',
         width:'40%',
         float:'right',
-        textAlign:'center'
+        textAlign:'center',
+        
     },
     PostText : {
         float : 'left'
@@ -181,10 +182,7 @@ class Carousel extends React.Component {
                             </Grid>
                             
                             <Grid item className={classes.ThumbnailContainer}>
-                             
-                                 
                                         <img src={this.state.popularPosts[0].thumbnail}></img>
-                                    
                             </Grid>
                         
                     </Grid>
@@ -203,11 +201,7 @@ class Carousel extends React.Component {
                             </Grid>
                             
                             <Grid item className={classes.ThumbnailContainer}>
-                                <Paper>
-                                    <div>
-                                        
-                                    </div>
-                                </Paper>
+                                        <img src={this.state.popularPosts[1].thumbnail}></img>
                             </Grid>
                         
                     </Grid>
@@ -226,11 +220,7 @@ class Carousel extends React.Component {
                             </Grid>
                             
                             <Grid item className={classes.ThumbnailContainer}>
-                                <Paper>
-                                    <div>
-                                        
-                                    </div>
-                                </Paper>
+                                        <img src={this.state.popularPosts[2].thumbnail}></img>
                             </Grid>
                         
                     </Grid>
@@ -247,14 +237,10 @@ class Carousel extends React.Component {
                             <p style={{display:'inline'}}>{ReactHtmlParser(smallContentArray[3],options)}</p>
                             <p>Views:{this.state.popularPosts[3].views}</p>
                             </Grid>
-                            
                             <Grid item className={classes.ThumbnailContainer}>
-                                <Paper>
-                                    <div>
-                                        
-                                    </div>
-                                </Paper>
+                                        <img src={this.state.popularPosts[3].thumbnail}></img>
                             </Grid>
+                        
                         
                     </Grid>
                     </NavLink>
@@ -272,11 +258,7 @@ class Carousel extends React.Component {
                             </Grid>
                             
                             <Grid item className={classes.ThumbnailContainer}>
-                                <Paper>
-                                    <div>
-                                        
-                                    </div>
-                                </Paper>
+                                        <img src={this.state.popularPosts[4].thumbnail}></img>
                             </Grid>
                         
                     </Grid>

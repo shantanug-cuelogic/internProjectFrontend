@@ -41,7 +41,42 @@ class App extends Component {
   
   render() {
 
-const theme = createMuiTheme({
+// const theme = createMuiTheme({
+//   palette: {
+//     primary: {
+//       light: '#757ce8',
+//       main: '#3f50b5',
+//       dark: '#002884',
+//       contrastText: '#fff',
+//     },
+//     secondary: {
+//       light: '#ff7961',
+//       main: '#f44336',
+//       dark: '#ba000d',
+//       contrastText: '#000',
+//     },
+//   },
+// })
+
+const theme = 
+this.props.isDark ?
+createMuiTheme({
+  palette: {
+    primary: {
+      light: '#616161',
+      main: '#212121',
+      dark: '#212121',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },
+  },
+}) : 
+createMuiTheme({
   palette: {
     primary: {
       light: '#757ce8',
@@ -57,6 +92,7 @@ const theme = createMuiTheme({
     },
   },
 })
+
 
 
     return (
@@ -91,7 +127,8 @@ const theme = createMuiTheme({
 const mapStateToProps = state =>{
   return {
     auth : state.authReducer.auth,
-    userId : state.authReducer.userId
+    userId : state.authReducer.userId,
+    isDark: state.themeReducer.isDark,
   }
 }
 
