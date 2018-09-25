@@ -105,7 +105,7 @@ class SignIn extends React.Component {
                     if (response.data.success) {
                         this.setState({
                             open: true,
-                            message:"Succesfully Signed In"
+                            snackbarMessage:"Succesfully Signed In"
                         });
 
                         localStorage.setItem("authToken", response.data.authToken);
@@ -123,6 +123,7 @@ class SignIn extends React.Component {
                                     userDetails.data[0].email,
                                     userDetails.data[0].isAdmin
                                 );
+
                                 this.props.history.push('/');
 
                             })
@@ -201,7 +202,7 @@ class SignIn extends React.Component {
                     open={this.state.open}
                     TransitionComponent={this.TransitionUp}
                     variant="error"
-                    autoHideDuration={6000}
+                    autoHideDuration={1000}
                     onClose={this.handleCloseSnackBar}
                     ContentProps={{
                         'aria-describedby': 'message-id',
@@ -233,8 +234,7 @@ const mapDispatchToProps = dispatch => {
             profileImage: profileImage,
             email: email,
             isAdmin: isAdmin
-
-        })
+       })
     }
 }
 

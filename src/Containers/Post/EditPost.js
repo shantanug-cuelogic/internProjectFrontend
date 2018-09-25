@@ -4,7 +4,7 @@ import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'font-awesome/css/font-awesome.css';
 import FroalaEditor from 'react-froala-wysiwyg';
-import { Button, Paper,TextField, MenuItem } from '@material-ui/core';
+import { Button, Paper,TextField, MenuItem, Snackbar } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import Input from '@material-ui/core/Input';
@@ -36,7 +36,8 @@ class EditPost extends React.Component {
     state = {
         model :this.props.postContent,
         postTitle:this.props.postTitle,
-    
+        open:false,
+        snackbarMessage:''
     }
     
     config = {
@@ -91,6 +92,12 @@ class EditPost extends React.Component {
         })
         .then((response) => {
             if(response.data.success) {
+
+                this.setState({
+                    open:true,
+                    snackbarMessage:"Post Updated Successfully!!"
+                })
+
                 this.props.handleUpdatePostToStore(this.state.model,this.state.postTitle);
                 this.props.history.push('/post/'+this.props.postId);
             }
@@ -99,6 +106,15 @@ class EditPost extends React.Component {
             console.log(error);
         })
     }
+
+    handleCloseSnackBar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({ open: false });
+    };
+
 
     handlePostTitleChange = () =>{
         this.setState ({
@@ -130,6 +146,23 @@ class EditPost extends React.Component {
                />
                 <Button variant="contained" color="primary" className={classes.button}  onClick={this.handleUpdatePost} >Update Post</Button>
             </Paper>
+            <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    open={this.state.open}
+                    TransitionComponent={this.TransitionUp}
+                    variant="error"
+                    autoHideDuration={6000}
+                    onClose={this.handleCloseSnackBar}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">{this.state.snackbarMessage}</span>}
+
+                />
+
         </div>
         );
     }

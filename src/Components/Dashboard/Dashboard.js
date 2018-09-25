@@ -6,7 +6,7 @@ import Profile from '../Profile/Profile';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-
+import LikeIcon from '@material-ui/icons/ThumbUp';
 
 const drawerWidth = 340;
 const styles = theme => ({
@@ -36,16 +36,18 @@ class DashBoard extends React.Component {
         spacing: '16',
         views:0,
         likes:0,
-        posts:0
+        posts:0,
+        comments:0
     };
 
     componentDidMount() {
         let likeUrl ='/totallikes/'+this.props.userId;
         let viewUrl ='/totalviews/'+this.props.userId;
         let postUrl ='/totalposts/'+this.props.userId;
-        console.log(this.props.userId);
+        let commentUrl = '/totalcomments/'+this.props.userId;
         axios.get(likeUrl)
         .then((response)=>{
+            console.log(response.data);
             if(response.data.success) {
               
                 this.setState({
@@ -59,8 +61,8 @@ class DashBoard extends React.Component {
         });
         axios.get(viewUrl)
         .then((response)=>{
+            console.log(response.data);
             if(response.data.success) {
-                console.log("TotalViews============>",response.data.viewCount)
                 this.setState({
                     views:response.data.viewCount
                 })
@@ -73,11 +75,25 @@ class DashBoard extends React.Component {
         axios.get(postUrl)
         .then((response)=>{
             if(response.data.success) {
-                console.log("TotalPosts============>",response.data.postCount)
              this.setState({
                 posts:response.data.postCount
              })
                 
+            }
+            
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
+
+        axios.get(commentUrl)
+        .then((response)=>{
+            
+            console.log(response.data)
+            if(response.data.success) {
+                this.setState({
+                    comments:response.data.commentCount
+                });
             }
             
         })
@@ -123,28 +139,34 @@ class DashBoard extends React.Component {
 
                             <Grid item >
                                 <Paper className={classes.paper} >
-                                    <Typography>
+                                    <img src="/require/likeicon.jpg" alt="Like Icon" height="200px"></img>
+                                    <Typography variant="body2">
                                         Total No Of Likes : {this.state.likes}
                                     </Typography>
                                 </Paper>
                             </Grid>
                             <Grid item >
                                 <Paper className={classes.paper} >
-                                <Typography>
+                                <img src="/require/viewicon.jpg" alt="View Icon" height="200px"></img>
+                                <Typography variant="body2">
                                         Total No Of Views : {this.state.views}
                                     </Typography>
                                 </Paper>
                             </Grid>
                             <Grid item >
                                 <Paper className={classes.paper} >
-                                <Typography>
+                                <img src="/require/posticon.jpg" alt="Post Icon" height="200px"></img>
+                                <Typography variant="body2" >
                                         Total No Of Posts : {this.state.posts}
                                     </Typography>
                                 </Paper>
                             </Grid>
                             <Grid item >
                                 <Paper className={classes.paper} >
-
+                                <img src="/require/commenticon.jpg" alt="Post Icon" height="200px"></img>
+                                <Typography variant="body2" >
+                                        Total No Of Comments : {this.state.comments}
+                                    </Typography>
                                 </Paper>
                             </Grid>
 

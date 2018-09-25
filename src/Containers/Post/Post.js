@@ -91,6 +91,7 @@ class Post extends Component {
         lastName: '',
         likeAllowed: true,
         open: false,
+        snackbarMessage : ''
     }
 
     componentDidMount() {
@@ -204,6 +205,10 @@ class Post extends Component {
                         commentContent: comment
                     }
                     document.getElementById('comment').value = "";
+                    this.setState({
+                        open:true,
+                        snackbarMessage:"Comment Posted !!"
+                    })
                     this.props.postCommentToReducer(updatedCommentData);
                 }
             })
@@ -223,6 +228,11 @@ class Post extends Component {
         })
             .then((response) => {
                 if (response.data.success) {
+                    this.setState({
+                        open:true,
+                        snackbarMessage:"Post Deleted Succesfully"
+                    })
+
                     this.props.deletePostToReducer();
                     this.props.history.push('/');
 
@@ -254,7 +264,8 @@ class Post extends Component {
                         if (commentData.commentId === commentId) {
                             this.props.deleteCommentToReducer(id);
                             this.setState({
-                                open: true
+                                open:true,
+                                snackbarMessage:"Comment Deleted Succesfully"
                             })
                         }
                     });
@@ -451,7 +462,7 @@ class Post extends Component {
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">Comment Deleted</span>}
+                    message={<span id="message-id">{this.state.snackbarMessage}</span>}
 
                 />
 

@@ -1,5 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router'
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Divider from '@material-ui/core/Divider';
@@ -75,4 +77,4 @@ const mapDispatchToProps = dispatch =>{
 }
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(style)(Header));
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(withStyles(style)(Header)));

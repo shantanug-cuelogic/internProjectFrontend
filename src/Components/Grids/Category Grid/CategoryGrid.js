@@ -26,6 +26,11 @@ const styles = {
   },
   Divider : {
     margin:'0'
+  },
+  CardContent:{
+    height: 140,
+    width:345,
+    paddingLeft:0
   }
 };
 
@@ -44,41 +49,46 @@ function transform(node, index) {
    
   }
 
-const categoryGrid =(props) => {
-    const url = "/post/"+props.postId
-  const { classes } = props;
-  return (
-    <NavLink to={url} className={classes.Links} >
-    <Card className={classes.card}>
-      <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image={props.thumbnail}
-          title={props.postTitle}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="headline" component="h2">
-            {props.postTitle}
-          </Typography>
-          <Typography component="p">
-           
-           {ReactHtmlParser(props.postContent.substr(0,150),options)}
-
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-      <div className={classes.Divider}>
-      Likes : {props.likes} Views : {props.views}
+class CategoryGrid extends React.PureComponent  {
+   
+  render() {
+    const url = "/post/"+this.props.postId
+    const { classes } = this.props;
+    return (
+      <div>
+      <NavLink to={url} className={classes.Links} >
+      <Card className={classes.card}>
+        <CardActionArea>
+          <CardMedia
+            className={classes.media}
+            image={this.props.thumbnail}
+            title={this.props.postTitle}
+          />
+          <CardContent className={classes.CardContent}>
+            <Typography gutterBottom variant="headline" component="h2">
+              {this.props.postTitle}
+            </Typography>
+            <Typography component="p" className={classes.CardPostContent}>
+             
+             {ReactHtmlParser(this.props.postContent.substr(0,150),options)}
+  
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+        <div className={classes.Divider}>
+        Likes : {this.props.likes} Views : {this.props.views}
+        </div>
+        
+        
+      </Card>
+      </NavLink>
       </div>
-      
-      
-    </Card>
-    </NavLink>
-  );
+    );
+  
+  
+}
 }
 
-categoryGrid.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
-export default withRouter(withStyles(styles)(categoryGrid));
+
+export default withRouter(withStyles(styles)(CategoryGrid));

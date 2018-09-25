@@ -11,7 +11,8 @@ import axios from 'axios';
 import ProfileUpload from '../ImageUploadPreviev/ImageUploadPreview';
 import validator from 'validator';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
-
+import { connect } from 'react-redux';
+import * as actionTypes from '../../Store/Actions/actionTypes';
 const styles = theme => ({
   root: {
     width: '80%',
@@ -213,7 +214,56 @@ class SignUpProcess extends React.Component {
         .then((response) => {
   
           if (response.data.success) {
-            this.props.history.push('/signin');
+            axios.post('/login', {
+              "email": this.state.formData.email,
+              "password": this.state.formData.password
+          })
+              .then((response) => {
+                  if (response.data.success) {
+                      this.setState({
+                          open: true,
+                          snackbarmsg:`WELCOME ${this.state.formData.firstName} `
+                      });
+
+                      localStorage.setItem("authToken", response.data.authToken);
+                      localStorage.setItem('userId', response.data.userId);
+                      axios.get('/userprofile/' + response.data.userId)
+
+                          .then((userDetails) => {
+                              // console.log(userDetails.data[0])
+
+                              this.props.handleSignInState(response.data.authToken,
+                                  parseInt(response.data.userId),
+                                  userDetails.data[0].firstName,
+                                  userDetails.data[0].lastName,
+                                  userDetails.data[0].profileImage,
+                                  userDetails.data[0].email,
+                                  userDetails.data[0].isAdmin
+                              );
+
+                              this.props.history.push('/');
+
+                          })
+                          .catch((error) => {
+                              console.log(error);
+                          });
+                      //  console.log('===>', this.props.userId)
+                  }
+
+                  else {
+                      this.setState({
+                          open:true,
+                          snackbarMessage:"Username OR Password is wrong"
+                      })
+                  }
+
+              })
+              .catch((error) => {
+                  console.log(error)
+              })
+
+
+           
           }
           else {
             if (response.data.message.errno === 1062) {
@@ -357,4 +407,28 @@ SignUpProcess.propTypes = {
   classes: PropTypes.object,
 };
 
-export default withStyles(styles)(SignUpProcess);
+const mapStateToProps = state => {
+  return {
+      auth: state.authReducer.auth,
+      authToken: state.authReducer.authToken,
+      firstName: state.authReducer.firstName
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+      handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin) => dispatch({
+          type: actionTypes.AUTHENTICATE,
+          authToken: token, userId: id,
+          firstName: firstName,
+          lastName: lastName,
+          profileImage: profileImage,
+          email: email,
+          isAdmin: isAdmin
+     })
+  }
+}
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(SignUpProcess));

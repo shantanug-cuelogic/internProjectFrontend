@@ -53,7 +53,7 @@ class Upload extends React.Component {
         this.setState({
             file: file
         })
-        this.props.imageStoreToReducer(event.target.files[0]);
+        // this.props.imageStoreToReducer(event.target.files[0]);
     }
 
     render() {
@@ -77,7 +77,6 @@ class Upload extends React.Component {
                     fullWidth
                     id="profilepic"
                     type="file"
-                    value=""
                     label=" Profile Picture"
                     helperText="Upload Yoour Profile Picture"
                     name="profilePicture"

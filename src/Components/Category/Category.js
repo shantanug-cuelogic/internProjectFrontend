@@ -18,7 +18,7 @@ const styles = {
     
 }
 
-class Category extends React.Component {
+class Category extends React.PureComponent {
 
     componentDidMount() {
         
@@ -67,6 +67,7 @@ class Category extends React.Component {
     //         return false;
     //     })
     // }
+
 render() {
 
 

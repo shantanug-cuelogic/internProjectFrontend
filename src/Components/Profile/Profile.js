@@ -4,7 +4,7 @@ import { Paper, Grid, Typography, Button } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import {connect } from 'react-redux';
-
+import { NavLink } from 'react-router-dom';
 
 const styles =  themes => ({
 paper :{
@@ -40,6 +40,7 @@ class Profile extends React.Component{
     
     render() {
         const {classes} = this.props;
+       let url = '/updateprofile/' + this.props.userId;
         return(
             <div className={classes.ProfileContainer }>
                 <Grid 
@@ -59,7 +60,7 @@ class Profile extends React.Component{
                 <Divider className={classes.Divider} />
                 <Typography variant="title" > {this.props.email}</Typography>
                 <Divider className={classes.Divider} />
-                {/* { this.props.auth ? <Button color="primary" variant="contained"> Edit</Button> :null} */}
+                <Button color="primary" variant="contained" component={NavLink} to={url} > Update Profile</Button>
                 
             </div>
         );

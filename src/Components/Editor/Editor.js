@@ -4,7 +4,7 @@ import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'font-awesome/css/font-awesome.css';
 import FroalaEditor from 'react-froala-wysiwyg';
-import { Button, Paper, TextField, MenuItem } from '@material-ui/core';
+import { Button, Paper, TextField, MenuItem, Snackbar } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import Input from '@material-ui/core/Input';
@@ -13,6 +13,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Thumbnail from '../ImageUploadPreviev/ImageUploadPreview';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import validator from 'validator';
 
 const styles = {
     button: {
@@ -69,7 +70,10 @@ const categories = [
 class Editor extends Component {
     state = {
         model: '',
-        Category: 'Technology'
+        Category: '',
+        snackbarMessage:'',
+        open:false
+
     }
 
     config = {
@@ -112,8 +116,69 @@ class Editor extends Component {
         });
     };
 
+    handleCloseSnackBar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({ open: false });
+    };
+
+    validation = () => {
+        let postTitle = document.getElementById('postTitle').value;
+       let image = document.getElementById('profilepic').files[0];
+        if(validator.isEmpty(postTitle)) {
+            this.setState({
+                open:true,
+                snackbarMessage:'Post Title Cannot Be Empty'
+            });
+
+            return false;
+        }
+        else {
+            
+            if(validator.isEmpty(this.state.Category)) {
+                this.setState({
+                    open:true,
+                    snackbarMessage:'Please Select Category '
+                });
+                return false;
+            }
+            else {
+                if(image === undefined) {
+                    this.setState({
+                        open:true,
+                        snackbarMessage:'Thumbnail Cannot Be Empty'
+                    }); 
+                    return false;
+                }
+                
+                else {
+                    if(validator.isEmpty(this.state.model)) {
+                        this.setState({
+                            open:true,
+                            snackbarMessage:'Post Content Cannot Be Empty'
+                        });
+                        return false;
+                    }
+                    else {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+
     handlePost = () => {
-       const formData = new FormData();
+
+        console.log(this.state.Category.length);
+        let validation = this.validation();
+
+
+ if(validation) {
+            
+        const formData = new FormData();
         formData.append('file',  document.getElementById('profilepic').files[0]);
         formData.append('title', document.getElementById('postTitle').value);
         formData.append('postContent', this.state.model);
@@ -131,13 +196,21 @@ class Editor extends Component {
         })
             .then((response) => {
             if (response.data.success) {
-                this.props.history.push('/');
+                
+                   this.setState({
+                       open:true,
+                       snackbarMessage:'Post Created Successfully!!'
+                   }) 
+
+                 this.props.history.push('/post/'+response.data.id);
             }
           
             })
             .catch((error) => {
                 console.log(error)
             })
+        }
+
     }
 
     render() {
@@ -195,6 +268,22 @@ class Editor extends Component {
 
                     <Button variant="contained" color="primary" className={classes.button} onClick={this.handlePost}>Post</Button>
                 </Paper>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    open={this.state.open}
+                    TransitionComponent={this.TransitionUp}
+                    variant="error"
+                    autoHideDuration={2000}
+                    onClose={this.handleCloseSnackBar}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">{this.state.snackbarMessage}</span>}
+
+                />
 
 
             </div>
