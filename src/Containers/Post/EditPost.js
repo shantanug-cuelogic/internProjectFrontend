@@ -14,8 +14,7 @@ import FormControl from '@material-ui/core/FormControl';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import { NavLink } from "react-router-dom";
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Thumbnail from '../../Components/ImageUploadPreviev/ImageUploadPreview';   
+import InputAdornment from '@material-ui/core/InputAdornment'; 
 
 const styles = {
     button: {
@@ -31,47 +30,13 @@ const styles = {
         paddingBottom: '5%'
     },
     
-    ThumbnailContainer: {
-        paddingLeft: '5%',
-        paddingRight: '5%',
-        paddingBottom:'5%'
-
-    },
 }
-
-const categories = [
-    {
-        value: 'TECHNOLOGY',
-        label: 'TECHNOLOGY'
-    },
-    {
-        value: 'TRAVEL',
-        label: 'TRAVEL'
-    },
-    {
-        value: 'STYLE',
-        label: 'STYLE'
-    },
-    {
-        value: 'BUSINESS',
-        label: 'BUSINESS'
-    },
-    {
-        value: 'POLITICS',
-        label: 'POLITICS'
-    },
-    {
-        value: 'SCIENCE',
-        label: 'SCIENCE'
-    },
-
-];
-
 class EditPost extends React.Component {
 
     state = {
         model :this.props.postContent,
-        postTitle:this.props.postTitle
+        postTitle:this.props.postTitle,
+    
     }
     
     config = {
@@ -104,65 +69,35 @@ class EditPost extends React.Component {
     handleModelChange = (model) => {
         this.setState({
             model: model,
-            Category: 'Technology'
+           
         });
     }
 
     handleCategoryChange = name => event => {
         this.setState({
-        Category: event.target.value,
+      
         });
     };
     
     handleUpdatePost = () => {
-      
-        const formData = new FormData();
-        formData.append('file',  document.getElementById('profilepic').files[0]);
-        formData.append('title', this.state.postTitle);
-        formData.append('postContent', this.state.model);
-        formData.append('category', this.state.Category);
-        formData.append('authToken', localStorage.getItem('authToken'));
-        formData.append('userId',localStorage.getItem('userId'));
-        formData.append('postIdtoUpdate' ,this.props.postId);
-        
-        axios.put('/post/update', formData,{
-          headers: {
-            'accept': 'application/json',
-            'Accept-Language': 'en-US,en;q=0.8',
-            'Content-Type': `multipart/form-data;`,
-          }
+        console.log(this.props.category);
+  
+        axios.put('/post/update',{
+        postIdtoUpdate :this.props.postId,
+	    title : this.state.postTitle,
+	    postContent : this.state.model,
+        category: this.props.category,
+        authToken: localStorage.getItem('authToken')
         })
-            .then((response) => {
-                if(response.data.success) {
-                    this.props.handleUpdatePostToStore(this.state.model,this.state.postTitle);
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-      
-      
-      
-      
-      
-      
-      ///////////////////////////////////////
-        // axios.put('/post/update',{
-        // postIdtoUpdate :this.props.postId,
-	    // title : this.state.postTitle,
-	    // postContent : this.state.model,
-        // category: this.state.Category,
-        
-	    //  authToken: localStorage.getItem('authToken')
-        // })
-        // .then((response) => {
-        //     if(response.data.success) {
-        //         this.props.handleUpdatePostToStore(this.state.model,this.state.postTitle);
-        //     }
-        // })
-        // .catch((error)=>{
-        //     console.log(error);
-        // })
+        .then((response) => {
+            if(response.data.success) {
+                this.props.handleUpdatePostToStore(this.state.model,this.state.postTitle);
+                this.props.history.push('/post/'+this.props.postId);
+            }
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
     }
 
     handlePostTitleChange = () =>{
@@ -187,38 +122,13 @@ class EditPost extends React.Component {
                         <FormHelperText id="postTitle"> Update Your Post Title Here</FormHelperText>
                     </FormControl>
                 </div>
-                <div className={classes.CategoryContainer}>
-                        <TextField
-                            select
-                            fullWidth
-                            // className={classNames(classes.margin, classes.textField)}
-                            variant="outlined"
-                            label="With Select"
-                            value={this.state.Category}
-                            onChange={this.handleCategoryChange('Catergory')}
-                            InputProps={{
-                                startAdornment: <InputAdornment position="start">Category</InputAdornment>,
-                            }}
-                        >
-                            {categories.map(option => (
-                                <MenuItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                    </div>
-                    
-                    <div className={classes.ThumbnailContainer}>
-                        <InputLabel>Upload Your Thumbnail</InputLabel>
-                        <Thumbnail />
-                    </div>
-
+               
                 <FroalaEditor tag='textarea'
                     model={this.state.model}
                     onModelChange={this.handleModelChange}
                     config={this.config}
                />
-                <Button variant="contained" color="primary" className={classes.button} onClick={this.handleUpdatePost} component={NavLink} to={url}  >Update Post</Button>
+                <Button variant="contained" color="primary" className={classes.button}  onClick={this.handleUpdatePost} >Update Post</Button>
             </Paper>
         </div>
         );
@@ -235,6 +145,7 @@ const mapStateToProps = state => {
         postId: state.postReducer.postId,
         postUserId: state.postReducer.userId,
         allcomments: state.postReducer.allcomments,
+        category: state.postReducer.postCategory
     }
 }
 

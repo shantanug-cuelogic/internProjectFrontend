@@ -6,9 +6,11 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { Paper, TextField, Input, Grid, Avatar, Divider } from '@material-ui/core';
+import { Paper, TextField, Input, Grid, Avatar, Divider, Snackbar } from '@material-ui/core';
 import axios from 'axios';
 import ProfileUpload from '../ImageUploadPreviev/ImageUploadPreview';
+import validator from 'validator';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 const styles = theme => ({
   root: {
@@ -16,6 +18,18 @@ const styles = theme => ({
     marginTop: '8%',
     marginLeft: '10%'
   },
+
+  Inputs: {
+    width: 600,
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 30
+  },
+  SignUpButton: {
+
+    marginBottom: 10
+  },
+
   backButton: {
     marginRight: theme.spacing.unit,
   },
@@ -43,275 +57,296 @@ const styles = theme => ({
   },
 });
 
-function getSteps() {
-  return ['Personal Details', 'Security Question ', 'Profile Photo'];
-}
 
-function getStepContent(stepIndex) {
-  switch (stepIndex) {
-    case 0:
-      return 'Enter Your Personal Deatails';
-    case 1:
-      return 'Choose Your Security Question';
-    case 2:
-      return 'Choose your Profile Picture';
-    default:
-      return 'Uknown stepIndex';
-  }
-}
 
 class SignUpProcess extends React.Component {
-  state = {
-    activeStep: 0,
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    question: "",
-    answer: "",
-    image: ""
+  constructor(props) {
+    super(props);
 
-  };
+    this.state = {
+      formData: {
+        email: '',
+        password: '',
+        firstName: '',
+        repeatPassword: '',
+        lastName: ''
+      },
+      submitted: false,
+      signUpButton: false,
+      open: false,
+      snackbarmsg: ''
 
-  handleAnswer = (event) => {
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
+      if (value !== this.state.formData.password) {
+
+        this.setState({
+          signUpButton: false
+        })
+        return false;
+      }
+      this.setState({
+        signUpButton: true
+      })
+      return true;
+    });
+
+    ValidatorForm.addValidationRule('isEmpty', (value) => {
+      if (value.length === 0) {
+
+        this.setState({
+          signUpButton: false
+        })
+
+        return false;
+      }
+
+      return true;
+    });
+
+
+
+  }
+  handleCloseSnackBar = () => {
     this.setState({
-      answer: event.target.value
+      open: false,
+      snackbarmsg: ""
     })
   }
 
-  handleNext = () => {
-    const { activeStep } = this.state;
-    if (activeStep === 0) {
+  validation = () => {
+    if (this.state.formData.firstName.length === 0) {
       this.setState({
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value
-
-      })
+        open: true,
+        snackbarmsg: 'First Name is Empty'
+      });
+      return false;
     }
-
-    if (activeStep === 1) {
-      this.setState({
-        question: document.getElementById('question').value,
-        answer: document.getElementById('answer').value
-      })
-    }
-    if (activeStep === 2) {
-      this.setState({
-        image: document.getElementById('profilepic').files[0],
-
-      })
-    }
-
-
-    this.setState({
-      activeStep: activeStep + 1,
-    });
-  };
-
-  handleBack = () => {
-    const { activeStep } = this.state;
-    this.setState({
-      activeStep: activeStep - 1,
-    });
-  };
-
-  handleSignin = () => {
-
-    const formData = new FormData();
-    formData.append('file', this.state.image);
-    formData.append('firstName', "shantanu");
-    formData.append('lastName', this.state.lastName);
-    formData.append('isAdmin', false);
-    formData.append('email', this.state.email);
-    formData.append('securityQuestion', this.state.question);
-    formData.append('securityAnswer', this.state.answer);
-    formData.append('password', this.state.password);
-
-
-
-    axios.post('/register', formData,
-      // firstName:this.state.firstName,
-      // lastName:this.state.lastName,
-      // password: this.state.password,
-      // isAdmin:false,
-      // email:this.state.email,
-      // securityQuestion:this.state.question,
-      // securityAnswer:this.state.answer,
-      {
-        headers: {
-          'accept': 'application/json',
-          'Accept-Language': 'en-US,en;q=0.8',
-          'Content-Type': `multipart/form-data;`,
+    else {
+      if (this.state.formData.lastName.length === 0) {
+        this.setState({
+          open: true,
+          snackbarmsg: 'Last Name is Empty'
+        });
+        return false;
+      }
+      else {
+        if (this.state.formData.email.length === 0) {
+          this.setState({
+            open: true,
+            snackbarmsg: 'Email cannot be empty'
+          });
+          return false;
         }
-      })
-      .then((response) => {
-        console.log(response.data)
-        if (response.data) {
-          //this.props.history.push('/signin');
+        else {
+          if (this.state.formData.password.length === 0) {
+            this.setState({
+              open: true,
+              snackbarmsg: 'Password cannot be empty'
+            });
+            return false;
+          }
+          else {
+            if(!validator.isEmail(this.state.formData.email)) {
+              this.setState({
+                open: true,
+                snackbarmsg: 'Enter Valid Email Id'
+              });
+              return false;
+            }
+            else {
+              if(this.state.formData.password === this.state.formData.repeatPassword) {
+                return true;
+              }
+              else {
+                this.setState({
+                  open:true,
+                  snackbarmsg : 'Confirm password does not match'
+                });
+                return false;
+              }
+            }
+          }
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      })
+      }
+    }
   }
 
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-    });
-  };
+
+  handleSubmit = () => {
+
+    // const formData = new FormData();
+    // // formData.append('file', this.state.image);
+    // formData.append('firstName', this.state.formData.firstName);
+    // formData.append('lastName', this.state.formData.lastName);
+    // formData.append('isAdmin', false);
+    // formData.append('email', this.state.formData.email);
+    // // formData.append('securityQuestion', this.state.question);
+    // // formData.append('securityAnswer', this.state.answer);
+    // formData.append('password', this.state.formData.password);
+
+    // axios.post('/register', formData,
+
+    //   {
+    //     headers: {
+    //       'accept': 'application/json',
+    //       'Accept-Language': 'en-US,en;q=0.8',
+    //       'Content-Type': `multipart/form-data;`,
+    //     }
+    //   })
+
+    let validation = this.validation();
+    if(validation) {
+      axios.post('/register', {
+        firstName: this.state.formData.firstName,
+        lastName: this.state.formData.lastName,
+        isAdmin: false,
+        email: this.state.formData.email,
+        password: this.state.formData.password
+      })
+        .then((response) => {
+  
+          if (response.data.success) {
+            this.props.history.push('/signin');
+          }
+          else {
+            if (response.data.message.errno === 1062) {
+              this.setState({
+                open: true,
+                snackbarmsg: "Email Already Present"
+              })
+            }
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
+   
+
+
+  }
+
+
+  handleChange(event) {
+    const { formData } = this.state;
+    formData[event.target.name] = event.target.value;
+    this.setState({ formData });
+  }
+
+
 
   render() {
     const { classes } = this.props;
-    const steps = getSteps();
-    const { activeStep } = this.state;
 
-    let forms = null;
-    if (activeStep === 0) {
-      forms = <div>
-        <TextField
-          fullWidth
-          id="firstName"
-          type="text"
-          label="Firstname"
-          helperText="Enter Your First Name"
 
-        >
-        </TextField>
-
-        <TextField
-          fullWidth
-          id="lastName"
-          type="text"
-          label="Lastname"
-          helperText="Enter Your Last Name"
-        >
-        </TextField>
-        <TextField
-          fullWidth
-          id="email"
-          type="email"
-          label="Email"
-          helperText="Enter Your Email"
-        >
-        </TextField>
-        <TextField
-          fullWidth
-          id="password"
-          type="password"
-          label="Password"
-          helperText="Enter Your Password"
-        >
-        </TextField>
-        <TextField
-          fullWidth
-          id="confirmPassword"
-          type="password"
-          label=" Confirm Password"
-          helperText="Enter Your Password Again"
-        >
-        </TextField>
-      </div>
-    }
-
-    else if (activeStep === 1) {
-      forms = <div>
-        <TextField
-          fullWidth
-          id="question"
-          type="text"
-          label="Question"
-          helperText="Enter question"
-
-        >
-        </TextField>
-        <TextField
-          fullWidth
-          id="answer"
-          type="password"
-          label="Answer"
-          helperText="Enter Your Answer"
-          onChange={this.handleAnswer}
-          value={this.state.answer}
-        >
-        </TextField>
-      </div>
-    }
-    else if (activeStep === 2) {
-      //  forms = <div>
-
-      //    <Grid 
-      //             container
-      //             justify="center"
-      //             >
-      //                 <Grid item style = {{marginBottom:20}}>
-      //                     <Paper className={classes.paper}>
-      //                         <Avatar src="/images/default-user.png" className={classes.ProfileAvatar} />
-      //                     </Paper>
-      //                 </Grid>
-      //             </Grid>
-      //             <Divider /> 
-      //  <form  action="/profilePicUpload" method="POST" enctype="multipart/form-data">
-      //    <Input
-      //         fullWidth
-      //         id="profilepic"
-      //         type="file"
-      //         label=" Profile Picture"
-      //         helperText="Upload Yoour Profile Picture"
-      //         name="profilePicture"
-      //       >
-      //       </Input>
-      //       <Divider />
-      //       <Button color="primary" variant="contained" > Upload</Button>
-      //       </form>
-      //  </div>
-      forms = <ProfileUpload />
-
-    }
     return (
       <div className={classes.root}>
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.map(label => {
-            return (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-        <Paper>
-          <div className={classes.FormContainer}>
-            {forms}
-          </div>
+        <Typography variant="display2" className={classes.Title} > SIGN UP </Typography>
 
-        </Paper>
-        <div>
-          {this.state.activeStep === steps.length ? (
-            <div>
-              <Typography className={classes.instructions}>All steps completed</Typography>
-              <Button onClick={this.handleReset}>Reset</Button>
-              <Button onClick={this.handleSignin}>Signin</Button>
-            </div>
-          ) : (
-              <div>
-                <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-                <div>
-                  <Button
-                    disabled={activeStep === 0}
-                    onClick={this.handleBack}
-                    className={classes.backButton}
-                  >
-                    Back
-                </Button>
-                  <Button variant="contained" color="primary" onClick={this.handleNext}>
-                    {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                  </Button>
-                </div>
-              </div>
-            )}
-        </div>
+        <Grid container
+          direction="row"
+          justify="center"
+        >
+          <Paper>
+            <ValidatorForm
+              ref="form"
+              onSubmit={this.handleSubmit}
+            >
+              <Grid item>
+                <TextValidator
+                  className={classes.Inputs}
+                  label="First Name"
+                  onChange={this.handleChange}
+                  name="firstName"
+                  value={this.state.formData.firstName}
+                  validators={['required', 'isEmpty']}
+                  errorMessages={['this field is required', 'field cannot be empty']}
+                />
+              </Grid>
+
+              <Grid item>
+                <TextValidator
+                  className={classes.Inputs}
+                  label="Last Name"
+                  onChange={this.handleChange}
+                  name="lastName"
+                  value={this.state.formData.lastName}
+                  validators={['required', 'isEmpty']}
+                  errorMessages={['this field is required', 'field cannot be empty']}
+                />
+              </Grid>
+
+
+
+              <TextValidator
+                className={classes.Inputs}
+                label="Email"
+                onChange={this.handleChange}
+                name="email"
+                value={this.state.formData.email}
+                validators={['required', 'isEmail', 'isEmpty']}
+                errorMessages={['this field is required', 'email is not valid', 'field cannot be empty']}
+              />
+              <Grid item>
+                <TextValidator
+                  className={classes.Inputs}
+                  label="Password"
+                  onChange={this.handleChange}
+                  type="password"
+                  name="password"
+                  value={this.state.formData.password}
+                  validators={['required']}
+                  errorMessages={['this field is required']}
+                />
+              </Grid>
+              <Grid item>
+                <TextValidator
+                  className={classes.Inputs} style={{ marginBottom: 60 }}
+                  label="Repeat password"
+                  onChange={this.handleChange}
+                  name="repeatPassword"
+                  type="password"
+                  validators={['isPasswordMatch', 'required']}
+                  errorMessages={['password mismatch', 'this field is required']}
+                  value={this.state.formData.repeatPassword}
+                />
+              </Grid>
+
+
+            </ValidatorForm>
+
+            <Grid item>
+
+              <Button className={classes.SignUpButton} variant="contained" color="primary" onClick={this.handleSubmit}  > SIGN UP</Button>
+
+            </Grid>
+          </Paper>
+        </Grid>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.state.open}
+          TransitionComponent={this.TransitionUp}
+          variant="error"
+          autoHideDuration={1000}
+          onClose={this.handleCloseSnackBar}
+          onClick={this.handleCloseSnackBar}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">{this.state.snackbarmsg}</span>}
+
+        />
+
 
       </div>
     );

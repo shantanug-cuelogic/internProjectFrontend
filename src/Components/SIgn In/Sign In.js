@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import Snackbar from '@material-ui/core/Snackbar';
 import Slide from '@material-ui/core/Slide';
-
+import validator from 'validator';
 
 
 const styles = theme => ({
@@ -40,7 +40,8 @@ const styles = theme => ({
 class SignIn extends React.Component {
 
     state = {
-        open: false
+        open: false,
+        snackbarMessage: ''
     }
     TransitionUp = (props) => {
         return <Slide {...props} direction="up" />;
@@ -50,51 +51,101 @@ class SignIn extends React.Component {
         document.getElementById('email').value = "";
         document.getElementById('password').value = ""
     }
+    handleCloseSnackBar = () => {
+        this.setState({
+            open: false,
+            snackbarMessage: " "
+        })
+    }
+    validation = () => {
+        let email = document.getElementById('email').value;
+        let password = document.getElementById('password').value;
+        
+            if(validator.isEmpty(email)) {
+                this.setState({
+                    open:true,
+                    snackbarMessage:'User Name Cannot be empty'
+                });
+                return false;
+        }
+        else {
+            if(!validator.isEmail(email)) {
+                this.setState({
+                    open:true,
+                    snackbarMessage:'Enter Valid Email'
+                });
+                return false;
+            }
+            else {
+                if(validator.isEmpty(password)) {
+                    this.setState({
+                        open:true,
+                        snackbarMessage:"Password cannot be empty"
+                    });
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+    }
+
 
     handleSignIn = () => {
 
-        axios.post('/login', {
-            "email": document.getElementById('email').value,
-            "password": document.getElementById('password').value
-        })
-            .then((response) => {
-                if (response.data.success) {
-                    this.setState({
-                        open: true
-                    });
+        let validation = this.validation();
 
-                    localStorage.setItem("authToken", response.data.authToken);
-                    localStorage.setItem('userId', response.data.userId);
-                    axios.get('/userprofile/' + response.data.userId)
-
-                        .then((userDetails) => {
-                           // console.log(userDetails.data[0])
-                          
-                            this.props.handleSignInState(response.data.authToken,
-                                 parseInt(response.data.userId),
-                                 userDetails.data[0].firstName,
-                                 userDetails.data[0].lastName,
-                                 userDetails.data[0].profileImage,
-                                 userDetails.data[0].email,
-                                 userDetails.data[0].isAdmin
-                                 );
-                            this.props.history.push('/');
-        
-                        })
-                        .catch((error) => {
-                            console.log(error);
+        if (validation) {
+            axios.post('/login', {
+                "email": document.getElementById('email').value,
+                "password": document.getElementById('password').value
+            })
+                .then((response) => {
+                    if (response.data.success) {
+                        this.setState({
+                            open: true,
+                            message:"Succesfully Signed In"
                         });
-                    //  console.log('===>', this.props.userId)
-                }
 
-                else {
-                    alert("failed");
-                }
+                        localStorage.setItem("authToken", response.data.authToken);
+                        localStorage.setItem('userId', response.data.userId);
+                        axios.get('/userprofile/' + response.data.userId)
 
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+                            .then((userDetails) => {
+                                // console.log(userDetails.data[0])
+
+                                this.props.handleSignInState(response.data.authToken,
+                                    parseInt(response.data.userId),
+                                    userDetails.data[0].firstName,
+                                    userDetails.data[0].lastName,
+                                    userDetails.data[0].profileImage,
+                                    userDetails.data[0].email,
+                                    userDetails.data[0].isAdmin
+                                );
+                                this.props.history.push('/');
+
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                        //  console.log('===>', this.props.userId)
+                    }
+
+                    else {
+                        this.setState({
+                            open:true,
+                            snackbarMessage:"Username OR Password is wrong"
+                        })
+                    }
+
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        }
+
+
 
     }
     handleCloseSnackBar = (event, reason) => {
@@ -155,7 +206,7 @@ class SignIn extends React.Component {
                     ContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">{`Welcome ${this.props.firstName}`}</span>}
+                    message={<span id="message-id">{this.state.snackbarMessage}  </span>}
 
                 />
             </div>
@@ -168,20 +219,20 @@ const mapStateToProps = state => {
     return {
         auth: state.authReducer.auth,
         authToken: state.authReducer.authToken,
-        firstName :state.authReducer.firstName
+        firstName: state.authReducer.firstName
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        handleSignInState: (token, id , firstName, lastName,profileImage,email,isAdmin) => dispatch({ 
-            type: actionTypes.AUTHENTICATE, 
-            authToken: token, userId: id ,
-            firstName:firstName,
-            lastName:lastName,
-            profileImage:profileImage,
-            email:email,
-            isAdmin:isAdmin
+        handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin) => dispatch({
+            type: actionTypes.AUTHENTICATE,
+            authToken: token, userId: id,
+            firstName: firstName,
+            lastName: lastName,
+            profileImage: profileImage,
+            email: email,
+            isAdmin: isAdmin
 
         })
     }

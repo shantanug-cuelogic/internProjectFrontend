@@ -130,10 +130,10 @@ class Editor extends Component {
           }
         })
             .then((response) => {
-            // if (response.data.success) {
-            //     this.props.history.push('/');
-            // }
-            console.log(response.data);
+            if (response.data.success) {
+                this.props.history.push('/');
+            }
+          
             })
             .catch((error) => {
                 console.log(error)

@@ -20,7 +20,8 @@ const style = theme =>({
     UserName: {
         float: 'left',
         marginTop: 10,
-        color: 'black'
+        color: 'black',
+       marginLeft:20
     },
     DeleteButton: {
         float: 'right',
@@ -29,17 +30,15 @@ const style = theme =>({
         cursor: 'pointer',
         paddingTop:'2px',
         paddingBottom:'2px',
-        // backgroundColor:'#e82e2e'
-       
     },
+    AllComments:{
+        marginLeft:35,
+        marginRight:35
+    }
 
 })
 
 class Comment extends React.Component {
-
-    handleDeleteButton = () =>{
-       
-    }
 
     render() {
         const { classes } =this.props;
@@ -48,12 +47,12 @@ class Comment extends React.Component {
             deleteButton = <Typography variant="caption" className={classes.DeleteButton} onClick={this.props.click} >DELETE COMMENT</Typography>
         }
         return (
-            <Paper>
-                <Typography variant="caption" className={classes.UserName}>{this.props.firstName + " " + this.props.lastName}</Typography>
+            <Paper className={classes.AllComments}>
+                <Typography variant="body2" className={classes.UserName}>{this.props.firstName + " " + this.props.lastName}</Typography>
                 <div className={classes.CommentContainer}>
                     <Paper className={classes.Comments}>
                         
-                        <Typography variant="body2" gutterBottom style={{ wordWrap: 'break-word' }} > {this.props.commentContent} </Typography>
+                        <Typography variant="body1" gutterBottom style={{ wordWrap: 'break-word' }} > {this.props.commentContent} </Typography>
                         {deleteButton}
                 
                     </Paper>

@@ -11,7 +11,7 @@ import { NavLink } from "react-router-dom";
 import LikeIcon from '@material-ui/icons/ThumbUp';
 import UnlikeIcon from '@material-ui/icons/ThumbDown';
 import Visibility from '@material-ui/icons/Visibility';
-import ReactHtmlParser , {convertNodeToElement} from 'react-html-parser';
+import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
 import Snackbar from '@material-ui/core/Snackbar';
 import Slide from '@material-ui/core/Slide';
 
@@ -20,17 +20,22 @@ const style = theme => ({
 
     HeaderContainer: {
         marginTop: '10%',
-        height: '70px'
+        height: '70px',
+        paddingTop: '3%'
     },
 
     PostContainer: {
-        marginTop: '5%',
+
+        padding: '3%'
     },
     EditButtonContainer: {
         marginTop: '2%',
         position: 'sticky',
         top: '63px',
-        zIndex: 1000
+        zIndex: 1000,
+        paddingLeft: '3%',
+        paddingRight: '3%'
+
     },
     EditButton: {
         padding: '2%',
@@ -55,7 +60,8 @@ const style = theme => ({
         marginBottom: '3%'
     },
     AllCommentsContainer: {
-        marginBottom: '3%'
+        paddingTop: '3%',
+        paddingBottom: '3%',
     },
     TitleContainer: {
         marginTop: '10%',
@@ -73,11 +79,11 @@ const style = theme => ({
     DeleteButton: {
 
         marginLeft: "20px"
+    },
+    SigninLinkContainer:{
+        padding:20
     }
 });
-
-
-  
 
 class Post extends Component {
     state = {
@@ -94,43 +100,30 @@ class Post extends Component {
         axios.get('/post/getpost/' + requiredUrl)
             .then((response) => {
 
-                let postContent = response.data[0].postContent;
-                let postTitle = response.data[0].title;
-                let postId = parseInt(response.data[0].postId);
-                let userId = response.data[0].userId;
+                if(response.data.success) {
+                
+                let postContent = response.data.result[0].postContent;
+                let postTitle = response.data.result[0].title;
+                let postId = parseInt(response.data.result[0].postId);
+                let userId = response.data.result[0].userId;
+                let category = response.data.result[0].category;
 
-                axios.get('/post/comment/' + response.data[0].postId)
+                axios.get('/post/comment/' + response.data.result[0].postId)
                     .then((allcomments) => {
-                       
+
                         if (allcomments.data.success) {
 
-                            this.props.handleFetchPost(postId, userId, postTitle, postContent, allcomments.data.result)
+                            this.props.handleFetchPost(postId, userId, postTitle, postContent, allcomments.data.result,category)
                         }
                         else {
                             let array = []
-                            this.props.handleFetchPost(postId, userId, postTitle, postContent, array)
+                            this.props.handleFetchPost(postId, userId, postTitle, postContent, array,category)
                         }
 
-
-                        axios.get('/userprofile/' + localStorage.getItem('userId'))
-                            .then((response) => {
-
-                                console.log(response.data[0].firstName);
-                                if (response.data.success) {
-                                    this.setState({
-                                        firstName: response.data[0].firstName,
-                                        lastName: response.data[0].lastName
-                                    })
-                                }
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                            });
-
-                        axios.get('/post/like/totallikes/' + response.data[0].postId)
-                            .then((response) => {
-                                if (response.data.success) {
-                                    this.props.totalLikesToPostReducer(response.data.count)
+                        axios.get('/post/like/totallikes/' + response.data.result[0].postId)
+                            .then((res) => {
+                                if (res.data.success) {
+                                    this.props.totalLikesToPostReducer(res.data.count)
                                 }
                             })
                             .catch((error) => {
@@ -139,7 +132,7 @@ class Post extends Component {
 
                         axios.post('/post/like/allowed', {
                             authToken: localStorage.getItem('authToken'),
-                            postIdToLike: response.data[0].postId
+                            postIdToLike: response.data.result[0].postId
                         })
                             .then((response) => {
                                 if (response.data.success) {
@@ -159,7 +152,7 @@ class Post extends Component {
                             postIdToView: requiredUrl
                         })
                             .then((response) => {
-                                console.log(response.data);
+
                             })
                             .catch((error) => {
                                 console.log(error)
@@ -174,24 +167,25 @@ class Post extends Component {
                             .catch((error) => {
                                 console.log(error);
                             })
-                            
-                        axios.get()    
+
+                        axios.get()
 
                     })
                     .catch((error) => {
                         console.log(error)
                     })
+                }
             })
             .catch((error) => {
                 console.log(error)
             });
     }
 
-    TransitionUp =(props)=> {
+    TransitionUp = (props) => {
         return <Slide {...props} direction="up" />;
-      }
+    }
 
-    
+
 
     handlePostComment = () => {
         let comment = document.getElementById('comment').value;
@@ -241,11 +235,11 @@ class Post extends Component {
 
     handleCloseSnackBar = (event, reason) => {
         if (reason === 'clickaway') {
-          return;
+            return;
         }
-    
+
         this.setState({ open: false });
-      };
+    };
 
     handleDeleteClick = (commentId) => {
 
@@ -259,8 +253,8 @@ class Post extends Component {
                     this.props.allcomments.map((commentData, id) => {
                         if (commentData.commentId === commentId) {
                             this.props.deleteCommentToReducer(id);
-                            this.setState ({
-                                open:true
+                            this.setState({
+                                open: true
                             })
                         }
                     });
@@ -348,14 +342,14 @@ class Post extends Component {
 
         let comments = null;
         if (this.props.allcomments.length === 0) {
-            comments = <LinearProgress />
+            comments = <Typography variant="body2" > NO COMMENTS ON THIS POST YET</Typography>
         }
 
         else {
             comments = this.props.allcomments.map((comment, index) => {
 
                 return (
-                    <div>
+                    <div className={classes.AllComments}>
                         <Comment
                             key={index}
                             commentId={comment.commentId}
@@ -366,66 +360,70 @@ class Post extends Component {
                             click={() => this.handleDeleteClick(comment.commentId)}
                         >
                         </Comment>
-                        <Divider />
+
                     </div>
                 )
             })
         }
 
-        let authorProfileUrl = "/authorprofile/"+this.props.postUserId;
+        let likeButton = null;
+
+        if (this.props.auth) {
+
+
+
+            if (this.props.allowedToLike) {
+                likeButton = <Button onClick={this.handleLike}>
+                    <LikeIcon className={classes.LikeButton} color="primary" />
+
+                </Button>
+            }
+            else {
+                likeButton = <Button onClick={this.handleLike}>
+                    <UnlikeIcon className={classes.LikeButton} color="primary" />
+                </Button>
+            }
+        }
+
+
+        let authorProfileUrl = "/authorprofile/" + this.props.postUserId;
         return (
             <div>
                 <Paper>
                     <div className={classes.HeaderContainer}>
-                        <Typography variant="display2"> {this.props.postTitle} </Typography>
-                        <Typography variant="caption">  </Typography>
+                        <Typography variant="display2" color="textPrimary"> {this.props.postTitle} </Typography>
                     </div>
-
-                </Paper>
-                <Paper className={classes.EditButtonContainer}>
-                    {editDeleteButton}
-                    {this.props.allowedToLike ? <Button onClick={this.handleLike}>
-                        <LikeIcon className={classes.LikeButton} color="primary" />
-                        Likes: {this.props.likes}
-                    </Button>
-                        :
-                        <Button onClick={this.handleLike}>
-                            <UnlikeIcon className={classes.LikeButton} color="primary" />
-                            Likes: {this.props.likes}
-                        </Button>}
-                    <Button >
-                        <Visibility className={classes.LikeButton} color="primary" disabled />
-                        {this.props.views}
-                    </Button>
-                    <Button variant="outlined" component={NavLink} to={authorProfileUrl}>
-                        View Authors Profile
-                    </Button>
-
-                </Paper>
-
-                <Paper>
+                    <Divider />
                     <div className={classes.PostContainer}>
-                        <div className={classes.myDynamicContent}>
-                            <Typography>
-
-                                <style jsx="true">
-                                    {`
+                        <Typography variant="body2" >
+                            <style jsx="true">
+                                {`
                                     img {
                                     max-width : 100%
                                          }
                                 `}
-                                </style>
-                                {ReactHtmlParser(this.props.postContent)}
-                            </Typography>
-                        </div>
-                    <Divider />
+                            </style>
+                            {ReactHtmlParser(this.props.postContent)}
+                        </Typography>
                     </div>
                 </Paper>
+                <div className={classes.EditButtonContainer}>
+                    <Paper >
+                        {editDeleteButton}
+                        {likeButton}
+                        <div style={{ display: 'inline', marginRight: '10px' }}>
+                            <p style={{ display: 'inline', marginRight: '10px' }}>Likes : {this.props.likes}</p>
+                            <p style={{ display: 'inline' }}>Views : {this.props.views} </p>
+                        </div>
+                        <Button variant="outlined" component={NavLink} to={authorProfileUrl}>
+                            View Authors Profile
+                    </Button>
+                    </Paper>
+                </div>
 
-                {this.props.auth ? <Paper>
+                {this.props.auth ?
                     <div className={classes.CommentContainer}>
                         <Paper className={classes.Comments}>
-                            <Typography variant="caption" className={classes.UserName}>{this.state.firstName + " " + this.state.lastName}</Typography>
                             <TextField
                                 id="comment"
                                 label="Comment"
@@ -433,13 +431,12 @@ class Post extends Component {
                                 helperText="Enter Your Comment"
                                 margin="normal"
                             >
-
                             </TextField>
                             <Button variant="contained" color="primary" onClick={this.handlePostComment} className={classes.PostCommentButton}>POST COMMENT</Button>
                         </Paper>
                     </div>
-                </Paper>
-                    : <p style={{ color: 'red' }}>YOU NEED TO SIGNIN TO COMMENT</p>
+
+                    : <div className={classes.SigninLinkContainer}><NavLink style={{ color: 'red',textDecoration:'none' }} to='/signin' >YOU NEED TO SIGNIN TO COMMENT</NavLink></div>
                 }
                 <Snackbar
                     anchorOrigin={{
@@ -455,8 +452,8 @@ class Post extends Component {
                         'aria-describedby': 'message-id',
                     }}
                     message={<span id="message-id">Comment Deleted</span>}
-                    
-                 />
+
+                />
 
                 <Paper>
                     <div className={classes.AllCommentsContainer}>
@@ -465,7 +462,6 @@ class Post extends Component {
                 </Paper>
 
             </div>
-
 
 
         );
@@ -489,14 +485,15 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        handleFetchPost: (postId, userId, postTitle, postContent, allcomments) => dispatch(
+        handleFetchPost: (postId, userId, postTitle, postContent, allcomments,category) => dispatch(
             {
                 type: actionTypes.FETCH_POST,
                 postId: postId,
                 userId: userId,
                 postTitle: postTitle,
                 postContent: postContent,
-                allcomments: allcomments
+                allcomments: allcomments,
+                category: category
             }),
 
         postCommentToReducer: (updateCommentData) => dispatch({

@@ -11,7 +11,8 @@ const initialState = {
     allcomments: [],
     allowedToLike : false,
     likes : 0,
-    views: 0
+    views: 0,
+    postCategory:''
 }
 
 const reducer = (state = initialState, action) => {
@@ -19,14 +20,15 @@ const reducer = (state = initialState, action) => {
     switch (action.type) {
 
         case actionTypes.FETCH_POST: {
-
+          
             return {
                 ...state,
                 postId: action.postId,
                 postTitle: action.postTitle,
                 postContent: action.postContent,
                 userId: action.userId,
-                allcomments: action.allcomments
+                allcomments: action.allcomments,
+                postCategory: action.category
             }
 
         }
@@ -72,7 +74,8 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 postContent: action.postContent,
-                postTitle: action.postTitle
+                postTitle: action.postTitle,
+                postCategory : action.postCategory
             }
         }
 
