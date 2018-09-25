@@ -5,7 +5,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import {connect } from 'react-redux';
 
-import axios from 'axios';
 
 const styles =  themes => ({
 paper :{

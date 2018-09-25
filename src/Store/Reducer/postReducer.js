@@ -26,7 +26,6 @@ const reducer = (state = initialState, action) => {
                 postTitle: action.postTitle,
                 postContent: action.postContent,
                 userId: action.userId,
-
                 allcomments: action.allcomments
             }
 

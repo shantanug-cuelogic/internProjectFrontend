@@ -101,7 +101,7 @@ class Post extends Component {
 
                 axios.get('/post/comment/' + response.data[0].postId)
                     .then((allcomments) => {
-
+                       
                         if (allcomments.data.success) {
 
                             this.props.handleFetchPost(postId, userId, postTitle, postContent, allcomments.data.result)
@@ -112,7 +112,7 @@ class Post extends Component {
                         }
 
 
-                        axios.get('/userprofile/' + this.props.userId)
+                        axios.get('/userprofile/' + localStorage.getItem('userId'))
                             .then((response) => {
 
                                 console.log(response.data[0].firstName);
@@ -174,6 +174,9 @@ class Post extends Component {
                             .catch((error) => {
                                 console.log(error);
                             })
+                            
+                        axios.get()    
+
                     })
                     .catch((error) => {
                         console.log(error)
@@ -188,6 +191,7 @@ class Post extends Component {
         return <Slide {...props} direction="up" />;
       }
 
+    
 
     handlePostComment = () => {
         let comment = document.getElementById('comment').value;
@@ -368,36 +372,13 @@ class Post extends Component {
             })
         }
 
-    //    let reg = /src=\".+\.jpg\"/;
-    //    let string = this.props.postContent;
-
-    //     var matches = string.match(reg);
-    //     console.log(matches);
-
-    //var str = "<img alt='' src='http://api.com/images/UID' /><br/>Some plain text<br/><a href='http://www.google.com'>http://www.google.com</a>";
-    //var str = this.props.postContent;  
-    // let str =  new String(this.props.postContent.substr(0,25)) 
-    // console.log(typeof(str),"=====================================================================================================================================================>")
-    // var regex = /<img.*?src='(.*?)'/;
-    // var src = regex.exec(str);
-    
-
-
-
-
-
-
-
-
-      
-         // ReactHtmlParser(this.props.postContent,options)
-
-
+        let authorProfileUrl = "/authorprofile/"+this.props.postUserId;
         return (
             <div>
                 <Paper>
                     <div className={classes.HeaderContainer}>
                         <Typography variant="display2"> {this.props.postTitle} </Typography>
+                        <Typography variant="caption">  </Typography>
                     </div>
 
                 </Paper>
@@ -416,6 +397,10 @@ class Post extends Component {
                         <Visibility className={classes.LikeButton} color="primary" disabled />
                         {this.props.views}
                     </Button>
+                    <Button variant="outlined" component={NavLink} to={authorProfileUrl}>
+                        View Authors Profile
+                    </Button>
+
                 </Paper>
 
                 <Paper>
@@ -430,15 +415,10 @@ class Post extends Component {
                                          }
                                 `}
                                 </style>
-                                {/* {renderHTML(this.props.postContent)} */}
                                 {ReactHtmlParser(this.props.postContent)}
-                                {/* {ReactHtmlParser(this.props.postContent,options)} */}
                             </Typography>
-
                         </div>
-
-                        <Divider />
-
+                    <Divider />
                     </div>
                 </Paper>
 
@@ -516,7 +496,6 @@ const mapDispatchToProps = dispatch => {
                 userId: userId,
                 postTitle: postTitle,
                 postContent: postContent,
-
                 allcomments: allcomments
             }),
 

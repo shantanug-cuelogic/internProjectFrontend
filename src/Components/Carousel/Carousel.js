@@ -15,7 +15,7 @@ const style = {
         height:'500px'
     },
     ThumbnailContainer : {
-        
+        backgroundColor:'black',
         height:'500px',
         width:'40%',
         float:'right',
@@ -27,6 +27,9 @@ const style = {
     },
     Container : {
         marginTop:'10%'
+    },
+    Thumbnail : {
+        height:'450px'
     }
 
 }
@@ -105,35 +108,13 @@ class Carousel extends React.Component {
           };
           
           function transform(node, index) {
-          
-            // return null to block certain elements
-            // don't allow <span> elements
+       
             if (node.type === 'tag' && node.name === 'img') {
               return null;
             }
             if (node.type === 'tag' && node.name === 'video') {
               return null;
-            }
-          
-            // Transform <ul> into <ol>
-            // A node can be modified and passed to the convertNodeToElement function which will continue to render it and it's children
-            // if (node.type === 'tag' && node.name === 'ul') {
-            //   node.name = 'ol';
-            //   return convertNodeToElement(node, index, transform);
-            // }
-          
-            // return an <i> element for every <b>
-            // a key must be included for all elements
-            // if (node.type === 'tag' && node.name === 'b') {
-            //   return <i key={index}>I am now in italics, not bold</i>;
-            // }
-          
-            // all links must open in a new window
-            // if (node.type === 'tag' && node.name === 'a') {
-            //   node.attribs.target = '_blank';
-            //   return convertNodeToElement(node, index, transform);
-            
-          
+            }           
           }
         
 
@@ -145,7 +126,7 @@ class Carousel extends React.Component {
             slidesToShow: 1 ,
             speed: 6000,
             dots: true,
-            autoplay: false,
+            autoplay: true,
             autoplaySpeed: 2000,
             pauseOnHover: true,
             adaptiveHeight: false,
@@ -182,7 +163,7 @@ class Carousel extends React.Component {
                             </Grid>
                             
                             <Grid item className={classes.ThumbnailContainer}>
-                                        <img src={this.state.popularPosts[0].thumbnail}></img>
+                                <img src={this.state.popularPosts[0].thumbnail } alt="thumbnail" className={classes.Thumbnail}></img>
                             </Grid>
                         
                     </Grid>
@@ -201,7 +182,7 @@ class Carousel extends React.Component {
                             </Grid>
                             
                             <Grid item className={classes.ThumbnailContainer}>
-                                        <img src={this.state.popularPosts[1].thumbnail}></img>
+                             <img src={this.state.popularPosts[1].thumbnail} alt="thumbnail" className={classes.Thumbnail}></img>
                             </Grid>
                         
                     </Grid>
@@ -220,7 +201,7 @@ class Carousel extends React.Component {
                             </Grid>
                             
                             <Grid item className={classes.ThumbnailContainer}>
-                                        <img src={this.state.popularPosts[2].thumbnail}></img>
+                                        <img src={this.state.popularPosts[2].thumbnail} alt="thumbnail" className={classes.Thumbnail}></img>
                             </Grid>
                         
                     </Grid>
@@ -238,7 +219,7 @@ class Carousel extends React.Component {
                             <p>Views:{this.state.popularPosts[3].views}</p>
                             </Grid>
                             <Grid item className={classes.ThumbnailContainer}>
-                                        <img src={this.state.popularPosts[3].thumbnail}></img>
+                                        <img src={this.state.popularPosts[3].thumbnail} alt="thumbnail" className={classes.Thumbnail}></img>
                             </Grid>
                         
                         
@@ -258,7 +239,7 @@ class Carousel extends React.Component {
                             </Grid>
                             
                             <Grid item className={classes.ThumbnailContainer}>
-                                        <img src={this.state.popularPosts[4].thumbnail}></img>
+                                        <img src={this.state.popularPosts[4].thumbnail} alt="thumbnail" className={classes.Thumbnail}></img>
                             </Grid>
                         
                     </Grid>

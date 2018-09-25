@@ -10,7 +10,7 @@ const reducer = (state = initialState , action) => {
         switch(action.type) {
 
             case actionTypes.IMAGE_FILE : {
-                console.log("in reducer=================================================>");
+               
                 return {
                     ...state,
                     profileImageData : action.imageData

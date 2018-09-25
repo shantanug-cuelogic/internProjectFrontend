@@ -47,7 +47,7 @@ class DashBoard extends React.Component {
         axios.get(likeUrl)
         .then((response)=>{
             if(response.data.success) {
-                console.log("TotalLike============>",response.data.likeCount)
+              
                 this.setState({
                     likes:response.data.likeCount
                 })

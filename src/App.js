@@ -16,7 +16,7 @@ import EditPost from './Containers/Post/EditPost';
 import Dashboard from './Components/Dashboard/Dashboard';
 import Category from './Components/Category/Category';
 import SearchPost from './Components/SearchPost/SearchPost';
-
+import AuthorProfile from './Components/AuthorProfile/AuthorProfile';
 
 
 
@@ -113,6 +113,7 @@ createMuiTheme({
                 <Route path = '/dashboard' component = {Dashboard} ></Route>
                 <Route path='/category/:id' component = {Category} ></Route>
                 <Route path ='/search' component={SearchPost} ></Route>
+                <Route path ='/authorprofile/:userId' component={AuthorProfile} ></Route>
                 <Route path='/' exact component={BlogBuilder}></Route>
             </Switch>
           </div>
