@@ -13,6 +13,7 @@ import * as actionTypes from '../../Store/Actions/actionTypes';
 import Snackbar from '@material-ui/core/Snackbar';
 import Slide from '@material-ui/core/Slide';
 import validator from 'validator';
+import { NavLink } from 'react-router-dom';
 
 
 const styles = theme => ({
@@ -113,8 +114,6 @@ class SignIn extends React.Component {
                         axios.get('/userprofile/' + response.data.userId)
 
                             .then((userDetails) => {
-                                // console.log(userDetails.data[0])
-
                                 this.props.handleSignInState(response.data.authToken,
                                     parseInt(response.data.userId),
                                     userDetails.data[0].firstName,
@@ -130,7 +129,6 @@ class SignIn extends React.Component {
                             .catch((error) => {
                                 console.log(error);
                             });
-                        //  console.log('===>', this.props.userId)
                     }
 
                     else {
@@ -192,6 +190,8 @@ class SignIn extends React.Component {
                     <div className={classes.ButtonContainer}>
                         <Button variant="contained" color="primary" onClick={this.handleSignIn} className={classes.Button} >Signin</Button>
                         <Button variant="outlined" color="primary" onClick={this.handleReset} className={classes.Button}>reset</Button>
+                        <Button variant="outlined" color="primary"  className={classes.Button} component={NavLink} to="/forgotpassword" >forgot password</Button>
+
                     </div>
                 </Paper>
                 <Snackbar

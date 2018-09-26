@@ -17,7 +17,8 @@ import Dashboard from './Components/Dashboard/Dashboard';
 import Category from './Components/Category/Category';
 import SearchPost from './Components/SearchPost/SearchPost';
 import AuthorProfile from './Components/AuthorProfile/AuthorProfile';
-
+import ForgotPassword from './Components/ForgotPassword/ForgotPassword';
+import PasswordRecover from './Components/PasswordRecover/PasswordRecover';
 
 
 class App extends Component {
@@ -114,6 +115,8 @@ createMuiTheme({
                 <Route path='/category/:id' component = {Category} ></Route>
                 <Route path ='/search' component={SearchPost} ></Route>
                 <Route path ='/authorprofile/:userId' component={AuthorProfile} ></Route>
+                <Route path='/forgotpassword' component={ForgotPassword}></Route>
+                <Route path='/recoverpassword/:authToken' component={PasswordRecover}></Route>
                 <Route path='/' exact component={BlogBuilder}></Route>
             </Switch>
           </div>

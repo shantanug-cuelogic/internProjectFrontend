@@ -4,15 +4,18 @@ import axios from 'axios';
 import {  NavLink } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
 import ReactHtmlParser from 'react-html-parser';
-import { Grid , Paper, Typography } from '@material-ui/core';
+import { Grid , Paper, Typography, Hidden, Divider } from '@material-ui/core';
 
 const style = {
     Links :{
         textDecoration : 'none',
-        color:"black"
+        color:"black",
+        
     },
     CarouselContainer : {
-        height:'400px'
+        height:'370px',
+        backgroundColor:'white'
+    
     },
     ThumbnailContainer : {
         backgroundColor:'white',
@@ -24,14 +27,15 @@ const style = {
     },
     PostText : {
         float : 'left',
-        padding:10
+        padding:10,
     },
     Container : {
         marginTop:'10%',
         padding:20  
     },
     Thumbnail : {
-        height:'350px'
+        height:'350px',
+        padding:'10px'
     }
 
 }
@@ -90,25 +94,13 @@ class Carousel extends React.Component {
             console.log(error)
         })
     }
-
-    getSmallContent = () =>{
-        let firstPostContent =  this.state.popularPosts[0].postContent.substr(0,1000) + "...";
-          let secondPostContent =  this.state.popularPosts[1].postContent.substr(0,1000) + "...";
-          let thirdPostContent =  this.state.popularPosts[2].postContent.substr(0,1000) + "...";
-          let fourthPostContent =  this.state.popularPosts[3].postContent.substr(0,1000) + "...";
-          let fifthPostContent =  this.state.popularPosts[4].postContent.substr(0,1000) + "..."; 
-          
-        return [firstPostContent,secondPostContent,thirdPostContent,fourthPostContent,fifthPostContent]
-        } 
-          
-
-    render() {
+ render() {
         const {classes} = this.props;   
   
         const options = {
             decodeEntities: true,
             transform 
-          };
+            };
           
           function transform(node, index) {
        
@@ -127,12 +119,12 @@ class Carousel extends React.Component {
             infinite: true,
             centerPadding: "60px",
             slidesToShow: 1 ,
-            speed: 6000,
+            speed: 1000,
             dots: true,
-            autoplay: false,
+            autoplay: true,
             autoplaySpeed: 2000,
             pauseOnHover: true,
-            adaptiveHeight: false,
+            adaptiveHeight: true,
             
           };
 
@@ -142,27 +134,26 @@ class Carousel extends React.Component {
           let fourthUrl = "/post/"+this.state.popularPosts[3].postId;
           let fifthUrl = "/post/"+this.state.popularPosts[4].postId;
 
-           
-
-           let smallContentArray = this.getSmallContent();
-
         return(
             
-            <div className={classes.Container}>
-            
-                <Slider {...settings} className={classes.CarouselContainer} >
-
+            <div className={classes.Container}  >
+                <Paper>
+                <div style={{overflow:'hidden'}}>
+                <Slider {...settings} className={classes.CarouselContainer}  >
+                        
                     <NavLink to={firstUrl} className={classes.Links} >
                     <Grid 
                     container
                     direction="row"
                     className={classes.Carousel} 
+                    
             
                    >
                         
                             <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
                             <Typography variant="display2" color="textPrimary" >{this.state.popularPosts[0].title}</Typography>
-                            <Typography variant="body2">{ReactHtmlParser(smallContentArray[0],options)}</Typography>
+                           <Divider />
+                            <Typography variant="body2">{ReactHtmlParser(this.state.popularPosts[0].postContent,options)}</Typography>
                           <div>
                           <Typography variant="caption">Views:{this.state.popularPosts[0].views}</Typography>
                            
@@ -185,7 +176,7 @@ class Carousel extends React.Component {
                         
                             <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
                             <Typography variant="display2" color="textPrimary" >{this.state.popularPosts[1].title}</Typography>
-                            <Typography variant="body2">{ReactHtmlParser(smallContentArray[1],options)}</Typography>
+                            <Typography variant="body2">{ReactHtmlParser(this.state.popularPosts[1].postContent,options)}</Typography>
                           <div>
                           <Typography variant="caption">Views:{this.state.popularPosts[1].views}</Typography>
                            
@@ -208,7 +199,7 @@ class Carousel extends React.Component {
                         
                             <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
                             <Typography variant="display2" color="textPrimary" >{this.state.popularPosts[2].title}</Typography>
-                            <Typography variant="body2">{ReactHtmlParser(smallContentArray[2],options)}</Typography>
+                            <Typography variant="body2">{ReactHtmlParser(this.state.popularPosts[2].postContent,options)}</Typography>
                           <div>
                           <Typography variant="caption">Views:{this.state.popularPosts[2].views}</Typography>
                            
@@ -231,7 +222,7 @@ class Carousel extends React.Component {
                         
                             <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
                             <Typography variant="display2" color="textPrimary" >{this.state.popularPosts[3].title}</Typography>
-                            <Typography variant="body2">{ReactHtmlParser(smallContentArray[3],options)}</Typography>
+                            <Typography variant="body2">{ReactHtmlParser(this.state.popularPosts[3].postContent,options)}</Typography>
                           <div>
                           <Typography variant="caption">Views:{this.state.popularPosts[3].views}</Typography>
                            
@@ -254,7 +245,7 @@ class Carousel extends React.Component {
                         
                             <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
                             <Typography variant="display2" color="textPrimary" >{this.state.popularPosts[4].title}</Typography>
-                            <Typography variant="body2">{ReactHtmlParser(smallContentArray[4],options)}</Typography>
+                            <Typography variant="body2">{ReactHtmlParser(this.state.popularPosts[4].postContent,options)}</Typography>
                           <div>
                           <Typography variant="caption">Views:{this.state.popularPosts[4].views}</Typography>
                            
@@ -267,9 +258,10 @@ class Carousel extends React.Component {
                         
                     </Grid>
                     </NavLink>
-                
+                     
             </Slider>
-            
+            </div> 
+            </Paper>
                 
             </div>
             

@@ -36,37 +36,26 @@ class Category extends React.PureComponent {
         })
     }
 
-    // componentDidUpdate() {
-    //     axios.get('/post/category/'+this.props.match.params.id)
-    //     .then((response)=>{
-        
-    //         if(response.data.success) {
-                   
-    //             this.props.categoryFetchPostReducer(response.data.result);
-    //         }
-            
-    //     })
-    //     .catch((error)=>{
-    //         console.log(error);
-    //     })
-    // }
+  
 
-    //  componentShouldUpdate() {
-    //     axios.get('/post/category/'+this.props.match.params.id)
-    //     .then((response)=>{
+    componentWillReceiveProps(nextProps) {
+       
+        if(this.props.match.params.id !== nextProps.match.params.id)
+        axios.get('/post/category/'+nextProps.match.params.id)
+        .then((response)=>{
         
-    //         if(response.data.success) {
+            if(response.data.success) {
                    
-    //             this.props.categoryFetchPostReducer(response.data.result);
-    //             return true
-    //         }
+                this.props.categoryFetchPostReducer(response.data.result);
+            }
             
-    //     })
-    //     .catch((error)=>{
-    //         console.log(error);
-    //         return false;
-    //     })
-    // }
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+        
+    }
+
 
 render() {
 

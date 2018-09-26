@@ -118,6 +118,7 @@ function ComplexGrid(props) {
           </Grid>
         </Grid>
       </Grid> */}
+      <NavLink to={url} className={classes.Links} >
         <div className={classes.PostContainer}>
           <Grid container
             direction="row"
@@ -135,30 +136,21 @@ function ComplexGrid(props) {
                 <Typography gutterBottom variant="headline" style={{ display: "inline" }}>
                   {props.title}
                 </Typography>
-                <Paper style={{ display: 'inline' }}>
+                <div style={{ display: 'inline' }}>
                   {ReactHtmlParser(content, options)}
-                </Paper>
-              </div>
-              <Grid item>
-                <div>
-                  <ul>
-                    <li>
-                      <NavLink to={url} className={classes.Links} >Continue Reading</NavLink>
-                    </li>
-                  </ul>
                 </div>
-              </Grid>
+              </div>
             </Grid>
             <Grid item xs={12} sm={6}>
               <div className={classes.ThumbnailContainer}>
-                <img src={props.thumbnail} style={{height:230}}></img>
+                <img src={props.thumbnail} style={{height:230}} alt="Thumbnail"></img>
               </div>
             </Grid>
 
           </Grid>
 
         </div>
-
+        </NavLink>
       </Paper>
     </div>
 

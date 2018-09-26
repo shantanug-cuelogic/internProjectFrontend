@@ -190,8 +190,9 @@ class Header extends React.Component {
                                 <Grid container
                                     direction="row">
                                     <Grid item>
-                                        <Button color="inherit" size="small" className={classes.button} component={NavLink} to="/"> Home
-                        <HomeIcon />
+                                        <Button color="inherit" size="small" className={classes.button} component={NavLink} to="/">
+                                        <HomeIcon className={classes.IconLeft} />
+                                    Home
                                         </Button>
                                     </Grid>
                                     <Grid item>
@@ -200,12 +201,13 @@ class Header extends React.Component {
                                     <Grid item>
                                         <Avatar
                                             sizes='small'
-                                            alt="Burger logo"
+                                            alt="Profile Picture"
                                             src={this.props.profileImage}
                                             className={classes.button}
                                             aria-owns={this.state.anchorEl ? 'simple-menu' : null}
                                             aria-haspopup="true"
                                             onClick={this.handleClick}>
+                                            
                                         </Avatar>
                                     </Grid>
                                 </Grid>

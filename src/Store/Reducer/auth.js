@@ -21,10 +21,15 @@ const reducer = (state = initialState , action) => {
                localStorage.removeItem('userId');
 
                 return {
-                    userId:null,
+                 
                     auth : false,
-                   
-
+                    authToken : "",
+                    userId: "",
+                    firstName:"",
+                    lastName:"",
+                    profileImage:"",
+                    isAdmin:false,
+                    email:""
                 }
             } 
 

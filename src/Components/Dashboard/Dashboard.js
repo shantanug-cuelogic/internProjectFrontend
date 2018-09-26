@@ -28,6 +28,9 @@ const styles = theme => ({
     },
     ProfileContainer: {
         marginTop: '10%'
+    },
+    Icons:{
+        padding:'10%'
     }
 });
 
@@ -139,7 +142,7 @@ class DashBoard extends React.Component {
 
                             <Grid item >
                                 <Paper className={classes.paper} >
-                                    <img src="/require/likeicon.jpg" alt="Like Icon" height="200px"></img>
+                                    <img src="/require/likeicon.jpg" alt="Like Icon" height="150px" className={classes.Icons}></img>
                                     <Typography variant="body2">
                                         Total No Of Likes : {this.state.likes}
                                     </Typography>
@@ -147,7 +150,7 @@ class DashBoard extends React.Component {
                             </Grid>
                             <Grid item >
                                 <Paper className={classes.paper} >
-                                <img src="/require/viewicon.jpg" alt="View Icon" height="200px"></img>
+                                <img src="/require/viewicon.jpg" alt="View Icon" height="150px" className={classes.Icons}></img>
                                 <Typography variant="body2">
                                         Total No Of Views : {this.state.views}
                                     </Typography>
@@ -155,7 +158,7 @@ class DashBoard extends React.Component {
                             </Grid>
                             <Grid item >
                                 <Paper className={classes.paper} >
-                                <img src="/require/posticon.jpg" alt="Post Icon" height="200px"></img>
+                                <img src="/require/posticon.jpg" alt="Post Icon" height="150px" className={classes.Icons}></img>
                                 <Typography variant="body2" >
                                         Total No Of Posts : {this.state.posts}
                                     </Typography>
@@ -163,7 +166,7 @@ class DashBoard extends React.Component {
                             </Grid>
                             <Grid item >
                                 <Paper className={classes.paper} >
-                                <img src="/require/commenticon.jpg" alt="Post Icon" height="200px"></img>
+                                <img src="/require/commenticon.jpg" alt="Post Icon" height="150px" className={classes.Icons}></img>
                                 <Typography variant="body2" >
                                         Total No Of Comments : {this.state.comments}
                                     </Typography>

@@ -18,7 +18,7 @@ const {classes} = this.props;
         return (
             <div className={classes.Container}>
                 <SubHeader />
-                <Paper><Carousel /> </Paper>
+                <Carousel />
                 <Paper><Menu /></Paper>
             </div>
         );

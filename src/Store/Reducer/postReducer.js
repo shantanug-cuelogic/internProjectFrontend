@@ -40,7 +40,7 @@ const reducer = (state = initialState, action) => {
         }
 
         case actionTypes.RESET_POST_CONTENT: {
-
+          
             return {
                 
                 postContent: ' ',
