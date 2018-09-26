@@ -53,8 +53,9 @@ const style = theme => ({
     },
     UserName: {
         float: 'left',
-        marginTop: 10,
-        color: 'black'
+        marginTop: 40,
+        color: 'black',
+       marginLeft:30
     },
     PostCommentButton: {
         marginBottom: '3%'
@@ -198,8 +199,8 @@ class Post extends Component {
             .then((response) => {
                 if (response.data.success) {
                     let updatedCommentData = {
-                        firstName: this.state.firstName,
-                        lastName: this.state.lastName,
+                        firstName: this.props.firstName,
+                        lastName: this.props.lastName,
                         userId: parseInt(this.props.userId),
                         commentId: response.data.message.insertId,
                         commentContent: comment
@@ -380,13 +381,9 @@ class Post extends Component {
         let likeButton = null;
 
         if (this.props.auth) {
-
-
-
             if (this.props.allowedToLike) {
                 likeButton = <Button onClick={this.handleLike}>
                     <LikeIcon className={classes.LikeButton} color="primary" />
-
                 </Button>
             }
             else {
@@ -434,6 +431,7 @@ class Post extends Component {
 
                 {this.props.auth ?
                     <div className={classes.CommentContainer}>
+                     <Typography variant="body2" className={classes.UserName}>{this.props.firstName + " " + this.props.lastName}</Typography>
                         <Paper className={classes.Comments}>
                             <TextField
                                 id="comment"
@@ -490,7 +488,9 @@ const mapStateToProps = state => {
         allcomments: state.postReducer.allcomments,
         allowedToLike: state.postReducer.allowedToLike,
         likes: state.postReducer.likes,
-        views: state.postReducer.views
+        views: state.postReducer.views,
+        firstName:state.authReducer.firstName,
+        lastName:state.authReducer.lastName
     }
 }
 
@@ -504,7 +504,8 @@ const mapDispatchToProps = dispatch => {
                 postTitle: postTitle,
                 postContent: postContent,
                 allcomments: allcomments,
-                category: category
+                category: category,
+                
             }),
 
         postCommentToReducer: (updateCommentData) => dispatch({

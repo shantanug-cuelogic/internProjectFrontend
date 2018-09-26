@@ -1,9 +1,7 @@
 import React from 'react';
 import { Typography, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import axios from 'axios';
 import { connect } from 'react-redux';
-import * as actionTypes from '../../Store/Actions/actionTypes';
 
 
 const style = theme =>({

@@ -14,22 +14,16 @@ const styles = {
     PostContainer : {
  marginTop:'10%'
     },
-    
-    
 }
 
 class Category extends React.PureComponent {
 
     componentDidMount() {
-        
         axios.get('/post/category/'+this.props.match.params.id)
         .then((response)=>{
-        
             if(response.data.success) {
-                   
                 this.props.categoryFetchPostReducer(response.data.result);
             }
-            
         })
         .catch((error)=>{
             console.log(error);
@@ -45,10 +39,8 @@ class Category extends React.PureComponent {
         .then((response)=>{
         
             if(response.data.success) {
-                   
                 this.props.categoryFetchPostReducer(response.data.result);
             }
-            
         })
         .catch((error)=>{
             console.log(error);
@@ -97,10 +89,6 @@ render() {
                 justify="center" >
                 {posts}
                 </Grid>
-                
-                
-               
-               
             </div>
             </div>
             
