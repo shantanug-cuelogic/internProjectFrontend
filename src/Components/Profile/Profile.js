@@ -40,7 +40,7 @@ class Profile extends React.Component{
     
     render() {
         const {classes} = this.props;
-       let url = '/updateprofile/' + this.props.userId;
+       let url = '/updateprofile' ;
         return(
             <div className={classes.ProfileContainer }>
                 <Grid 
@@ -50,15 +50,18 @@ class Profile extends React.Component{
                     <Grid item style = {{marginBottom:20}}>
                         <Paper className={classes.paper}>
                             <Avatar src={this.props.profileImage} className={classes.ProfileAvatar} />
+                            <Typography variant="caption" > Update Your Profile To add Image </Typography>
                         </Paper>
                     </Grid>
                 </Grid>
                 <Divider className={classes.Divider} />
                 <Typography variant="display2" > {this.props.firstName +" "+this.props.lastName}</Typography>
                 <Divider className={classes.Divider} />
-                <Typography variant="display1" >No of Post: 99 </Typography>
-                <Divider className={classes.Divider} />
                 <Typography variant="title" > {this.props.email}</Typography>
+                <Divider className={classes.Divider} />
+                <Typography variant="subheading" >{this.props.gender} </Typography>
+                <Typography variant="caption" > Gender</Typography>
+                
                 <Divider className={classes.Divider} />
                 <Button color="primary" variant="contained" component={NavLink} to={url} > Update Profile</Button>
                 
@@ -70,12 +73,13 @@ class Profile extends React.Component{
 const mapStateToProps = state => {
     return {
     auth: state.authReducer.auth,
-    userId: state.authReducer.userId.email,
+    userId: state.authReducer.userId,
     firstName:state.authReducer.firstName,
     lastName:state.authReducer.lastName,
     email:state.authReducer.email,
     profileImage:state.authReducer.profileImage,
-    isAdmin: state.authReducer.isAdmin
+    isAdmin: state.authReducer.isAdmin,
+    gender:state.authReducer.gender
     }
 }
 

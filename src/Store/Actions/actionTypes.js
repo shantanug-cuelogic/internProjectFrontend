@@ -1,6 +1,7 @@
 export const AUTHENTICATE = 'AUTHENTICATE ';
 export const LOGOUT = 'LOGOUT';
 export const AUTHENTICATE_ON_RELOAD = 'AUTHENTICATE_ON_RELOAD';
+export const UPDATE_USER ="UPDATE_USER";
 
 export const FETCH_POST = 'FETCH_POST';
 export const UPDATE_POST = 'UPDATE_POST';
@@ -11,6 +12,7 @@ export const ALLOWED_TO_LIKE_POST = "ALLOWED_TO_LIKE_POST";
 export const TOTAL_LIKE_TO_POST = "TOTAL_LIKE_TO_POST";
 
 export const TOTAL_VIEWS_TO_POST = "TOTAL_VIEWS_TO_POST";
+export const ADD_VIEWS_TO_POST = "ADD_VIEWS_TO_POST";
 
 export const TOGGLE ='TOGGLE';
 export const IMAGE_FILE = 'IMAGE_FILE'; 
@@ -21,3 +23,6 @@ export const DELETE_COMMENT = 'DELETE_COMMENT';
 export const FETCH_POST_CATEGORY = "FETCH_POST_CATEGORY";
 
 export const THEME_HANDLER = "THEME_HANDLER"; 
+
+export const SNACKBAR_OPEN ="SNACKBAR_OPEN";
+export const SNACKBAR_CLOSE ="SNACKBAR_CLOSE";

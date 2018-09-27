@@ -74,9 +74,6 @@ class SignUpProcess extends React.Component {
       },
       submitted: false,
       signUpButton: false,
-      open: false,
-      snackbarmsg: ''
-
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -114,51 +111,31 @@ class SignUpProcess extends React.Component {
 
 
   }
-  handleCloseSnackBar = () => {
-    this.setState({
-      open: false,
-      snackbarmsg: ""
-    })
-  }
 
   validation = () => {
     if (this.state.formData.firstName.length === 0) {
-      this.setState({
-        open: true,
-        snackbarmsg: 'First Name is Empty'
-      });
+
+      this.props.handleOpenSnackBar('First Name is Empty');
       return false;
     }
     else {
       if (this.state.formData.lastName.length === 0) {
-        this.setState({
-          open: true,
-          snackbarmsg: 'Last Name is Empty'
-        });
+        this.props.handleOpenSnackBar('Last Name is Empty');
         return false;
       }
       else {
         if (this.state.formData.email.length === 0) {
-          this.setState({
-            open: true,
-            snackbarmsg: 'Email cannot be empty'
-          });
+          this.props.handleOpenSnackBar("Email cannot be Empty");
           return false;
         }
         else {
           if (this.state.formData.password.length === 0) {
-            this.setState({
-              open: true,
-              snackbarmsg: 'Password cannot be empty'
-            });
+            this.props.handleOpenSnackBar('Password cannot be empty');
             return false;
           }
           else {
             if(!validator.isEmail(this.state.formData.email)) {
-              this.setState({
-                open: true,
-                snackbarmsg: 'Enter Valid Email Id'
-              });
+              this.props.handleOpenSnackBar('Enter Valid Email Id');
               return false;
             }
             else {
@@ -166,10 +143,7 @@ class SignUpProcess extends React.Component {
                 return true;
               }
               else {
-                this.setState({
-                  open:true,
-                  snackbarmsg : 'Confirm password does not match'
-                });
+                this.props.handleOpenSnackBar('Password doest not Match')
                 return false;
               }
             }
@@ -181,26 +155,6 @@ class SignUpProcess extends React.Component {
 
 
   handleSubmit = () => {
-
-    // const formData = new FormData();
-    // // formData.append('file', this.state.image);
-    // formData.append('firstName', this.state.formData.firstName);
-    // formData.append('lastName', this.state.formData.lastName);
-    // formData.append('isAdmin', false);
-    // formData.append('email', this.state.formData.email);
-    // // formData.append('securityQuestion', this.state.question);
-    // // formData.append('securityAnswer', this.state.answer);
-    // formData.append('password', this.state.formData.password);
-
-    // axios.post('/register', formData,
-
-    //   {
-    //     headers: {
-    //       'accept': 'application/json',
-    //       'Accept-Language': 'en-US,en;q=0.8',
-    //       'Content-Type': `multipart/form-data;`,
-    //     }
-    //   })
 
     let validation = this.validation();
     if(validation) {
@@ -220,10 +174,7 @@ class SignUpProcess extends React.Component {
           })
               .then((response) => {
                   if (response.data.success) {
-                      this.setState({
-                          open: true,
-                          snackbarmsg:`WELCOME ${this.state.formData.firstName} `
-                      });
+                      this.props.handleOpenSnackBar(`WELCOME ${this.state.formData.firstName} `)
 
                       localStorage.setItem("authToken", response.data.authToken);
                       localStorage.setItem('userId', response.data.userId);
@@ -238,7 +189,8 @@ class SignUpProcess extends React.Component {
                                   userDetails.data[0].lastName,
                                   userDetails.data[0].profileImage,
                                   userDetails.data[0].email,
-                                  userDetails.data[0].isAdmin
+                                  userDetails.data[0].isAdmin,
+                                  userDetails.data[0].gender
                               );
 
                               this.props.history.push('/');
@@ -247,14 +199,12 @@ class SignUpProcess extends React.Component {
                           .catch((error) => {
                               console.log(error);
                           });
-                      //  console.log('===>', this.props.userId)
+                     
                   }
 
                   else {
-                      this.setState({
-                          open:true,
-                          snackbarMessage:"Username OR Password is wrong"
-                      })
+
+                      this.props.handleOpenSnackBar('Username OR Password is Wrong');
                   }
 
               })
@@ -267,10 +217,7 @@ class SignUpProcess extends React.Component {
           }
           else {
             if (response.data.message.errno === 1062) {
-              this.setState({
-                open: true,
-                snackbarmsg: "Email Already Present"
-              })
+              this.props.handleOpenSnackBar('Email Already Present');
             }
           }
         })
@@ -379,25 +326,7 @@ class SignUpProcess extends React.Component {
             </Grid>
           </Paper>
         </Grid>
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          open={this.state.open}
-          TransitionComponent={this.TransitionUp}
-          variant="error"
-          autoHideDuration={1000}
-          onClose={this.handleCloseSnackBar}
-          onClick={this.handleCloseSnackBar}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id">{this.state.snackbarmsg}</span>}
-
-        />
-
-
+       
       </div>
     );
   }
@@ -417,14 +346,19 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-      handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin) => dispatch({
+      handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin , gender) => dispatch({
           type: actionTypes.AUTHENTICATE,
           authToken: token, userId: id,
           firstName: firstName,
           lastName: lastName,
           profileImage: profileImage,
           email: email,
-          isAdmin: isAdmin
+          isAdmin: isAdmin,
+          gender:gender
+     }),
+     handleOpenSnackBar : (message) => dispatch ({
+       type:actionTypes.SNACKBAR_OPEN,
+       snackBarMessage: message
      })
   }
 }

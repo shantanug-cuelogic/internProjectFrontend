@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { Paper, TextField, Grid, Typography, Button, Snackbar } from '@material-ui/core';
 import validator from 'validator';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import * as actionTypes from '../../Store/Actions/actionTypes';
+import { connect } from 'react-redux';
 
 const Style = {
     Container: {
@@ -30,8 +32,6 @@ class ForgotPassword extends React.Component {
         this.state = {
             authToken: this.props.match.params.authToken,
             isValidToken: false,
-            open: false,
-            snackbarMessage: '',
             firstName: '',
             lastName: '',
             userId: null,
@@ -67,12 +67,12 @@ class ForgotPassword extends React.Component {
                 if (response.data.success) {
                     this.setState({
                         isValidToken: true,
-                        open: true,
-                        snackbarMessage: "User authenticated",
                         firstName: response.data.result[0].firstName,
                         lastName: response.data.result[0].lastName,
                         userId: response.data.result[0].userId
                     });
+                    this.props.handleOpenSnackBar("User authenticated");
+                    
                 }
             })
             .catch((error) => {
@@ -84,27 +84,18 @@ class ForgotPassword extends React.Component {
         let password = document.getElementById('password').value;
         let confirmpassword = document.getElementById('confirmpassword').value;
         if (validator.isEmpty(password)) {
-            this.setState({
-                open: true,
-                snackbarMessage: "Password Cannot Be Empty"
-            });
+            this.props.handleOpenSnackBar("Password Cannot Be Empty");
             return false;
         }
 
         else {
             if (validator.isEmpty(confirmpassword)) {
-                this.setState({
-                    open: true,
-                    snackbarMessage: "Password Cannot Be Empty"
-                });
+                this.props.handleOpenSnackBar("Password Cannot Be Empty");
                 return false;
             }
             else {
                 if (password !== confirmpassword) {
-                    this.setState({
-                        open: true,
-                        snackbarMessage: "Password does not match"
-                    });
+                    this.props.handleOpenSnackBar("Password does not match");
                     return false
                 }
                 else {
@@ -124,32 +115,20 @@ class ForgotPassword extends React.Component {
             })
                 .then((response) => {
                     if (response.data.success) {
-                        this.setState({
-                            open: true,
-                            snackbarMessage: "Password Changed Succesfully"
-                        });
+                        this.props.handleOpenSnackBar("Password Changed Succesfully");
                         this.props.history.push('/signin');
                     }
                     else {
-                        this.setState({
-                            open: true,
-                            snackbarMessage: response.data.message
-                        })
+                        this.props.handleOpenSnackBar(response.data.message);
                     }
                 })
                 .catch((error) => {
-
+                    console.log(error);
                 })
         }
 
     }
 
-    handleCloseSnackBar = () => {
-        this.setState({
-            open: false,
-            snackbarMessage: " "
-        })
-    }
 
     handleChangePassword = (event) => {
         this.setState({
@@ -220,29 +199,18 @@ class ForgotPassword extends React.Component {
                     {content}
                 </ValidatorForm>
 
-
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
-                    open={this.state.open}
-                    TransitionComponent={this.TransitionUp}
-                    variant="error"
-                    autoHideDuration={1000}
-                    onClose={this.handleCloseSnackBar}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">{this.state.snackbarMessage}  </span>}
-
-                />
             </div>
         );
     }
-
-
-
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        handleOpenSnackBar : (message) => dispatch({
+            type: actionTypes.SNACKBAR_OPEN,
+            snackBarMessage : message
+        })
+    }
 }
 
-export default withStyles(Style)(ForgotPassword);
+
+export default connect(null,mapDispatchToProps)(withStyles(Style)(ForgotPassword));

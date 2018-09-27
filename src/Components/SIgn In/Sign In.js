@@ -10,7 +10,6 @@ import { Typography, Button } from '@material-ui/core';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
-import Snackbar from '@material-ui/core/Snackbar';
 import Slide from '@material-ui/core/Slide';
 import validator from 'validator';
 import { NavLink } from 'react-router-dom';
@@ -40,10 +39,7 @@ const styles = theme => ({
 
 class SignIn extends React.Component {
 
-    state = {
-        open: false,
-        snackbarMessage: ''
-    }
+  
     TransitionUp = (props) => {
         return <Slide {...props} direction="up" />;
     }
@@ -52,37 +48,24 @@ class SignIn extends React.Component {
         document.getElementById('email').value = "";
         document.getElementById('password').value = ""
     }
-    handleCloseSnackBar = () => {
-        this.setState({
-            open: false,
-            snackbarMessage: " "
-        })
-    }
+   
     validation = () => {
         let email = document.getElementById('email').value;
         let password = document.getElementById('password').value;
         
             if(validator.isEmpty(email)) {
-                this.setState({
-                    open:true,
-                    snackbarMessage:'User Name Cannot be empty'
-                });
+                this.props.handleOpenSnackBar("Username Cannot be Empty");
                 return false;
         }
         else {
             if(!validator.isEmail(email)) {
-                this.setState({
-                    open:true,
-                    snackbarMessage:'Enter Valid Email'
-                });
+                this.props.handleOpenSnackBar("Enter Valid Email");
                 return false;
             }
             else {
                 if(validator.isEmpty(password)) {
-                    this.setState({
-                        open:true,
-                        snackbarMessage:"Password cannot be empty"
-                    });
+                   
+                    this.props.handleOpenSnackBar("Password cannot be empty");
                     return false;
                 }
                 else {
@@ -104,10 +87,10 @@ class SignIn extends React.Component {
             })
                 .then((response) => {
                     if (response.data.success) {
-                        this.setState({
-                            open: true,
-                            snackbarMessage:"Succesfully Signed In"
-                        });
+                        
+                        
+                        this.props.handleOpenSnackBar("Succesfully Signed In");
+                        
 
                         localStorage.setItem("authToken", response.data.authToken);
                         localStorage.setItem('userId', response.data.userId);
@@ -120,9 +103,9 @@ class SignIn extends React.Component {
                                     userDetails.data[0].lastName,
                                     userDetails.data[0].profileImage,
                                     userDetails.data[0].email,
-                                    userDetails.data[0].isAdmin
+                                    userDetails.data[0].isAdmin,
+                                    userDetails.data[0].gender
                                 );
-
                                 this.props.history.push('/');
 
                             })
@@ -132,10 +115,9 @@ class SignIn extends React.Component {
                     }
 
                     else {
-                        this.setState({
-                            open:true,
-                            snackbarMessage:"Username OR Password is wrong"
-                        })
+                      
+                            this.props.handleOpenSnackBar("Username or Password is Wrong")
+                        
                     }
 
                 })
@@ -147,13 +129,7 @@ class SignIn extends React.Component {
 
 
     }
-    handleCloseSnackBar = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        this.setState({ open: false });
-    }
+    
     render() {
         const { classes } = this.props;
         return (
@@ -194,22 +170,7 @@ class SignIn extends React.Component {
 
                     </div>
                 </Paper>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
-                    open={this.state.open}
-                    TransitionComponent={this.TransitionUp}
-                    variant="error"
-                    autoHideDuration={1000}
-                    onClose={this.handleCloseSnackBar}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">{this.state.snackbarMessage}  </span>}
-
-                />
+                
             </div>
         )
     }
@@ -220,21 +181,29 @@ const mapStateToProps = state => {
     return {
         auth: state.authReducer.auth,
         authToken: state.authReducer.authToken,
-        firstName: state.authReducer.firstName
+        firstName: state.authReducer.firstName,
+        
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin) => dispatch({
+        handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin, gender) => dispatch({
             type: actionTypes.AUTHENTICATE,
             authToken: token, userId: id,
             firstName: firstName,
             lastName: lastName,
             profileImage: profileImage,
             email: email,
-            isAdmin: isAdmin
+            isAdmin: isAdmin,
+            gender:gender
+       }),
+
+       handleOpenSnackBar : (snackBarMessage) => dispatch ({
+           type: actionTypes.SNACKBAR_OPEN,
+           snackBarMessage:snackBarMessage
        })
+       
     }
 }
 

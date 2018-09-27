@@ -3,6 +3,8 @@ import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper, TextField, Grid, Typography, Button, Snackbar } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { connect } from 'react-redux';
+import * as actionTypes from '../../Store/Actions/actionTypes';
 
 const Style = {
     Container: {
@@ -28,8 +30,6 @@ class ForgotPassword extends React.Component {
 
 
     state ={
-        open:false,
-        snackbarMessage:'',
         succesful:null
     }
 
@@ -45,31 +45,16 @@ class ForgotPassword extends React.Component {
       })
       .then((response)=>{
         if(response.data.success) {
-            this.setState({
-                succesful:true,    
-                open:true,
-                snackbarMessage:'Recovery Link Sent To Registered Email'
-            });
+            this.props.handleOpenSnackBar('Recovery Link Sent To Registered Email')
         }
         else {
-            this.setState({
-                succesful:null,    
-                open:true,
-                snackbarMessage:response.data.message
-            })
+            this.props.handleOpenSnackBar(response.data.message)
         }
       })
       .catch((error)=>{
           console.log(error);
       })
     } 
-
-    handleCloseSnackBar = () => {
-        this.setState({
-            open: false,
-            snackbarMessage: " "
-        })
-    }
 
     render() {
         const { classes } = this.props;
@@ -112,22 +97,7 @@ class ForgotPassword extends React.Component {
                 {waitTime}
                 </Paper>                    
             </Grid>
-            <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
-                    open={this.state.open}
-                    TransitionComponent={this.TransitionUp}
-                    variant="error"
-                    autoHideDuration={1000}
-                    onClose={this.handleCloseSnackBar}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">{this.state.snackbarMessage}  </span>}
-
-                />
+            
    </div>
 );
     }
@@ -136,4 +106,13 @@ class ForgotPassword extends React.Component {
 
 }
 
-export default withStyles(Style)(ForgotPassword);
+const mapDispatchToProps = dispatch => {
+    return {
+        handleOpenSnackBar : (message) => dispatch({
+            type: actionTypes.SNACKBAR_OPEN,
+            snackBarMessage : message
+        })
+    }
+}
+
+export default connect(null,mapDispatchToProps)(withStyles(Style)(ForgotPassword));

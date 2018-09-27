@@ -111,6 +111,7 @@ class Header extends React.Component {
         this.setState({ anchorEl: null });
         this.props.logout();
         this.props.resetPostReducer();
+        this.props.handleOpenSnackBar("Successfully Logged Out");
     }
 
     handleSearch = (e) => {
@@ -151,7 +152,7 @@ class Header extends React.Component {
                 <Toolbar>
                     <NavLink to='/' style={{textDecoration:'none'}}>
                         <Typography variant="title" style={{color:"white"}}>
-                            TITLE
+                            BlogIt
                         </Typography>
                     </NavLink>
                     <Grid container justify="flex-end"
@@ -263,7 +264,11 @@ const mapDispatchToProps = dispatch => {
     return {
         logout: () => dispatch({ type: actionTypes.LOGOUT }),
         resetPostReducer: () => dispatch({ type: actionTypes.RESET_POST_CONTENT }),
-        changeThemeReducer: (status) => dispatch({ type: actionTypes.THEME_HANDLER, ChangeTheme: status })
+        changeThemeReducer: (status) => dispatch({ type: actionTypes.THEME_HANDLER, ChangeTheme: status }),
+        handleOpenSnackBar : (message) => dispatch({
+            type: actionTypes.SNACKBAR_OPEN,
+            snackBarMessage: message
+        })
     }
 }
 

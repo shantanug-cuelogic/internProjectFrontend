@@ -43,7 +43,7 @@ class Upload extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            file: null
+            file: this.props.src
         }
         this.handleChange = this.handleChange.bind(this)
     }
@@ -66,9 +66,9 @@ class Upload extends React.Component {
                     justify="center"
                 >
                     <Grid item style={{ marginBottom: 20 }}>
-                        <Paper className={classes.paper}>
+                       
                             <Avatar src={this.state.file} className={classes.ProfileAvatar} />
-                        </Paper>
+                       
                     </Grid>
                 </Grid>
                 <Divider />

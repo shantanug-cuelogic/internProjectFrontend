@@ -91,8 +91,7 @@ class Post extends Component {
         firstName: '',
         lastName: '',
         likeAllowed: true,
-        open: false,
-        snackbarMessage : ''
+       
     }
 
     componentDidMount() {
@@ -109,7 +108,7 @@ class Post extends Component {
                 let postId = parseInt(response.data.result[0].postId);
                 let userId = response.data.result[0].userId;
                 let category = response.data.result[0].category;
-
+                
                 axios.get('/post/comment/' + response.data.result[0].postId)
                     .then((allcomments) => {
 
@@ -133,7 +132,7 @@ class Post extends Component {
                             });
 
                         axios.post('/post/like/allowed', {
-                            authToken: localStorage.getItem('authToken'),
+                            authToken: this.props.authToken,
                             postIdToLike: response.data.result[0].postId
                         })
                             .then((response) => {
@@ -150,11 +149,14 @@ class Post extends Component {
                             });
 
                         axios.post('/post/view/add', {
-                            authToken: localStorage.getItem("authToken"),
+                            authToken: this.props.authToken,
                             postIdToView: requiredUrl
                         })
                             .then((response) => {
-
+                                if(response.data.success) {
+                                   
+                                }
+                               
                             })
                             .catch((error) => {
                                 console.log(error)
@@ -170,7 +172,7 @@ class Post extends Component {
                                 console.log(error);
                             })
 
-                        axios.get()
+                       
 
                     })
                     .catch((error) => {
@@ -206,10 +208,8 @@ class Post extends Component {
                         commentContent: comment
                     }
                     document.getElementById('comment').value = "";
-                    this.setState({
-                        open:true,
-                        snackbarMessage:"Comment Posted !!"
-                    })
+                    
+                    this.props.handleOpenSnackBar("Comment Posted !!");
                     this.props.postCommentToReducer(updatedCommentData);
                 }
             })
@@ -217,11 +217,6 @@ class Post extends Component {
                 console.log(error)
             })
     }
-
-    handleEditPost = () => {
-
-    }
-
     handleDeletePost = () => {
         axios.post('/post/delete', {
             authToken: localStorage.getItem('authToken'),
@@ -229,11 +224,8 @@ class Post extends Component {
         })
             .then((response) => {
                 if (response.data.success) {
-                    this.setState({
-                        open:true,
-                        snackbarMessage:"Post Deleted Succesfully"
-                    })
-
+                
+                    this.props.handleOpenSnackBar("Post Deleted Succesfully")
                     this.props.deletePostToReducer();
                     this.props.history.push('/');
 
@@ -243,16 +235,7 @@ class Post extends Component {
 
             })
     }
-
-    handleCloseSnackBar = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        this.setState({ open: false });
-    };
-
-    handleDeleteClick = (commentId) => {
+handleDeleteClick = (commentId) => {
 
         axios.put('/post/comment/delete', {
             commentIdtoDelete: commentId,
@@ -264,10 +247,7 @@ class Post extends Component {
                     this.props.allcomments.map((commentData, id) => {
                         if (commentData.commentId === commentId) {
                             this.props.deleteCommentToReducer(id);
-                            this.setState({
-                                open:true,
-                                snackbarMessage:"Comment Deleted Succesfully"
-                            })
+                            this.props.handleOpenSnackBar("Comment Deleted Succesfully");
                         }
                     });
 
@@ -447,23 +427,6 @@ class Post extends Component {
 
                     : <div className={classes.SigninLinkContainer}><NavLink style={{ color: 'red',textDecoration:'none' }} to='/signin' >YOU NEED TO SIGNIN TO COMMENT</NavLink></div>
                 }
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
-                    open={this.state.open}
-                    TransitionComponent={this.TransitionUp}
-                    variant="error"
-                    autoHideDuration={6000}
-                    onClose={this.handleCloseSnackBar}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">{this.state.snackbarMessage}</span>}
-
-                />
-
                 <Paper>
                     <div className={classes.AllCommentsContainer}>
                         {comments}
@@ -480,6 +443,7 @@ class Post extends Component {
 const mapStateToProps = state => {
     return {
         auth: state.authReducer.auth,
+        authToken: state.authReducer.authToken,
         userId: state.authReducer.userId,
         postContent: state.postReducer.postContent,
         postTitle: state.postReducer.postTitle,
@@ -535,6 +499,10 @@ const mapDispatchToProps = dispatch => {
         totalViewsToPostReducer: (views) => dispatch({
             type: actionTypes.TOTAL_VIEWS_TO_POST,
             views: views
+        }),
+        handleOpenSnackBar : (snackBarMessage) => dispatch ({
+            type: actionTypes.SNACKBAR_OPEN,
+            snackBarMessage:snackBarMessage
         })
 
 

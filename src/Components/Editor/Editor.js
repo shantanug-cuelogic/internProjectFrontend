@@ -14,6 +14,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Thumbnail from '../ImageUploadPreviev/ImageUploadPreview';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import validator from 'validator';
+import { connect } from 'react-redux';
+import * as actionTypes from '../../Store/Actions/actionTypes'; 
 
 const styles = {
     button: {
@@ -71,8 +73,7 @@ class Editor extends Component {
     state = {
         model: '',
         Category: '',
-        snackbarMessage:'',
-        open:false
+      
 
     }
 
@@ -116,49 +117,29 @@ class Editor extends Component {
         });
     };
 
-    handleCloseSnackBar = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        this.setState({ open: false });
-    };
 
     validation = () => {
         let postTitle = document.getElementById('postTitle').value;
        let image = document.getElementById('profilepic').files[0];
         if(validator.isEmpty(postTitle)) {
-            this.setState({
-                open:true,
-                snackbarMessage:'Post Title Cannot Be Empty'
-            });
-
+            this.props.handleOpenSnackBar('Post Title Cannot Be Empty');
             return false;
         }
         else {
             
             if(validator.isEmpty(this.state.Category)) {
-                this.setState({
-                    open:true,
-                    snackbarMessage:'Please Select Category '
-                });
+                this.props.handleOpenSnackBar('Please Select Category ');
                 return false;
             }
             else {
                 if(image === undefined) {
-                    this.setState({
-                        open:true,
-                        snackbarMessage:'Thumbnail Cannot Be Empty'
-                    }); 
+                    this.props.handleOpenSnackBar('Thumbnail Cannot Be Empty')
                     return false;
                 }
                 
                 else {
                     if(validator.isEmpty(this.state.model)) {
-                        this.setState({
-                            open:true,
-                            snackbarMessage:'Post Content Cannot Be Empty'
-                        });
+                        this.props.handleOpenSnackBar('Post Content Cannot Be Empty');
                         return false;
                     }
                     else {
@@ -196,13 +177,8 @@ class Editor extends Component {
         })
             .then((response) => {
             if (response.data.success) {
-                
-                   this.setState({
-                       open:true,
-                       snackbarMessage:'Post Created Successfully!!'
-                   }) 
-
-                 this.props.history.push('/post/'+response.data.id);
+                    this.props.handleOpenSnackBar('Post Created Successfully!!');
+                     this.props.history.push('/post/'+response.data.id);
             }
           
             })
@@ -268,24 +244,6 @@ class Editor extends Component {
 
                     <Button variant="contained" color="primary" className={classes.button} onClick={this.handlePost}>Post</Button>
                 </Paper>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                    }}
-                    open={this.state.open}
-                    TransitionComponent={this.TransitionUp}
-                    variant="error"
-                    autoHideDuration={2000}
-                    onClose={this.handleCloseSnackBar}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span id="message-id">{this.state.snackbarMessage}</span>}
-
-                />
-
-
             </div>
 
         )
@@ -293,4 +251,13 @@ class Editor extends Component {
 
 }
 
-export default withStyles(styles)(Editor);
+const mapDispatchToProps = dispatch =>{
+    return {
+        handleOpenSnackBar : (message) => dispatch({
+            type: actionTypes.SNACKBAR_OPEN,
+            snackBarMessage : message
+        })
+    }
+}
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(Editor));

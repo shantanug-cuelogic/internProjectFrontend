@@ -5,11 +5,12 @@ const initialState = {
     auth : false,
     authToken : "",
     userId: "",
-    firstName:"",
-    lastName:"",
-    profileImage:"",
+    firstName:"Shantanu",
+    lastName:"Gade",
+    profileImage:"/require/userimage.jpg",
     isAdmin:false,
-    email:""
+    email:"shan@gmail.com",
+    gender:'Male'
 }
 
 const reducer = (state = initialState , action) => {
@@ -44,7 +45,8 @@ const reducer = (state = initialState , action) => {
                     lastName:action.lastName,
                     profileImage:action.profileImage,
                     isAdmin:action.isAdmin,
-                    email:action.email
+                    email:action.email,
+                    gender: action.gender
                 }
                
             }
@@ -55,6 +57,16 @@ const reducer = (state = initialState , action) => {
                     authToken : action.authToken,
                     userId : parseInt(action.userId)
 
+                }
+            }
+
+            case actionTypes.UPDATE_USER : {
+                return {
+                    ...state,
+                    firstName:action.firstName,
+                    lastName:action.lastName,
+                    gender:action.gender,
+                    profileImage:action.profileImage
                 }
             }
 

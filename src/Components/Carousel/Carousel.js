@@ -119,10 +119,10 @@ class Carousel extends React.Component {
             infinite: true,
             centerPadding: "60px",
             slidesToShow: 1 ,
-            speed: 1000,
+            speed: 2000,
             dots: true,
-            autoplay: true,
-            autoplaySpeed: 2000,
+            autoplay: false,
+            autoplaySpeed: 6000,
             pauseOnHover: true,
             adaptiveHeight: true,
             
@@ -153,7 +153,17 @@ class Carousel extends React.Component {
                             <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
                             <Typography variant="display2" color="textPrimary" >{this.state.popularPosts[0].title}</Typography>
                            <Divider />
-                            <Typography variant="body2">{ReactHtmlParser(this.state.popularPosts[0].postContent,options)}</Typography>
+                            <Typography variant="body2">
+                            <style jsx="true">
+                                {`
+                                    p {
+                                    margin-top :0px;
+                                    margin-bottom:0px;
+                                         }
+                                `}
+                            </style>
+                            {ReactHtmlParser(this.state.popularPosts[0].postContent,options)}
+                            </Typography>
                           <div>
                           <Typography variant="caption">Views:{this.state.popularPosts[0].views}</Typography>
                            
@@ -176,7 +186,17 @@ class Carousel extends React.Component {
                         
                             <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
                             <Typography variant="display2" color="textPrimary" >{this.state.popularPosts[1].title}</Typography>
-                            <Typography variant="body2">{ReactHtmlParser(this.state.popularPosts[1].postContent,options)}</Typography>
+                            <Typography variant="body2">
+                            <style jsx="true">
+                                {`
+                                    p {
+                                    margin-top : 0px;
+                                    margin-bottom:0px;
+                                         }
+                                `}
+                            </style>
+                            {ReactHtmlParser(this.state.popularPosts[1].postContent,options)}
+                            </Typography>
                           <div>
                           <Typography variant="caption">Views:{this.state.popularPosts[1].views}</Typography>
                            
@@ -199,7 +219,17 @@ class Carousel extends React.Component {
                         
                             <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
                             <Typography variant="display2" color="textPrimary" >{this.state.popularPosts[2].title}</Typography>
-                            <Typography variant="body2">{ReactHtmlParser(this.state.popularPosts[2].postContent,options)}</Typography>
+                            <Typography variant="body2">
+                            <style jsx="true">
+                                {`
+                                    p {
+                                    margin-top : 0px;
+                                    margin-bottom:0px;
+                                         }
+                                `}
+                            </style>
+                            {ReactHtmlParser(this.state.popularPosts[2].postContent,options)}
+                            </Typography>
                           <div>
                           <Typography variant="caption">Views:{this.state.popularPosts[2].views}</Typography>
                            
@@ -222,7 +252,17 @@ class Carousel extends React.Component {
                         
                             <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
                             <Typography variant="display2" color="textPrimary" >{this.state.popularPosts[3].title}</Typography>
-                            <Typography variant="body2">{ReactHtmlParser(this.state.popularPosts[3].postContent,options)}</Typography>
+                            <Typography variant="body2">
+                            <style jsx="true">
+                                {`
+                                    p {
+                                    margin-top : 0px;
+                                    margin-bottom:0px;
+                                         }
+                                `}
+                            </style>
+                            {ReactHtmlParser(this.state.popularPosts[3].postContent,options)}
+                            </Typography>
                           <div>
                           <Typography variant="caption">Views:{this.state.popularPosts[3].views}</Typography>
                            
@@ -245,7 +285,17 @@ class Carousel extends React.Component {
                         
                             <Grid item  sm={7} className={classes.PostText} style={{display:'inline'}}>
                             <Typography variant="display2" color="textPrimary" >{this.state.popularPosts[4].title}</Typography>
-                            <Typography variant="body2">{ReactHtmlParser(this.state.popularPosts[4].postContent,options)}</Typography>
+                            <Typography variant="body2">
+                            <style jsx="true">
+                                {`
+                                    p {
+                                    margin-top : 0px;
+                                    margin-bottom:0px;
+                                         }
+                                `}
+                            </style>
+                            {ReactHtmlParser(this.state.popularPosts[4].postContent,options)}
+                            </Typography>
                           <div>
                           <Typography variant="caption">Views:{this.state.popularPosts[4].views}</Typography>
                            

@@ -19,6 +19,8 @@ import SearchPost from './Components/SearchPost/SearchPost';
 import AuthorProfile from './Components/AuthorProfile/AuthorProfile';
 import ForgotPassword from './Components/ForgotPassword/ForgotPassword';
 import PasswordRecover from './Components/PasswordRecover/PasswordRecover';
+import UpdateProfile from './Components/UpdateProfile/UpdateProfile';
+import Snackbar from '@material-ui/core/Snackbar';
 
 
 class App extends Component {
@@ -38,8 +40,16 @@ class App extends Component {
 
     // });
   }
-  
-  
+  handleCloseSnackBar = (event, reason) => {
+    if (reason === 'clickaway') {
+        return;
+    }
+    this.props.closeSnackBar();
+   
+};
+
+
+
   render() {
 
 // const theme = createMuiTheme({
@@ -117,11 +127,25 @@ createMuiTheme({
                 <Route path ='/authorprofile/:userId' component={AuthorProfile} ></Route>
                 <Route path='/forgotpassword' component={ForgotPassword}></Route>
                 <Route path='/recoverpassword/:authToken' component={PasswordRecover}></Route>
+                <Route path="/updateprofile" component={UpdateProfile}> </Route>
                 <Route path='/' exact component={BlogBuilder}></Route>
             </Switch>
           </div>
-          
-        
+          <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    open={this.props.open}
+                    TransitionComponent={this.TransitionUp}
+                    variant="error"
+                    autoHideDuration={1000}
+                    onClose={this.handleCloseSnackBar}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">{this.props.snackBarMessage}  </span>}
+            />
       </div>
       </MuiThemeProvider>
     );
@@ -133,12 +157,17 @@ const mapStateToProps = state =>{
     auth : state.authReducer.auth,
     userId : state.authReducer.userId,
     isDark: state.themeReducer.isDark,
+    open: state.snackBarReducer.open,
+    snackBarMessage: state.snackBarReducer.snackBarMessage
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return{
-    authenticate : (userStatus,token,id)=> dispatch({type:actionTypes.AUTHENTICATE_ON_RELOAD , status:userStatus , authToken:token, userId:id })
+    authenticate : (userStatus,token,id)=> dispatch({type:actionTypes.AUTHENTICATE_ON_RELOAD , status:userStatus , authToken:token, userId:id }),
+    closeSnackBar : () => dispatch({
+      type:actionTypes.SNACKBAR_CLOSE
+      })
   }
 }
 
