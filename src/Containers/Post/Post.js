@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Typography, Paper, Button, TextField, Divider } from '@material-ui/core';
+import { Typography, Paper, Button, TextField, Divider,Avatar,Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -18,8 +18,24 @@ import Slide from '@material-ui/core/Slide';
 
 const style = theme => ({
 
+    AuthorContainer:{
+        marginTop:'10%',
+        height:70  
+    },
+
+    AuthorAvatar : {
+        height:70,
+        width:70,
+        
+    },
+
+    AuthorInfo : {
+        height:70,
+        display:'inline'
+    },
+
     HeaderContainer: {
-        marginTop: '10%',
+        
         height: '70px',
         paddingTop: '3%'
     },
@@ -91,7 +107,11 @@ class Post extends Component {
         firstName: '',
         lastName: '',
         likeAllowed: true,
-       
+        authorFirstName:"",
+        authorLastName:"",
+        authorProfileImage:"",
+        authorEmail:"",
+
     }
 
     componentDidMount() {
@@ -171,13 +191,25 @@ class Post extends Component {
                             .catch((error) => {
                                 console.log(error);
                             })
+                         })
+                    .catch((error) => {
+                        console.log(error)
+                    })
 
-                       
-
+                    axios.get('/userprofile/'+response.data.result[0].userId)
+                    .then((response) => {
+                        
+                        this.setState({
+                            authorFirstName:response.data[0].firstName,
+                            authorLastName:response.data[0].lastName,
+                            authorProfileImage:response.data[0].profileImage,
+                            authorEmail:response.data[0].email,
+                        })
                     })
                     .catch((error) => {
                         console.log(error)
                     })
+
                 }
             })
             .catch((error) => {
@@ -377,6 +409,28 @@ handleDeleteClick = (commentId) => {
         let authorProfileUrl = "/authorprofile/" + this.props.postUserId;
         return (
             <div>
+                 
+                   <Grid
+                   container
+                justify="center"
+                  
+                  >
+                 
+                   <div className={classes.AuthorContainer} style={{marginBottom:'3%'}} >
+                   <NavLink to={authorProfileUrl} >       
+                        <Avatar src={this.state.authorProfileImage} className={classes.AuthorAvatar} style={{float:'left'}} ></Avatar>
+                    </NavLink>
+                        <div className={classes.AuthorInfo} style={{float:'left', marginLeft:20}}>
+                            <Typography variant="subheading">{this.state.authorFirstName+ " "+ this.state.authorLastName }</Typography>
+                            <Button variant="outlined" color="primary" size="small"  > Follow</Button>
+                            <Typography variant="caption" >{this.state.authorEmail}</Typography>    
+                        </div>
+
+                    </div>
+                    
+                   </Grid>
+                            
+               
                 <Paper>
                     <div className={classes.HeaderContainer}>
                         <Typography variant="display2" color="textPrimary"> {this.props.postTitle} </Typography>

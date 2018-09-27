@@ -97,6 +97,8 @@ class SignIn extends React.Component {
                         axios.get('/userprofile/' + response.data.userId)
 
                             .then((userDetails) => {
+                                console.log(userDetails)
+
                                 this.props.handleSignInState(response.data.authToken,
                                     parseInt(response.data.userId),
                                     userDetails.data[0].firstName,
