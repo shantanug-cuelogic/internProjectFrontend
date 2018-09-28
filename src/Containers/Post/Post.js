@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Typography, Paper, Button, TextField, Divider,Avatar,Grid } from '@material-ui/core';
+import { Typography, Paper, Button, TextField, Divider, Avatar, Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -18,24 +18,24 @@ import Slide from '@material-ui/core/Slide';
 
 const style = theme => ({
 
-    AuthorContainer:{
-        marginTop:'10%',
-        height:70  
+    AuthorContainer: {
+        marginTop: '10%',
+        height: 70
     },
 
-    AuthorAvatar : {
-        height:70,
-        width:70,
-        
+    AuthorAvatar: {
+        height: 70,
+        width: 70,
+
     },
 
-    AuthorInfo : {
-        height:70,
-        display:'inline'
+    AuthorInfo: {
+        height: 70,
+        display: 'inline'
     },
 
     HeaderContainer: {
-        
+
         height: '70px',
         paddingTop: '3%'
     },
@@ -71,7 +71,7 @@ const style = theme => ({
         float: 'left',
         marginTop: 40,
         color: 'black',
-       marginLeft:30
+        marginLeft: 30
     },
     PostCommentButton: {
         marginBottom: '3%'
@@ -97,8 +97,8 @@ const style = theme => ({
 
         marginLeft: "20px"
     },
-    SigninLinkContainer:{
-        padding:20
+    SigninLinkContainer: {
+        padding: 20
     }
 });
 
@@ -107,10 +107,12 @@ class Post extends Component {
         firstName: '',
         lastName: '',
         likeAllowed: true,
-        authorFirstName:"",
-        authorLastName:"",
-        authorProfileImage:"",
-        authorEmail:"",
+        authorFirstName: "",
+        authorLastName: "",
+        authorProfileImage: "",
+        authorEmail: "",
+        authorId: '',
+        allowedToFollow: null,
 
     }
 
@@ -121,95 +123,117 @@ class Post extends Component {
         axios.get('/post/getpost/' + requiredUrl)
             .then((response) => {
 
-                if(response.data.success) {
-                
-                let postContent = response.data.result[0].postContent;
-                let postTitle = response.data.result[0].title;
-                let postId = parseInt(response.data.result[0].postId);
-                let userId = response.data.result[0].userId;
-                let category = response.data.result[0].category;
-                
-                axios.get('/post/comment/' + response.data.result[0].postId)
-                    .then((allcomments) => {
+                if (response.data.success) {
+                    let postContent = response.data.result[0].postContent;
+                    let postTitle = response.data.result[0].title;
+                    let postId = parseInt(response.data.result[0].postId);
+                    let userId = response.data.result[0].userId;
+                    let category = response.data.result[0].category;
 
-                        if (allcomments.data.success) {
+                    axios.get('/post/comment/' + response.data.result[0].postId)
+                        .then((allcomments) => {
 
-                            this.props.handleFetchPost(postId, userId, postTitle, postContent, allcomments.data.result,category)
-                        }
-                        else {
-                            let array = []
-                            this.props.handleFetchPost(postId, userId, postTitle, postContent, array,category)
-                        }
+                            if (allcomments.data.success) {
 
-                        axios.get('/post/like/totallikes/' + response.data.result[0].postId)
-                            .then((res) => {
-                                if (res.data.success) {
-                                    this.props.totalLikesToPostReducer(res.data.count)
-                                }
+                                this.props.handleFetchPost(postId, userId, postTitle, postContent, allcomments.data.result, category)
+                            }
+                            else {
+                                let array = []
+                                this.props.handleFetchPost(postId, userId, postTitle, postContent, array, category)
+                            }
+
+                            axios.get('/post/like/totallikes/' + response.data.result[0].postId)
+                                .then((res) => {
+                                    if (res.data.success) {
+                                        this.props.totalLikesToPostReducer(res.data.count)
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                });
+
+                            axios.post('/post/like/allowed', {
+                                authToken: this.props.authToken,
+                                postIdToLike: response.data.result[0].postId
                             })
-                            .catch((error) => {
-                                console.log(error);
+                                .then((response) => {
+                                    if (response.data.success) {
+                                        this.props.allowToLikePostReducer(true);
+
+                                    }
+                                    else {
+                                        this.props.allowToLikePostReducer(false);
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.log(error)
+                                });
+
+                            axios.post('/post/view/add', {
+                                authToken: this.props.authToken,
+                                postIdToView: requiredUrl
+                            })
+                                .then((response) => {
+                                    if (response.data.success) {
+
+                                    }
+
+                                })
+                                .catch((error) => {
+                                    console.log(error)
+                                });
+
+                            axios.get('/post/view/totalviews/' + requiredUrl)
+                                .then((response) => {
+                                    if (response.data.success) {
+                                        this.props.totalViewsToPostReducer(response.data.count);
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                })
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
+
+                    axios.get('/userprofile/' + response.data.result[0].userId)
+                        .then((response) => {
+
+                            this.setState({
+                                authorFirstName: response.data[0].firstName,
+                                authorLastName: response.data[0].lastName,
+                                authorProfileImage: response.data[0].profileImage,
+                                authorEmail: response.data[0].email,
+                                authorId: response.data[0].userId,
                             });
 
-                        axios.post('/post/like/allowed', {
-                            authToken: this.props.authToken,
-                            postIdToLike: response.data.result[0].postId
+                            if (this.props.auth) {
+                                axios.post('/follower/allowed', {
+                                    authToken: this.props.authToken,
+                                    userIdToFollow: response.data[0].userId
+                                })
+                                    .then((response) => {
+                                        if (response.data.success) {
+                                            this.setState({
+                                                allowedToFollow: true
+                                            });
+                                        }
+                                        else {
+                                            this.setState({
+                                                allowedToFollow: false
+                                            })
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        console.log(error);
+                                    })
+                            }
+
                         })
-                            .then((response) => {
-                                if (response.data.success) {
-                                    this.props.allowToLikePostReducer(true);
-
-                                }
-                                else {
-                                    this.props.allowToLikePostReducer(false);
-                                }
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                            });
-
-                        axios.post('/post/view/add', {
-                            authToken: this.props.authToken,
-                            postIdToView: requiredUrl
-                        })
-                            .then((response) => {
-                                if(response.data.success) {
-                                   
-                                }
-                               
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                            });
-
-                        axios.get('/post/view/totalviews/' + requiredUrl)
-                            .then((response) => {
-                                if (response.data.success) {
-                                    this.props.totalViewsToPostReducer(response.data.count);
-                                }
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            })
-                         })
-                    .catch((error) => {
-                        console.log(error)
-                    })
-
-                    axios.get('/userprofile/'+response.data.result[0].userId)
-                    .then((response) => {
-                        
-                        this.setState({
-                            authorFirstName:response.data[0].firstName,
-                            authorLastName:response.data[0].lastName,
-                            authorProfileImage:response.data[0].profileImage,
-                            authorEmail:response.data[0].email,
-                        })
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
-
+                        .catch((error) => {
+                            console.log(error)
+                        });
                 }
             })
             .catch((error) => {
@@ -240,7 +264,7 @@ class Post extends Component {
                         commentContent: comment
                     }
                     document.getElementById('comment').value = "";
-                    
+
                     this.props.handleOpenSnackBar("Comment Posted !!");
                     this.props.postCommentToReducer(updatedCommentData);
                 }
@@ -256,7 +280,7 @@ class Post extends Component {
         })
             .then((response) => {
                 if (response.data.success) {
-                
+
                     this.props.handleOpenSnackBar("Post Deleted Succesfully")
                     this.props.deletePostToReducer();
                     this.props.history.push('/');
@@ -267,7 +291,7 @@ class Post extends Component {
 
             })
     }
-handleDeleteClick = (commentId) => {
+    handleDeleteClick = (commentId) => {
 
         axios.put('/post/comment/delete', {
             commentIdtoDelete: commentId,
@@ -344,13 +368,49 @@ handleDeleteClick = (commentId) => {
                     console.log(error)
                 })
         }
-
-
-        console.log(this.props.allowedToLike);
         this.props.allowToLikePostReducer(!this.props.allowedToLike);
     }
 
+    handleFollow = () => {
+        axios.post('/follower/add', {
+            authToken: this.props.authToken,
+            userIdToFollow: this.state.authorId
+        })
+            .then((response) => {
+                if (response.data.success) {
+                    this.props.handleOpenSnackBar(response.data.message);
+                    this.setState({
+                        allowedToFollow: false
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+
+    }
+
+    handleUnfollow = () => {
+        axios.put('/follower/unfollow', {
+            authToken: this.props.authToken,
+            userIdToUnfollow: this.state.authorId
+        })
+            .then((response) => {
+                if (response.data.success) {
+                    this.setState({
+                        allowedToFollow: true
+                    });
+                    this.props.handleOpenSnackBar(response.data.message);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
+
     render() {
+        let authorProfileUrl = "/authorprofile/" + this.props.postUserId;
         const { classes } = this.props;
 
         let editPostUrl = '/editpost/' + this.props.postId
@@ -405,32 +465,49 @@ handleDeleteClick = (commentId) => {
             }
         }
 
+        let followButton = null;
+        if (this.state.authorId !== this.props.userId) {
 
-        let authorProfileUrl = "/authorprofile/" + this.props.postUserId;
+            if (this.state.allowedToFollow === true) {
+                followButton = <div>
+                    <Button variant="outlined" color="primary" size="small" onClick={this.handleFollow} > Follow</Button>
+                </div>
+            }
+            else if (this.state.allowedToFollow === false) {
+                followButton = <div>
+                    <Button variant="outlined" color="primary" size="small" onClick={this.handleUnfollow} > Unfollow</Button>
+                </div>
+            }
+            else {
+                followButton = null
+            }
+        }
+
+        console.log(this.state.allowedToFollow);
+
         return (
             <div>
-                 
-                   <Grid
-                   container
-                justify="center"
-                  
-                  >
-                 
-                   <div className={classes.AuthorContainer} style={{marginBottom:'3%'}} >
-                   <NavLink to={authorProfileUrl} >       
-                        <Avatar src={this.state.authorProfileImage} className={classes.AuthorAvatar} style={{float:'left'}} ></Avatar>
-                    </NavLink>
-                        <div className={classes.AuthorInfo} style={{float:'left', marginLeft:20}}>
-                            <Typography variant="subheading">{this.state.authorFirstName+ " "+ this.state.authorLastName }</Typography>
-                            <Button variant="outlined" color="primary" size="small"  > Follow</Button>
-                            <Typography variant="caption" >{this.state.authorEmail}</Typography>    
+
+                <Grid
+                    container
+                    justify="center"
+
+                >
+                    <div className={classes.AuthorContainer} style={{ marginBottom: '3%' }} >
+                        <NavLink to={authorProfileUrl} >
+                            <Avatar src={this.state.authorProfileImage} className={classes.AuthorAvatar} style={{ float: 'left' }} ></Avatar>
+                        </NavLink>
+                        <div className={classes.AuthorInfo} style={{ float: 'left', marginLeft: 20 }}>
+                            <Typography variant="subheading">{this.state.authorFirstName + " " + this.state.authorLastName}</Typography>
+                            {followButton}
+                            <Typography variant="caption" >{this.state.authorEmail}</Typography>
                         </div>
 
                     </div>
-                    
-                   </Grid>
-                            
-               
+
+                </Grid>
+
+
                 <Paper>
                     <div className={classes.HeaderContainer}>
                         <Typography variant="display2" color="textPrimary"> {this.props.postTitle} </Typography>
@@ -465,7 +542,7 @@ handleDeleteClick = (commentId) => {
 
                 {this.props.auth ?
                     <div className={classes.CommentContainer}>
-                     <Typography variant="body2" className={classes.UserName}>{this.props.firstName + " " + this.props.lastName}</Typography>
+                        <Typography variant="body2" className={classes.UserName}>{this.props.firstName + " " + this.props.lastName}</Typography>
                         <Paper className={classes.Comments}>
                             <TextField
                                 id="comment"
@@ -479,7 +556,7 @@ handleDeleteClick = (commentId) => {
                         </Paper>
                     </div>
 
-                    : <div className={classes.SigninLinkContainer}><NavLink style={{ color: 'red',textDecoration:'none' }} to='/signin' >YOU NEED TO SIGNIN TO COMMENT</NavLink></div>
+                    : <div className={classes.SigninLinkContainer}><NavLink style={{ color: 'red', textDecoration: 'none' }} to='/signin' >YOU NEED TO SIGNIN TO COMMENT</NavLink></div>
                 }
                 <Paper>
                     <div className={classes.AllCommentsContainer}>
@@ -507,14 +584,14 @@ const mapStateToProps = state => {
         allowedToLike: state.postReducer.allowedToLike,
         likes: state.postReducer.likes,
         views: state.postReducer.views,
-        firstName:state.authReducer.firstName,
-        lastName:state.authReducer.lastName
+        firstName: state.authReducer.firstName,
+        lastName: state.authReducer.lastName
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        handleFetchPost: (postId, userId, postTitle, postContent, allcomments,category) => dispatch(
+        handleFetchPost: (postId, userId, postTitle, postContent, allcomments, category) => dispatch(
             {
                 type: actionTypes.FETCH_POST,
                 postId: postId,
@@ -523,7 +600,7 @@ const mapDispatchToProps = dispatch => {
                 postContent: postContent,
                 allcomments: allcomments,
                 category: category,
-                
+
             }),
 
         postCommentToReducer: (updateCommentData) => dispatch({
@@ -554,9 +631,9 @@ const mapDispatchToProps = dispatch => {
             type: actionTypes.TOTAL_VIEWS_TO_POST,
             views: views
         }),
-        handleOpenSnackBar : (snackBarMessage) => dispatch ({
+        handleOpenSnackBar: (snackBarMessage) => dispatch({
             type: actionTypes.SNACKBAR_OPEN,
-            snackBarMessage:snackBarMessage
+            snackBarMessage: snackBarMessage
         })
 
 

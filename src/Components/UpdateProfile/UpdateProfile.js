@@ -10,29 +10,29 @@ import EditIcon from '@material-ui/icons/Create';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 
 const styles = themes => ({
-   
+
 
     ProfileContainer: {
         margin: '7%',
-        textAlign:'center'
+        textAlign: 'center'
     },
-    ProfileImageContainer : {
-        paddingLeft:'5%',
-        paddingRight:'5%',
-        paddingBottom:'2%'
+    ProfileImageContainer: {
+        paddingLeft: '5%',
+        paddingRight: '5%',
+        paddingBottom: '2%'
     },
-    Email:{
-        paddingBottom:'2%'
+    Email: {
+        paddingBottom: '2%'
     },
-    UpdateButton : {
-        
-        marginBottom:'3%'
+    UpdateButton: {
+
+        marginBottom: '3%'
     },
-    InputContainer :{
-        marginBottom:'2%'
+    InputContainer: {
+        marginBottom: '2%'
     }
 
-   
+
 
 });
 
@@ -118,7 +118,7 @@ class Profile extends React.Component {
                 if (response.data.success) {
 
                     this.props.updateUserToReducer(this.state.firstName, this.state.lastName, this.state.gender, response.data.profileImagePath);
-                   this.props.handleOpenSnackBar("Userprofile Updated Succesfully");
+                    this.props.handleOpenSnackBar("Userprofile Updated Succesfully");
                     this.props.history.push('/profile');
                 }
                 else {
@@ -136,150 +136,147 @@ class Profile extends React.Component {
     render() {
         const { classes } = this.props;
 
-
-
-
         return (
-           
-           <div className={classes.ProfileContainer}>
-           <Paper>
-                <Grid
-                    container
-                    justify="center"
-                >
-                    <div className={classes.ProfileImageContainer}>
-                    <Grid item >
 
-                        <ProfilePic src={this.props.profileImage} />
-                        <Typography variant="caption" style={{ marginTop: '5%' }} > Click Choose File to Upload New Image </Typography>
-
-                    </Grid>
-                    </div>
-                </Grid>
-
-                <Grid
-                    container
-                    justify="center"
-                 >
-                <Typography variant="title" className={classes.Email} > {this.props.email}</Typography>
-                <Divider />  
-                    <Grid container
-                        direction="row"
+            <div className={classes.ProfileContainer}>
+                <Paper>
+                    <Grid
+                        container
                         justify="center"
-                        className={classes.InputContainer}
                     >
-                        <Grid item sm={6}>
-                            {this.state.changeFirstName ?
-                                <TextField
-                                    id="firstnameInput"
-                                    label="First Name"
-                                    className={classes.textField}
-                                    value={this.state.firstName}
-                                    onChange={this.handleOnChangeFirstname}
-                                    margin="normal"
-                                />
-                                :
+                        <div className={classes.ProfileImageContainer}>
+                            <Grid item >
 
-                                <div>
-                                    <Typography variant="display2" id="firstName" > {this.props.firstName}</Typography>
-                                    <Typography variant="caption" > First Name</Typography>
-                                </div>
-                            }
+                                <ProfilePic src={this.props.profileImage} />
+                                <Typography variant="caption" style={{ marginTop: '5%' }} > Click Choose File to Upload New Image </Typography>
 
-                        </Grid>
-                        <Grid item>
-                            <Button onClick={this.handleFirstNameChange}>
-                                <EditIcon />
-                            </Button>
-
-                        </Grid>
+                            </Grid>
+                        </div>
                     </Grid>
 
-                    
-                    <Grid container
-                        direction="row"
+                    <Grid
+                        container
                         justify="center"
-                        className={classes.InputContainer}
                     >
-                        <Grid item sm={6}>
-
-                            {
-                                this.state.changeLastName ?
+                        <Typography variant="title" className={classes.Email} > {this.props.email}</Typography>
+                        <Divider />
+                        <Grid container
+                            direction="row"
+                            justify="center"
+                            className={classes.InputContainer}
+                        >
+                            <Grid item sm={6}>
+                                {this.state.changeFirstName ?
                                     <TextField
-                                        id="lastNameInput"
-                                        label="Last Name"
+                                        id="firstnameInput"
+                                        label="First Name"
                                         className={classes.textField}
-                                        value={this.state.lastName}
-                                        onChange={this.handleOnChangeLastname}
+                                        value={this.state.firstName}
+                                        onChange={this.handleOnChangeFirstname}
                                         margin="normal"
                                     />
                                     :
+
                                     <div>
-                                        <Typography variant="display2" > {this.props.lastName}</Typography>
-                                        <Typography variant="caption" > Last Name</Typography>
+                                        <Typography variant="display2" id="firstName" > {this.props.firstName}</Typography>
+                                        <Typography variant="caption" > First Name</Typography>
                                     </div>
+                                }
 
-                            }
+                            </Grid>
+                            <Grid item>
+                                <Button onClick={this.handleFirstNameChange}>
+                                    <EditIcon />
+                                </Button>
 
-
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Button onClick={this.handleLastNameChange} >
-                                <EditIcon />
-                            </Button>
-                        </Grid>
-                    </Grid>
 
-                    <Grid container
-                        direction="row"
-                        justify="center"
-                        className={classes.InputContainer}
-                    >
-                        <Grid item sm={6}>
-                            {
-                                this.state.changeGender ?
-                                    <TextField
-                                        id="genderInput"
-                                        select
-                                        label="Select"
 
-                                        value={this.state.gender}
-                                        onChange={this.handleOnChangeGender}
-                                        SelectProps={{
-                                            MenuProps: {
-                                                className: classes.menu,
-                                            },
-                                        }}
-                                        helperText="Select Your Gender"
-                                        margin="normal"
-                                    >
-                                        {gender.map(option => (
-                                            <MenuItem key={option.value} value={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                    :
-                                    <div>
-                                        <Typography variant="subheading" >{this.props.gender} </Typography>
-                                        <Typography variant="caption" > Gender</Typography>
+                        <Grid container
+                            direction="row"
+                            justify="center"
+                            className={classes.InputContainer}
+                        >
+                            <Grid item sm={6}>
 
-                                    </div>
-                            }
+                                {
+                                    this.state.changeLastName ?
+                                        <TextField
+                                            id="lastNameInput"
+                                            label="Last Name"
+                                            className={classes.textField}
+                                            value={this.state.lastName}
+                                            onChange={this.handleOnChangeLastname}
+                                            margin="normal"
+                                        />
+                                        :
+                                        <div>
+                                            <Typography variant="display2" > {this.props.lastName}</Typography>
+                                            <Typography variant="caption" > Last Name</Typography>
+                                        </div>
+
+                                }
+
+
+                            </Grid>
+                            <Grid item>
+                                <Button onClick={this.handleLastNameChange} >
+                                    <EditIcon />
+                                </Button>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Button onClick={this.handleGenderChange}>
-                                <EditIcon />
-                            </Button>
+
+                        <Grid container
+                            direction="row"
+                            justify="center"
+                            className={classes.InputContainer}
+                        >
+                            <Grid item sm={6}>
+                                {
+                                    this.state.changeGender ?
+                                        <TextField
+                                            id="genderInput"
+                                            select
+                                            label="Select"
+
+                                            value={this.state.gender}
+                                            onChange={this.handleOnChangeGender}
+                                            SelectProps={{
+                                                MenuProps: {
+                                                    className: classes.menu,
+                                                },
+                                            }}
+                                            helperText="Select Your Gender"
+                                            margin="normal"
+                                        >
+                                            {gender.map(option => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                        :
+                                        <div>
+                                            <Typography variant="subheading" >{this.props.gender} </Typography>
+                                            <Typography variant="caption" > Gender</Typography>
+
+                                        </div>
+                                }
+                            </Grid>
+                            <Grid item>
+                                <Button onClick={this.handleGenderChange}>
+                                    <EditIcon />
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    
-                    <Button variant="contained" color="primary" onClick={this.handleUpdateProfile} className={classes.UpdateButton} >
-                        Update
+
+                        <Button variant="contained" color="primary" onClick={this.handleUpdateProfile} className={classes.UpdateButton} >
+                            Update
                     </Button>
-                </Grid>
+                    </Grid>
                 </Paper>
-</div>
+            </div>
         );
     }
 }
