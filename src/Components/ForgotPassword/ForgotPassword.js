@@ -5,6 +5,7 @@ import { Paper, TextField, Grid, Typography, Button, Snackbar } from '@material-
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
+import validator from 'validator';
 
 const Style = {
     Container: {
@@ -33,9 +34,30 @@ class ForgotPassword extends React.Component {
         succesful:null
     }
 
+    validation = () => {
+        let username = document.getElementById('username').value;
+        
+            if(validator.isEmpty(username)) {
+                this.props.handleOpenSnackBar("Username Cannot be Empty");
+                return false;
+        }
+        else {
+            if(!validator.isEmail(username)) {
+                this.props.handleOpenSnackBar("Enter Valid Email");
+                return false;
+            }
+            else {
+                    return true;
+            }
+        }
+    }
+
 
     handleSubmit = () => {
 
+    let validation = this.validation();    
+    
+    if(validation) {
         this.setState({
             succesful:false
         })
@@ -46,6 +68,9 @@ class ForgotPassword extends React.Component {
       .then((response)=>{
         if(response.data.success) {
             this.props.handleOpenSnackBar('Recovery Link Sent To Registered Email')
+            this.setState ({
+                succesful:true
+            })
         }
         else {
             this.props.handleOpenSnackBar(response.data.message)
@@ -54,7 +79,8 @@ class ForgotPassword extends React.Component {
       .catch((error)=>{
           console.log(error);
       })
-    } 
+    }
+} 
 
     render() {
         const { classes } = this.props;

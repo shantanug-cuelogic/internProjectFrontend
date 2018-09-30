@@ -5,6 +5,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import {connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import axios from 'axios';
 
 const styles =  themes => ({
 paper :{
@@ -36,7 +37,11 @@ Divider : {
 
 class Profile extends React.Component{
 
-   
+    constructor(props) {
+        super(props)
+
+    }
+
     
     render() {
         const {classes} = this.props;
@@ -58,6 +63,9 @@ class Profile extends React.Component{
                 <Typography variant="display2" > {this.props.firstName +" "+this.props.lastName}</Typography>
                 <Divider className={classes.Divider} />
                 <Typography variant="title" > {this.props.email}</Typography>
+                <Divider className={classes.Divider} />
+                <Typography variant="subheading"> 2 </Typography>
+                <Typography variant="caption" > No of followers</Typography>
                 <Divider className={classes.Divider} />
                 <Typography variant="subheading" >{this.props.gender} </Typography>
                 <Typography variant="caption" > Gender</Typography>

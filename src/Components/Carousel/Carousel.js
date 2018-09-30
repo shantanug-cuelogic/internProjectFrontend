@@ -137,6 +137,7 @@ class Carousel extends React.Component {
         return(
             
             <div className={classes.Container}  >
+                <Typography variant="display1"  > Most Popular ... </Typography>
                 <Paper>
                 <div style={{overflow:'hidden'}}>
                 <Slider {...settings} className={classes.CarouselContainer}  >

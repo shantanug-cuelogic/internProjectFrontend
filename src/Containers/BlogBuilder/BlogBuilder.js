@@ -2,7 +2,7 @@ import React from 'react';
 import Carousel from '../../Components/Carousel/Carousel';
 import Menu from '../Menu/Menu';
 import { withStyles } from '@material-ui/core/styles';
-import {Paper} from '@material-ui/core';
+import {Paper, Typography} from '@material-ui/core';
 import SubHeader from '../../Components/Layout/SubHeader/SubHeader';
 const style = {
     Container :{
@@ -18,7 +18,8 @@ const {classes} = this.props;
         return (
             <div className={classes.Container}>
                 <SubHeader />
-                <Carousel />
+                <Carousel />   
+                
                 <Paper><Menu /></Paper>
             </div>
         );

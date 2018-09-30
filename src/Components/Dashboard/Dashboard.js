@@ -6,31 +6,36 @@ import Profile from '../Profile/Profile';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import LikeIcon from '@material-ui/icons/ThumbUp';
 
 const drawerWidth = 340;
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        marginTop: '10%'
+        marginTop: '2%'
     },
     paper: {
-        height: 240,
+        height: 200,
         width: 200,
         backgroundColor :fade(theme.palette.primary.light, 0.25)
     },
     control: {
         padding: theme.spacing.unit * 2,
     },
+    HeaderContainer: {
+        marginTop:'7%',
+        marginLeft:'30%'
+    },
     drawerPaper: {
         zIndex: 1,
         width: drawerWidth,
+        overflow:'hidden'
     },
     ProfileContainer: {
-        marginTop: '10%'
+        marginTop: '15%',
+        
     },
     Icons:{
-        padding:'10%'
+        padding:'0%'
     }
 });
 
@@ -113,11 +118,9 @@ class DashBoard extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { spacing } = this.state;
-
         return (
             <div>
-                <div style={{ display: 'block' }}>
+                <div>
                     <Drawer
                         variant="permanent"
                         classes={{
@@ -127,13 +130,15 @@ class DashBoard extends React.Component {
                         <div className={classes.ProfileContainer}>
                             <Profile />
                         </div>
-
-
                         <Divider />
 
                     </Drawer>
                 </div>
+               <div className={classes.HeaderContainer}>
+                    <Typography variant="display2" > DASHBOARD </Typography>
+                </div>
                 <Grid container className={classes.root} spacing={16}>
+               
                     <Grid item xs={12}>
                         <Grid container className={classes.demo}
                             justify="flex-end"
