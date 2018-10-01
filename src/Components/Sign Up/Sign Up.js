@@ -166,45 +166,30 @@ class SignUpProcess extends React.Component {
         password: this.state.formData.password
       })
         .then((response) => {
-  
           if (response.data.success) {
             axios.post('/login', {
-              "email": this.state.formData.email,
+              "email":  this.state.formData.email,
               "password": this.state.formData.password
           })
               .then((response) => {
                   if (response.data.success) {
-                      this.props.handleOpenSnackBar(`WELCOME ${this.state.formData.firstName} `)
-
+                    this.props.handleOpenSnackBar(`WELCOME ${this.state.formData.firstName} `)
                       localStorage.setItem("authToken", response.data.authToken);
                       localStorage.setItem('userId', response.data.userId);
-                      axios.get('/userprofile/' + response.data.userId)
-
-                          .then((userDetails) => {
-                              // console.log(userDetails.data[0])
-
-                              this.props.handleSignInState(response.data.authToken,
-                                  parseInt(response.data.userId),
-                                  userDetails.data[0].firstName,
-                                  userDetails.data[0].lastName,
-                                  userDetails.data[0].profileImage,
-                                  userDetails.data[0].email,
-                                  userDetails.data[0].isAdmin,
-                                  userDetails.data[0].gender
-                              );
-
-                              this.props.history.push('/');
-
-                          })
-                          .catch((error) => {
-                              console.log(error);
-                          });
-                     
+                      this.props.handleSignInState(response.data.authToken,
+                          parseInt(response.data.userDetails.userId),
+                          response.data.userDetails.firstName,
+                          response.data.userDetails.lastName,
+                          response.data.userDetails.profileImage,
+                          response.data.userDetails.email,
+                          response.data.userDetails.isAdmin,
+                          response.data.userDetails.gender,
+                          response.data.userDetails.followers,
+                      );
+                      this.props.history.push('/');
                   }
-
                   else {
-
-                      this.props.handleOpenSnackBar('Username OR Password is Wrong');
+                      this.props.handleOpenSnackBar("Username or Password is Wrong")
                   }
 
               })
@@ -212,14 +197,8 @@ class SignUpProcess extends React.Component {
                   console.log(error)
               })
 
-
-           
           }
-          else {
-            if (response.data.message.errno === 1062) {
-              this.props.handleOpenSnackBar('Email Already Present');
-            }
-          }
+         
         })
         .catch((error) => {
           console.log(error);
@@ -236,12 +215,8 @@ class SignUpProcess extends React.Component {
     formData[event.target.name] = event.target.value;
     this.setState({ formData });
   }
-
-
-
   render() {
     const { classes } = this.props;
-
 
     return (
       <div className={classes.root}>
@@ -346,7 +321,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-      handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin , gender) => dispatch({
+      handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin , gender,followers) => dispatch({
           type: actionTypes.AUTHENTICATE,
           authToken: token, userId: id,
           firstName: firstName,
@@ -354,7 +329,8 @@ const mapDispatchToProps = dispatch => {
           profileImage: profileImage,
           email: email,
           isAdmin: isAdmin,
-          gender:gender
+          gender:gender,
+          followers:followers
      }),
      handleOpenSnackBar : (message) => dispatch ({
        type:actionTypes.SNACKBAR_OPEN,

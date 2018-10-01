@@ -39,7 +39,7 @@ const styles = theme => ({
 
 class SignIn extends React.Component {
 
-  
+
     TransitionUp = (props) => {
         return <Slide {...props} direction="up" />;
     }
@@ -48,23 +48,23 @@ class SignIn extends React.Component {
         document.getElementById('email').value = "";
         document.getElementById('password').value = ""
     }
-   
+
     validation = () => {
         let email = document.getElementById('email').value;
         let password = document.getElementById('password').value;
-        
-            if(validator.isEmpty(email)) {
-                this.props.handleOpenSnackBar("Username Cannot be Empty");
-                return false;
+
+        if (validator.isEmpty(email)) {
+            this.props.handleOpenSnackBar("Username Cannot be Empty");
+            return false;
         }
         else {
-            if(!validator.isEmail(email)) {
+            if (!validator.isEmail(email)) {
                 this.props.handleOpenSnackBar("Enter Valid Email");
                 return false;
             }
             else {
-                if(validator.isEmpty(password)) {
-                   
+                if (validator.isEmpty(password)) {
+
                     this.props.handleOpenSnackBar("Password cannot be empty");
                     return false;
                 }
@@ -87,39 +87,23 @@ class SignIn extends React.Component {
             })
                 .then((response) => {
                     if (response.data.success) {
-                        
-                        
                         this.props.handleOpenSnackBar("Succesfully Signed In");
-                        
-
                         localStorage.setItem("authToken", response.data.authToken);
                         localStorage.setItem('userId', response.data.userId);
-                        axios.get('/userprofile/' + response.data.userId)
-
-                            .then((userDetails) => {
-                                console.log(userDetails)
-
-                                this.props.handleSignInState(response.data.authToken,
-                                    parseInt(response.data.userId),
-                                    userDetails.data[0].firstName,
-                                    userDetails.data[0].lastName,
-                                    userDetails.data[0].profileImage,
-                                    userDetails.data[0].email,
-                                    userDetails.data[0].isAdmin,
-                                    userDetails.data[0].gender
-                                );
-                                this.props.history.push('/');
-
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            });
+                        this.props.handleSignInState(response.data.authToken,
+                            parseInt(response.data.userDetails.userId),
+                            response.data.userDetails.firstName,
+                            response.data.userDetails.lastName,
+                            response.data.userDetails.profileImage,
+                            response.data.userDetails.email,
+                            response.data.userDetails.isAdmin,
+                            response.data.userDetails.gender,
+                            response.data.userDetails.followers,
+                        );
+                        this.props.history.push('/');
                     }
-
                     else {
-                      
-                            this.props.handleOpenSnackBar("Username or Password is Wrong")
-                        
+                        this.props.handleOpenSnackBar("Username or Password is Wrong")
                     }
 
                 })
@@ -127,11 +111,8 @@ class SignIn extends React.Component {
                     console.log(error)
                 })
         }
-
-
-
     }
-    
+
     render() {
         const { classes } = this.props;
         return (
@@ -168,11 +149,11 @@ class SignIn extends React.Component {
                     <div className={classes.ButtonContainer}>
                         <Button variant="contained" color="primary" onClick={this.handleSignIn} className={classes.Button} >Signin</Button>
                         <Button variant="outlined" color="primary" onClick={this.handleReset} className={classes.Button}>reset</Button>
-                        <Button variant="outlined" color="primary"  className={classes.Button} component={NavLink} to="/forgotpassword" >forgot password</Button>
+                        <Button variant="outlined" color="primary" className={classes.Button} component={NavLink} to="/forgotpassword" >forgot password</Button>
 
                     </div>
                 </Paper>
-                
+
             </div>
         )
     }
@@ -184,13 +165,13 @@ const mapStateToProps = state => {
         auth: state.authReducer.auth,
         authToken: state.authReducer.authToken,
         firstName: state.authReducer.firstName,
-        
+
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin, gender) => dispatch({
+        handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin, gender, followers) => dispatch({
             type: actionTypes.AUTHENTICATE,
             authToken: token, userId: id,
             firstName: firstName,
@@ -198,14 +179,15 @@ const mapDispatchToProps = dispatch => {
             profileImage: profileImage,
             email: email,
             isAdmin: isAdmin,
-            gender:gender
-       }),
+            gender: gender,
+            followers: followers
+        }),
 
-       handleOpenSnackBar : (snackBarMessage) => dispatch ({
-           type: actionTypes.SNACKBAR_OPEN,
-           snackBarMessage:snackBarMessage
-       })
-       
+        handleOpenSnackBar: (snackBarMessage) => dispatch({
+            type: actionTypes.SNACKBAR_OPEN,
+            snackBarMessage: snackBarMessage
+        })
+
     }
 }
 

@@ -14,12 +14,13 @@ import Visibility from '@material-ui/icons/Visibility';
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
 import Snackbar from '@material-ui/core/Snackbar';
 import Slide from '@material-ui/core/Slide';
+import StarRatingComponent from 'react-star-rating-component';
 
 
 const style = theme => ({
 
     AuthorContainer: {
-        marginTop: '10%',
+        marginTop: '0%',
         height: 70
     },
 
@@ -113,7 +114,7 @@ class Post extends Component {
         authorEmail: "",
         authorId: '',
         allowedToFollow: null,
-
+        rating:1
     }
 
     componentDidMount() {
@@ -255,6 +256,7 @@ class Post extends Component {
             commentContent: comment
         })
             .then((response) => {
+                console.log(response.data);
                 if (response.data.success) {
                     let updatedCommentData = {
                         firstName: this.props.firstName,
@@ -407,7 +409,9 @@ class Post extends Component {
                 console.log(error);
             })
     }
-
+    onStarClick(nextValue, prevValue, name) {
+        this.setState({rating: nextValue});
+    }
 
     render() {
         let authorProfileUrl = "/authorprofile/" + this.props.postUserId;
@@ -483,10 +487,10 @@ class Post extends Component {
             }
         }
 
-        console.log(this.state.allowedToFollow);
 
         return (
             <div>
+                 <div id="google_translate_element" style={{display:'inline', marginTop:'6%', float:'right'}} ></div>
 
                 <Grid
                     container
@@ -502,12 +506,10 @@ class Post extends Component {
                             {followButton}
                             <Typography variant="caption" >{this.state.authorEmail}</Typography>
                         </div>
-
                     </div>
-
+                   
                 </Grid>
-
-
+              
                 <Paper>
                     <div className={classes.HeaderContainer}>
                         <Typography variant="display2" color="textPrimary"> {this.props.postTitle} </Typography>
@@ -537,6 +539,15 @@ class Post extends Component {
                         <Button variant="outlined" component={NavLink} to={authorProfileUrl}>
                             View Authors Profile
                     </Button>
+                        <div>
+                        <StarRatingComponent
+                            name="rate1"
+                            starCount={5}
+                            value={this.state.rating}
+                             onStarClick={this.onStarClick.bind(this)}
+                        />
+                        </div>
+                        
                     </Paper>
                 </div>
 

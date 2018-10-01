@@ -30,12 +30,13 @@ const reducer = (state = initialState , action) => {
                     lastName:"",
                     profileImage:"",
                     isAdmin:false,
-                    email:""
+                    email:"",
+                    followers: 0
                 }
             } 
 
             case actionTypes.AUTHENTICATE : {
-               console.log(action);
+             
                 return {
                     ...state,
                     auth : true,
@@ -46,7 +47,8 @@ const reducer = (state = initialState , action) => {
                     profileImage:action.profileImage,
                     isAdmin:action.isAdmin,
                     email:action.email,
-                    gender: action.gender
+                    gender: action.gender,
+                    followers:action.followers
                 }
                
             }

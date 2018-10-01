@@ -15,7 +15,7 @@ import Thumbnail from '../ImageUploadPreviev/ImageUploadPreview';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import validator from 'validator';
 import { connect } from 'react-redux';
-import * as actionTypes from '../../Store/Actions/actionTypes'; 
+import * as actionTypes from '../../Store/Actions/actionTypes';
 
 const styles = {
     button: {
@@ -73,7 +73,7 @@ class Editor extends Component {
     state = {
         model: '',
         Category: '',
-      
+
 
     }
 
@@ -113,32 +113,32 @@ class Editor extends Component {
 
     handleCategoryChange = name => event => {
         this.setState({
-        Category: event.target.value,
+            Category: event.target.value,
         });
     };
 
 
     validation = () => {
         let postTitle = document.getElementById('postTitle').value;
-       let image = document.getElementById('profilepic').files[0];
-        if(validator.isEmpty(postTitle)) {
+        let image = document.getElementById('profilepic').files[0];
+        if (validator.isEmpty(postTitle)) {
             this.props.handleOpenSnackBar('Post Title Cannot Be Empty');
             return false;
         }
         else {
-            
-            if(validator.isEmpty(this.state.Category)) {
+
+            if (validator.isEmpty(this.state.Category)) {
                 this.props.handleOpenSnackBar('Please Select Category ');
                 return false;
             }
             else {
-                if(image === undefined) {
+                if (image === undefined) {
                     this.props.handleOpenSnackBar('Thumbnail Cannot Be Empty')
                     return false;
                 }
-                
+
                 else {
-                    if(validator.isEmpty(this.state.model)) {
+                    if (validator.isEmpty(this.state.model)) {
                         this.props.handleOpenSnackBar('Post Content Cannot Be Empty');
                         return false;
                     }
@@ -153,38 +153,38 @@ class Editor extends Component {
 
     handlePost = () => {
 
-        console.log(this.state.Category.length);
         let validation = this.validation();
+        if (validation) {
+
+             console.log(typeof(userId));   
+            const formData = new FormData();
+            formData.append('file', document.getElementById('profilepic').files[0]);
+            formData.append('title', document.getElementById('postTitle').value);
+            formData.append('postContent', this.state.model);
+            formData.append('category', this.state.Category);
+            formData.append('authToken', this.props.authToken);
+            formData.append('userId', this.props.userId);
 
 
- if(validation) {
-            
-        const formData = new FormData();
-        formData.append('file',  document.getElementById('profilepic').files[0]);
-        formData.append('title', document.getElementById('postTitle').value);
-        formData.append('postContent', this.state.model);
-        formData.append('category', this.state.Category);
-        formData.append('authToken', localStorage.getItem('authToken'));
-        formData.append('userId',localStorage.getItem('userId'));
-   
-        
-        axios.post('post/create', formData,{
-          headers: {
-            'accept': 'application/json',
-            'Accept-Language': 'en-US,en;q=0.8',
-            'Content-Type': `multipart/form-data;`,
-          }
-        })
-            .then((response) => {
-            if (response.data.success) {
-                    this.props.handleOpenSnackBar('Post Created Successfully!!');
-                     this.props.history.push('/post/'+response.data.id);
-            }
-          
+            axios.post('post/create', formData, {
+                headers: {
+                    'accept': 'application/json',
+                    'Accept-Language': 'en-US,en;q=0.8',
+                    'Content-Type': `multipart/form-data;`,
+                }
             })
-            .catch((error) => {
-                console.log(error)
-            })
+                .then((response) => {
+                    console.log(response.data);
+                    if (response.data.success) {
+                    
+                        this.props.handleOpenSnackBar('Post Created Successfully!!');
+                        this.props.history.push('/post/' + response.data.id);
+                    }
+
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
         }
 
     }
@@ -198,7 +198,7 @@ class Editor extends Component {
                     <div className={classes.TitleContainer}>
                         <FormControl className={classes.formControl} aria-describedby="PostTitle" fullWidth>
                             <InputLabel htmlFor="postTitle">Post Title</InputLabel>
-                            <Input id="postTitle"  onChange={this.handleChange} />
+                            <Input id="postTitle" onChange={this.handleChange} />
                             <FormHelperText id="postTitle"> Your Post Title Goes Here</FormHelperText>
                         </FormControl>
                     </div>
@@ -251,13 +251,21 @@ class Editor extends Component {
 
 }
 
-const mapDispatchToProps = dispatch =>{
+const mapStateToProps = state => {
     return {
-        handleOpenSnackBar : (message) => dispatch({
+        auth: state.authReducer.auth,
+        userId : state.authReducer.userId,
+        authToken : state.authReducer.authToken
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        handleOpenSnackBar: (message) => dispatch({
             type: actionTypes.SNACKBAR_OPEN,
-            snackBarMessage : message
+            snackBarMessage: message
         })
     }
 }
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(Editor));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Editor));

@@ -64,7 +64,7 @@ class Profile extends React.Component{
                 <Divider className={classes.Divider} />
                 <Typography variant="title" > {this.props.email}</Typography>
                 <Divider className={classes.Divider} />
-                <Typography variant="subheading"> 2 </Typography>
+                <Typography variant="subheading"> {this.props.followers} </Typography>
                 <Typography variant="caption" > No of followers</Typography>
                 <Divider className={classes.Divider} />
                 <Typography variant="subheading" >{this.props.gender} </Typography>
@@ -87,7 +87,8 @@ const mapStateToProps = state => {
     email:state.authReducer.email,
     profileImage:state.authReducer.profileImage,
     isAdmin: state.authReducer.isAdmin,
-    gender:state.authReducer.gender
+    gender:state.authReducer.gender,
+    followers:state.authReducer.followers
     }
 }
 

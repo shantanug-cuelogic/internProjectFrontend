@@ -1,11 +1,13 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Paper,  Drawer, Divider, Typography  } from '@material-ui/core';
+import { Paper, Drawer, Divider, Typography } from '@material-ui/core';
 import Profile from '../Profile/Profile';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import { element } from 'prop-types';
+import moment from 'moment';
 
 const drawerWidth = 340;
 const styles = theme => ({
@@ -14,100 +16,134 @@ const styles = theme => ({
         marginTop: '2%'
     },
     paper: {
-        height: 200,
+        height: 150,
         width: 200,
-        backgroundColor :fade(theme.palette.primary.light, 0.25)
+        backgroundColor: fade(theme.palette.primary.light, 0.25)
     },
     control: {
         padding: theme.spacing.unit * 2,
     },
     HeaderContainer: {
-        marginTop:'7%',
-        marginLeft:'30%'
+        marginTop: '7%',
+        marginLeft: '30%'
     },
     drawerPaper: {
         zIndex: 1,
         width: drawerWidth,
-        overflow:'hidden'
+        overflow: 'hidden'
     },
     ProfileContainer: {
         marginTop: '15%',
-        
+
     },
-    Icons:{
-        padding:'0%'
+    Icons: {
+        padding: '0%'
+    },
+    RecentActivityContainer: {
+        height: 300,
+        marginTop: 20,
+        marginLeft: 333
+    },
+    RecentActivity: {
+        height: 230,
+        marginLeft: 20,
+        marginRight: 20,
+        padding: 10,
+        overflow: 'scroll'
+    },
+    RecentActivities: {
+        fontSize: 20
     }
 });
 
 class DashBoard extends React.Component {
+
+    constructor(props) {
+        super(props)
+        axios.get('/recentactivity/' + this.props.userId)
+            .then((response) => {
+                if (response.data.success) {
+              console.log(response.data.result)
+                    this.setState({
+                        recentactivity: response.data.result
+                    })
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
+
     state = {
         spacing: '16',
-        views:0,
-        likes:0,
-        posts:0,
-        comments:0
+        views: 0,
+        likes: 0,
+        posts: 0,
+        comments: 0,
+        recentactivity: []
     };
 
     componentDidMount() {
-        let likeUrl ='/totallikes/'+this.props.userId;
-        let viewUrl ='/totalviews/'+this.props.userId;
-        let postUrl ='/totalposts/'+this.props.userId;
-        let commentUrl = '/totalcomments/'+this.props.userId;
+        let likeUrl = '/totallikes/' + this.props.userId;
+        let viewUrl = '/totalviews/' + this.props.userId;
+        let postUrl = '/totalposts/' + this.props.userId;
+        let commentUrl = '/totalcomments/' + this.props.userId;
         axios.get(likeUrl)
-        .then((response)=>{
-            console.log(response.data);
-            if(response.data.success) {
-              
-                this.setState({
-                    likes:response.data.likeCount
-                })
-            }
-            
-        })
-        .catch((error)=>{
-            console.log(error);
-        });
+            .then((response) => {
+                console.log(response.data);
+                if (response.data.success) {
+
+                    this.setState({
+                        likes: response.data.likeCount
+                    })
+                }
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         axios.get(viewUrl)
-        .then((response)=>{
-            console.log(response.data);
-            if(response.data.success) {
-                this.setState({
-                    views:response.data.viewCount
-                })
-            }
-            
-        })
-        .catch((error)=>{
-            console.log(error);
-        });
+            .then((response) => {
+                console.log(response.data);
+                if (response.data.success) {
+                    this.setState({
+                        views: response.data.viewCount
+                    })
+                }
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         axios.get(postUrl)
-        .then((response)=>{
-            if(response.data.success) {
-             this.setState({
-                posts:response.data.postCount
-             })
-                
-            }
-            
-        })
-        .catch((error)=>{
-            console.log(error);
-        });
+            .then((response) => {
+                if (response.data.success) {
+                    this.setState({
+                        posts: response.data.postCount
+                    })
+
+                }
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
 
         axios.get(commentUrl)
-        .then((response)=>{
-            
-            console.log(response.data)
-            if(response.data.success) {
-                this.setState({
-                    comments:response.data.commentCount
-                });
-            }
-            
-        })
-        .catch((error)=>{
-            console.log(error);
-        });
+            .then((response) => {
+
+                console.log(response.data)
+                if (response.data.success) {
+                    this.setState({
+                        comments: response.data.commentCount
+                    });
+                }
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     handleChange = key => (event, value) => {
@@ -118,6 +154,23 @@ class DashBoard extends React.Component {
 
     render() {
         const { classes } = this.props;
+
+        let recentactivity = null;
+
+        if (this.state.recentactivity.length === 0) {
+            recentactivity = <p>NO RECENT ACTIVITY TO SHOW</p>
+        }
+        else {
+            recentactivity = this.state.recentactivity.map((element, index) => {
+                return (
+                    <div key={index}>
+                    <p className={classes.RecentActivities} >YOU {element.activityType} on {element.title} at { moment.unix(element.activityTimeStamp).format("MM/DD/YYYY")}</p>
+                    <Divider />
+                </div>
+                );
+            });
+        }
+
         return (
             <div>
                 <div>
@@ -134,11 +187,11 @@ class DashBoard extends React.Component {
 
                     </Drawer>
                 </div>
-               <div className={classes.HeaderContainer}>
+                <div className={classes.HeaderContainer}>
                     <Typography variant="display2" > DASHBOARD </Typography>
                 </div>
                 <Grid container className={classes.root} spacing={16}>
-               
+
                     <Grid item xs={12}>
                         <Grid container className={classes.demo}
                             justify="flex-end"
@@ -147,7 +200,7 @@ class DashBoard extends React.Component {
 
                             <Grid item >
                                 <Paper className={classes.paper} >
-                                    <img src="/require/likeicon.jpg" alt="Like Icon" height="150px" className={classes.Icons}></img>
+                                    <img src="/require/likeicon.jpg" alt="Like Icon" height="100px" className={classes.Icons}></img>
                                     <Typography variant="body2">
                                         Total No Of Likes : {this.state.likes}
                                     </Typography>
@@ -155,24 +208,24 @@ class DashBoard extends React.Component {
                             </Grid>
                             <Grid item >
                                 <Paper className={classes.paper} >
-                                <img src="/require/viewicon.jpg" alt="View Icon" height="150px" className={classes.Icons}></img>
-                                <Typography variant="body2">
+                                    <img src="/require/viewicon.jpg" alt="View Icon" height="100px" className={classes.Icons}></img>
+                                    <Typography variant="body2">
                                         Total No Of Views : {this.state.views}
                                     </Typography>
                                 </Paper>
                             </Grid>
                             <Grid item >
                                 <Paper className={classes.paper} >
-                                <img src="/require/posticon.jpg" alt="Post Icon" height="150px" className={classes.Icons}></img>
-                                <Typography variant="body2" >
+                                    <img src="/require/posticon.jpg" alt="Post Icon" height="100px" className={classes.Icons}></img>
+                                    <Typography variant="body2" >
                                         Total No Of Posts : {this.state.posts}
                                     </Typography>
                                 </Paper>
                             </Grid>
                             <Grid item >
                                 <Paper className={classes.paper} >
-                                <img src="/require/commenticon.jpg" alt="Post Icon" height="150px" className={classes.Icons}></img>
-                                <Typography variant="body2" >
+                                    <img src="/require/commenticon.jpg" alt="Post Icon" height="100px" className={classes.Icons}></img>
+                                    <Typography variant="body2" >
                                         Total No Of Comments : {this.state.comments}
                                     </Typography>
                                 </Paper>
@@ -181,7 +234,16 @@ class DashBoard extends React.Component {
                         </Grid>
                     </Grid>
                 </Grid>
+                <Paper className={classes.RecentActivityContainer} >
+                    <Typography variant="display1" >
+                        Recent Activity
+                   </Typography>
+                    <Paper className={classes.RecentActivity} >
 
+                       {recentactivity}
+
+                    </Paper>
+                </Paper>
 
             </div >
 
@@ -191,7 +253,8 @@ class DashBoard extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        userId : state.authReducer.userId
+        userId: state.authReducer.userId,
+
     }
 }
 
