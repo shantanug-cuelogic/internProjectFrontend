@@ -14,8 +14,8 @@ import Visibility from '@material-ui/icons/Visibility';
 import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
 import Snackbar from '@material-ui/core/Snackbar';
 import Slide from '@material-ui/core/Slide';
-import StarRatingComponent from 'react-star-rating-component';
-
+import postService from '../../Services/PostService';
+import RateModal from '../../Components/Modal/Modal';
 
 const style = theme => ({
 
@@ -100,6 +100,10 @@ const style = theme => ({
     },
     SigninLinkContainer: {
         padding: 20
+    },
+    RatingContainer : {
+        display:'inline',
+        fontSize:24
     }
 });
 
@@ -120,7 +124,7 @@ class Post extends Component {
     componentDidMount() {
 
         let requiredUrl = this.props.match.params.id;
-
+      //  postService.fetchAllPostData(requiredUrl);
         axios.get('/post/getpost/' + requiredUrl)
             .then((response) => {
 
@@ -409,9 +413,7 @@ class Post extends Component {
                 console.log(error);
             })
     }
-    onStarClick(nextValue, prevValue, name) {
-        this.setState({rating: nextValue});
-    }
+    
 
     render() {
         let authorProfileUrl = "/authorprofile/" + this.props.postUserId;
@@ -539,13 +541,9 @@ class Post extends Component {
                         <Button variant="outlined" component={NavLink} to={authorProfileUrl}>
                             View Authors Profile
                     </Button>
-                        <div>
-                        <StarRatingComponent
-                            name="rate1"
-                            starCount={5}
-                            value={this.state.rating}
-                             onStarClick={this.onStarClick.bind(this)}
-                        />
+                        <div className={classes.RatingContainer}>
+                        
+                       <RateModal ButtonName="Rate this post" postId={this.props.postId} userId={this.props.userId}  style={{display:'inline'}} />
                         </div>
                         
                     </Paper>
@@ -574,7 +572,7 @@ class Post extends Component {
                         {comments}
                     </div>
                 </Paper>
-
+                    
             </div>
 
 
