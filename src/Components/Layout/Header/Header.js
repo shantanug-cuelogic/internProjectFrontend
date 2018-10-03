@@ -174,7 +174,9 @@ class Header extends React.Component {
                                 id="searchString"
                                 onKeyDown={this.handleSearch}
                             />
+                            
                         </div>
+                        
                         <Switch
                             checked={this.state.checkedB}
                             onChange={this.handleChangeTheme}
