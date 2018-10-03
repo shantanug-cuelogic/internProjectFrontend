@@ -240,7 +240,7 @@ class DashBoard extends React.Component {
                 </Grid>
                <div className={classes.PieChartContainer} >
                <Paper  >
-                <ViewPieChart userId={this.props.userId}/>
+                <ViewPieChart userId={6}/>
                 </Paper>
                </div>
                 
