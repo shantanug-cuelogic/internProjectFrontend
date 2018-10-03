@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { element } from 'prop-types';
 import moment from 'moment';
-
+import ViewPieChart from '../ViewPieChart/ViewPieChart';
 const drawerWidth = 340;
 const styles = theme => ({
     root: {
@@ -53,6 +53,10 @@ const styles = theme => ({
     },
     RecentActivities: {
         fontSize: 20
+    },
+    PieChartContainer : {
+        marginLeft:333,
+        marginTop: 20
     }
 });
 
@@ -63,7 +67,7 @@ class DashBoard extends React.Component {
         axios.get('/recentactivity/' + this.props.userId)
             .then((response) => {
                 if (response.data.success) {
-              console.log(response.data.result)
+         
                     this.setState({
                         recentactivity: response.data.result
                     })
@@ -91,7 +95,7 @@ class DashBoard extends React.Component {
         let commentUrl = '/totalcomments/' + this.props.userId;
         axios.get(likeUrl)
             .then((response) => {
-                console.log(response.data);
+              
                 if (response.data.success) {
 
                     this.setState({
@@ -105,7 +109,7 @@ class DashBoard extends React.Component {
             });
         axios.get(viewUrl)
             .then((response) => {
-                console.log(response.data);
+              
                 if (response.data.success) {
                     this.setState({
                         views: response.data.viewCount
@@ -133,7 +137,7 @@ class DashBoard extends React.Component {
         axios.get(commentUrl)
             .then((response) => {
 
-                console.log(response.data)
+            
                 if (response.data.success) {
                     this.setState({
                         comments: response.data.commentCount
@@ -234,6 +238,13 @@ class DashBoard extends React.Component {
                         </Grid>
                     </Grid>
                 </Grid>
+               <div className={classes.PieChartContainer} >
+               <Paper  >
+                <ViewPieChart userId={this.props.userId}/>
+                </Paper>
+               </div>
+                
+                
                 <Paper className={classes.RecentActivityContainer} >
                     <Typography variant="display1" >
                         Recent Activity
