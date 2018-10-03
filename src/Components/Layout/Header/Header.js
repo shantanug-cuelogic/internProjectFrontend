@@ -241,6 +241,8 @@ class Header extends React.Component {
                             <Divider />
                             <NavLink to="/profile" className={classes.Links} ><MenuItem onClick={this.handleClose}>Profile</MenuItem></NavLink>
                             <Divider />
+                            <NavLink to="/drafts" className={classes.Links}><MenuItem onClick={this.handleClose}>Drafts</MenuItem></NavLink>
+                            <Divider />
                             <NavLink to="/" className={classes.Links}><MenuItem onClick={this.logOut}>Logout</MenuItem></NavLink>
                         </Menu>
 

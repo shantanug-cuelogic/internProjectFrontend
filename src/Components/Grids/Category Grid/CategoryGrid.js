@@ -52,7 +52,7 @@ function transform(node, index) {
 class CategoryGrid extends React.PureComponent  {
    
   render() {
-    const url = "/post/"+this.props.postId
+    const url = this.props.link
     const { classes } = this.props;
     return (
       <div>

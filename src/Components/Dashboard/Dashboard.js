@@ -164,7 +164,7 @@ class DashBoard extends React.Component {
             recentactivity = this.state.recentactivity.map((element, index) => {
                 return (
                     <div key={index}>
-                    <p className={classes.RecentActivities} >YOU {element.activityType} on {element.title} at { moment.unix(element.activityTimeStamp).format("MM/DD/YYYY")}</p>
+                    <p className={classes.RecentActivities} >You {element.activityType}  {element.title} on { moment.unix(element.activityTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</p>
                     <Divider />
                 </div>
                 );

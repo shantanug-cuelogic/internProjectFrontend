@@ -16,11 +16,13 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Slide from '@material-ui/core/Slide';
 import postService from '../../Services/PostService';
 import RateModal from '../../Components/Modal/Modal';
+import StarRatingComponent from 'react-star-rating-component';
+
 
 const style = theme => ({
 
     AuthorContainer: {
-        marginTop: '0%',
+        marginTop: '5%',
         height: 70
     },
 
@@ -118,7 +120,7 @@ class Post extends Component {
         authorEmail: "",
         authorId: '',
         allowedToFollow: null,
-        rating:1
+        rating:0
     }
 
     componentDidMount() {
@@ -244,6 +246,18 @@ class Post extends Component {
             .catch((error) => {
                 console.log(error)
             });
+
+            axios.get('/post/ratings/'+this.props.match.params.id)
+            .then((response) => {
+            
+                this.setState({
+                    rating:response.data.Ratings
+                })
+            } )
+            .catch((error) =>{
+                console.log(error);
+            })
+
     }
 
     TransitionUp = (props) => {
@@ -538,13 +552,23 @@ class Post extends Component {
                             <p style={{ display: 'inline', marginRight: '10px' }}>Likes : {this.props.likes}</p>
                             <p style={{ display: 'inline' }}>Views : {this.props.views} </p>
                         </div>
+                        <div style={{display:'inline', marginRight: 10}} >
+                        <StarRatingComponent 
+                        editing={false}
+                        starCount={5}
+                        value={this.state.rating}
+                        />
+                        </div>
+                        
                         <Button variant="outlined" component={NavLink} to={authorProfileUrl}>
                             View Authors Profile
                     </Button>
-                        <div className={classes.RatingContainer}>
-                        
-                       <RateModal ButtonName="Rate this post" postId={this.props.postId} userId={this.props.userId}  style={{display:'inline'}} />
-                        </div>
+                       {this.props.auth ? 
+                         <div className={classes.RatingContainer}>
+                         <RateModal ButtonName="Rate this post" postId={parseInt(this.props.match.params.id)} style={{display:'inline'}} />
+                         </div>
+                        : null}
+                       
                         
                     </Paper>
                 </div>
