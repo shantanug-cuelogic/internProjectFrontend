@@ -58,6 +58,7 @@ render() {
     }
     else {
         posts =  this.props.categoryPosts.map((post,index)=>{
+           let link =  `/post/${post.postId}`
             return (
                 <Grid item>
                 <CategoryGrid
@@ -68,6 +69,7 @@ render() {
                 likes={post.likes}
                 views ={post.views}
                 thumbnail={post.thumbnail}
+                link = {link}
                 />
                 </Grid>
             );

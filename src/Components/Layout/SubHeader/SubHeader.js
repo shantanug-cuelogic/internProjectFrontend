@@ -51,7 +51,7 @@ class Header extends React.Component {
         <Button variant="text" color="primary" component={NavLink} to='/category/technology'> Technology</Button>
         <Button variant="text" color="primary" component={NavLink} to='/category/travel'> Travel </Button>
         <Button variant="text" color="primary" component={NavLink} to='/category/style'> Style </Button>
-        <Button variant="text" color="primary" component={NavLink} to='/category/buisness'> Business </Button>
+        <Button variant="text" color="primary" component={NavLink} to='/category/business'> Business </Button>
         <Button variant="text" color="primary" component={NavLink} to='/category/politics'> Politics </Button>
         <Button variant="text" color="primary" component={NavLink} to='/category/science'> Science </Button>
             

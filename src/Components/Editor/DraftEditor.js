@@ -71,10 +71,30 @@ const categories = [
 ];
 
 class Editor extends Component {
+    
+    constructor(props) {
+        super(props);
+        axios.get('/post/getpost/'+this.props.match.params.id)
+        .then((response) => {
+            if(response.data.success) {
+                this.setState({
+                    model: response.data.result[0].postContent,
+                    Category: response.data.result[0].category,
+                    title: response.data.result[0].title,
+                    thumbnail: response.data.result[0].thumbnail
+                })
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+    
     state = {
         model: '',
         Category: '',
-
+        title: "",
+        thumbnail:null
 
     }
 
@@ -118,6 +138,11 @@ class Editor extends Component {
         });
     };
 
+    handleTitleChange = (event) => {
+        this.setState({
+            title:event.target.value
+        })
+    }
 
     validation = () => {
         let postTitle = document.getElementById('postTitle').value;
@@ -133,12 +158,7 @@ class Editor extends Component {
                 return false;
             }
             else {
-                if (image === undefined) {
-                    this.props.handleOpenSnackBar('Thumbnail Cannot Be Empty')
-                    return false;
-                }
-
-                else {
+               
                     if (validator.isEmpty(this.state.model)) {
                         this.props.handleOpenSnackBar('Post Content Cannot Be Empty');
                         return false;
@@ -146,29 +166,30 @@ class Editor extends Component {
                     else {
                         return true;
                     }
-                }
+                
             }
         }
     }
 
 
     handlePost = () => {
-
+        console.log(this.state)
         let validation = this.validation();
         if (validation) {
 
-             console.log(typeof(userId));   
+        
             const formData = new FormData();
             formData.append('file', document.getElementById('profilepic').files[0]);
-            formData.append('title', document.getElementById('postTitle').value);
+            formData.append('title',this.state.title);
             formData.append('postContent', this.state.model);
             formData.append('category', this.state.Category);
             formData.append('authToken', this.props.authToken);
             formData.append('userId', this.props.userId);
             formData.append('isDraft',0);
+            formData.append('postId',this.props.match.params.id);
 
 
-            axios.post('post/create', formData, {
+            axios.put('/post/savepost', formData, {
                 headers: {
                     'accept': 'application/json',
                     'Accept-Language': 'en-US,en;q=0.8',
@@ -203,7 +224,7 @@ class Editor extends Component {
             formData.append('isDraft',1);
             
 
-            axios.post('post/create', formData, {
+            axios.post('/post/create', formData, {
                 headers: {
                     'accept': 'application/json',
                     'Accept-Language': 'en-US,en;q=0.8',
@@ -228,13 +249,18 @@ class Editor extends Component {
     render() {
 
         const { classes } = this.props;
+        console.log(this.state.thumbnail);
+        let thumbnail = null;
+        if(this.state.thumbnail !== null ) {
+            thumbnail = <Thumbnail src={this.state.thumbnail} />
+        }
         return (
             <div style={{ marginTop: '10%' }}>
                 <Paper className={classes.EditorContainer} >
                     <div className={classes.TitleContainer}>
                         <FormControl className={classes.formControl} aria-describedby="PostTitle" fullWidth>
                             <InputLabel htmlFor="postTitle">Post Title</InputLabel>
-                            <Input id="postTitle" onChange={this.handleChange} />
+                            <Input id="postTitle" onChange={this.handleTitleChange} value={this.state.title} />
                             <FormHelperText id="postTitle"> Your Post Title Goes Here</FormHelperText>
                         </FormControl>
                     </div>
@@ -263,7 +289,7 @@ class Editor extends Component {
 
                     <div className={classes.ThumbnailContainer}>
                         <InputLabel>Upload Your Thumbnail</InputLabel>
-                        <Thumbnail />
+                        {thumbnail}
                     </div>
 
 

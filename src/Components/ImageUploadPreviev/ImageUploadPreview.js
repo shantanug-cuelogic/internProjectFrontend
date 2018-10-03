@@ -42,6 +42,7 @@ const styles = theme => ({
 class Upload extends React.Component {
     constructor(props) {
         super(props)
+       console.log(this.props.src)
         this.state = {
             file: this.props.src
         }

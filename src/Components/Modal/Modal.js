@@ -34,26 +34,17 @@ const styles = theme => ({
 
 class SimpleModal extends React.Component {
 
-    constructor(props) {
-        super(props);
-        console.log("in constructor",this.props.postId)
-        axios.get('/post/ratings/'+props.postId)
-        .then((response) => {
-            console.log("Ratings ===>",response.data.Ratings);
-            this.setState({
-                rating:response.data.Ratings
-            })
-        } )
-        .catch((error) =>{
-            console.log(error);
-        })
-    }
 
 
     state = {
     open: false,
     rating:0
   };
+
+  componentDidMount() {
+    console.log("in component did mount this",this.props.postId);
+  }
+
 
   handleOpen = () => {
     this.setState({ open: true });
@@ -68,13 +59,14 @@ class SimpleModal extends React.Component {
 }
 
 handleRatePost = () =>{
-console.log(this.state.rating);
+
     axios.put('/post/ratings',{
         authToken : this.props.authToken,
         postId : this.props.postId,
         rating: this.state.rating
     })
     .then((response) =>{
+        console.log(response.data);
         if(response.data.success) {
             this.props.handleOpenSnackBar("Succesfully Rated!!");
             this.handleClose();
@@ -121,13 +113,13 @@ SimpleModal.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-// We need an intermediary variable for handling the recursive nesting.
 const SimpleModalWrapped = withStyles(styles)(SimpleModal);
 
 const mapStateToProps = state => {
     return {
         userId : state.authReducer.userId,
-        authToken:state.authReducer.authToken
+        authToken:state.authReducer.authToken,
+       // postId : state.postReducer.postId
     }
 }
 

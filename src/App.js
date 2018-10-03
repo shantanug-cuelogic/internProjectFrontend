@@ -8,6 +8,8 @@ import Post from './Containers/Post/Post';
 import Profile from './Components/Profile/Profile';
 import Editor from './Components/Editor/Editor';
 import Layout from './Components/Layout/Layout';
+import Drafts from './Components/Drafts/Drafts';
+import DraftEditor from './Components/Editor/DraftEditor';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -128,6 +130,8 @@ createMuiTheme({
                 <Route path='/forgotpassword' component={ForgotPassword}></Route>
                 <Route path='/recoverpassword/:authToken' component={PasswordRecover}></Route>
                 <Route path="/updateprofile" component={UpdateProfile}> </Route>
+                <Route path="/drafts" component={Drafts}> </Route>
+                <Route path="/drafteditor/:id" component={DraftEditor}> </Route>
                 <Route path='/' exact component={BlogBuilder}></Route>
             </Switch>
           </div>
