@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Paper, Drawer, Divider, Typography } from '@material-ui/core';
+import { Paper, Drawer, Divider, Typography, Button } from '@material-ui/core';
 import Profile from '../Profile/Profile';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -9,6 +9,9 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { element } from 'prop-types';
 import moment from 'moment';
 import ViewPieChart from '../ViewPieChart/ViewPieChart';
+import { Scrollbars } from 'react-custom-scrollbars';
+import AdminDashboard from './AdminDashboard/AdminDashBoard';
+
 const drawerWidth = 340;
 const styles = theme => ({
     root: {
@@ -34,6 +37,7 @@ const styles = theme => ({
     },
     ProfileContainer: {
         marginTop: '15%',
+        overflowY: 'scroll'
 
     },
     Icons: {
@@ -53,7 +57,7 @@ const styles = theme => ({
     },
     RecentActivities: {
         fontSize: 20,
-        color : '#262626'
+        color: '#262626'
     },
     PieChartContainer: {
         marginLeft: 333,
@@ -87,7 +91,8 @@ class DashBoard extends React.Component {
         posts: 0,
         comments: 0,
         recentactivity: [],
-        followers : []
+        followers: [],
+        adminFeatures: false
     };
 
     componentDidMount() {
@@ -150,17 +155,17 @@ class DashBoard extends React.Component {
             .catch((error) => {
                 console.log(error);
             });
-        axios.get('followersinfo/'+this.props.userId)
+        axios.get('followersinfo/' + this.props.userId)
             .then((response) => {
-                if(response.data.success) {
+                if (response.data.success) {
                     this.setState({
-                        followers : response.data.result
+                        followers: response.data.result
                     })
                 }
             })
             .catch((error) => {
                 console.log(error)
-            })    
+            })
     }
 
     handleChange = key => (event, value) => {
@@ -168,6 +173,13 @@ class DashBoard extends React.Component {
             [key]: value,
         });
     };
+
+    handleAdminFeatureToggle = () => {
+      let currentState = this.state.adminFeatures;
+        this.setState({
+            adminFeatures: !currentState
+        })
+    }
 
     render() {
         const { classes } = this.props;
@@ -190,18 +202,18 @@ class DashBoard extends React.Component {
 
         let viewStatistics = null;
 
-        if(this.state.posts === 0) {
-            viewStatistics = <p>YOU DONT HAVE ANY POSTS</p>
-        }
-        else if(this.state.views === 0) {
-            viewStatistics = <p>YOUR POST DONT HAVE ANY VIEWS YET</p>
-        } 
-        else {
-            viewStatistics = <Paper>
-            <ViewPieChart userId={this.props.userId} />
-            <Typography variant="caption" > Views per post </Typography>
-        </Paper>
-        }
+        // if(this.state.posts === 0) {
+        //     viewStatistics = <p>YOU DONT HAVE ANY POSTS</p>
+        // }
+        // else if(this.state.views === 0) {
+        //     viewStatistics = <p>YOUR POST DONT HAVE ANY VIEWS YET</p>
+        // } 
+        // else {
+        //     viewStatistics = <Paper>
+        //     <ViewPieChart userId={this.props.userId} />
+        //     <Typography variant="caption" > Views per post </Typography>
+        // </Paper>
+        // }
 
         let followers = null;
 
@@ -219,6 +231,11 @@ class DashBoard extends React.Component {
             });
         }
 
+        let adminButton = null;
+        if(this.props.isAdmin) {
+        adminButton = <Button variant="contained" color="secondary" style={{ marginTop: 20 }} onClick={this.handleAdminFeatureToggle} > ADMIN</Button>
+        }
+
 
         return (
             <div>
@@ -229,94 +246,115 @@ class DashBoard extends React.Component {
                             paper: classes.drawerPaper,
                         }}
                     >
-                        <div className={classes.ProfileContainer}>
+                        <Scrollbars className={classes.ProfileContainer}>
+
+                            {adminButton}
                             <Profile />
-                        </div>
+
+                        </Scrollbars>
                         <Divider />
 
                     </Drawer>
                 </div>
                 <div className={classes.HeaderContainer}>
-                    <Typography variant="display2" > DASHBOARD </Typography>
+                            <Typography variant="display2" > DASHBOARD </Typography>
                 </div>
-                <Grid container className={classes.root} spacing={16}>
+                {this.state.adminFeatures ?
+                    <AdminDashboard />
+                    :
+                    <div>
 
-                    <Grid item xs={12}>
-                        <Grid container className={classes.demo}
-                            justify="flex-end"
-                            spacing={16}
-                        >
+                        
+                        <Grid container className={classes.root} spacing={16}>
 
-                            <Grid item >
-                                <Paper className={classes.paper} >
-                                    <img src="/require/likeicon.jpg" alt="Like Icon" height="100px" className={classes.Icons}></img>
-                                    <Typography variant="body2">
-                                        Total No Of Likes : {this.state.likes}
-                                    </Typography>
-                                </Paper>
-                            </Grid>
-                            <Grid item >
-                                <Paper className={classes.paper} >
-                                    <img src="/require/viewicon.jpg" alt="View Icon" height="100px" className={classes.Icons}></img>
-                                    <Typography variant="body2">
-                                        Total No Of Views : {this.state.views}
-                                    </Typography>
-                                </Paper>
-                            </Grid>
-                            <Grid item >
-                                <Paper className={classes.paper} >
-                                    <img src="/require/posticon.jpg" alt="Post Icon" height="100px" className={classes.Icons}></img>
-                                    <Typography variant="body2" >
-                                        Total No Of Posts : {this.state.posts}
-                                    </Typography>
-                                </Paper>
-                            </Grid>
-                            <Grid item >
-                                <Paper className={classes.paper} >
-                                    <img src="/require/commenticon.jpg" alt="Post Icon" height="100px" className={classes.Icons}></img>
-                                    <Typography variant="body2" >
-                                        Total No Of Comments : {this.state.comments}
-                                    </Typography>
-                                </Paper>
-                            </Grid>
+                            <Grid item xs={12}>
+                                <Grid container className={classes.demo}
+                                    justify="flex-end"
+                                    spacing={16}
+                                >
 
+                                    <Grid item >
+                                        <Paper className={classes.paper} >
+                                            <img src="/require/likeicon.jpg" alt="Like Icon" height="100px" className={classes.Icons}></img>
+                                            <Typography variant="body2">
+                                                Total No Of Likes : {this.state.likes}
+                                            </Typography>
+                                        </Paper>
+                                    </Grid>
+                                    <Grid item >
+                                        <Paper className={classes.paper} >
+                                            <img src="/require/viewicon.jpg" alt="View Icon" height="100px" className={classes.Icons}></img>
+                                            <Typography variant="body2">
+                                                Total No Of Views : {this.state.views}
+                                            </Typography>
+                                        </Paper>
+                                    </Grid>
+                                    <Grid item >
+                                        <Paper className={classes.paper} >
+                                            <img src="/require/posticon.jpg" alt="Post Icon" height="100px" className={classes.Icons}></img>
+                                            <Typography variant="body2" >
+                                                Total No Of Posts : {this.state.posts}
+                                            </Typography>
+                                        </Paper>
+                                    </Grid>
+                                    <Grid item >
+                                        <Paper className={classes.paper} >
+                                            <img src="/require/commenticon.jpg" alt="Post Icon" height="100px" className={classes.Icons}></img>
+                                            <Typography variant="body2" >
+                                                Total No Of Comments : {this.state.comments}
+                                            </Typography>
+                                        </Paper>
+                                    </Grid>
+
+                                </Grid>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </Grid>
-                
-                
-                <div className={classes.PieChartContainer} >
-                    <Paper  >
-                        <Typography variant="display1" > Views Statistics </Typography>
-                        {viewStatistics}             
-
-                    </Paper>
-                </div>
-
-                <Paper className={classes.RecentActivityContainer} >
-                    <Typography variant="display1" >
-                        Followers
-                   </Typography>
-                    <Paper className={classes.RecentActivity} >
-
-                        {followers}
-
-                    </Paper>
-                </Paper>        
 
 
-                <Paper className={classes.RecentActivityContainer} >
-                    <Typography variant="display1" >
-                        Recent Activity
-                   </Typography>
-                    <Paper className={classes.RecentActivity} >
+                        <div className={classes.PieChartContainer} >
+                            <Paper  >
+                                <Typography variant="display1" > Views Statistics </Typography>
+                                {viewStatistics}
 
-                        {recentactivity}
+                            </Paper>
+                        </div>
 
-                    </Paper>
-                </Paper>
+                        <Paper className={classes.RecentActivityContainer} >
+                            <Typography variant="display1" >
+                                Followers
+                    </Typography>
+                            <Paper className={classes.RecentActivity} >
+                                <Scrollbars>
+                                    {followers}
+                                </Scrollbars>
 
-            </div >
+
+                            </Paper>
+                        </Paper>
+
+
+                        <Paper className={classes.RecentActivityContainer} >
+                            <Typography variant="display1" >
+                                Recent Activity
+                    </Typography>
+                            <Scrollbars >
+                                <Paper className={classes.RecentActivity} >
+
+                                    {recentactivity}
+
+
+
+                                </Paper>
+                            </Scrollbars>
+                        </Paper>
+
+                    </div >
+
+
+                }
+            </div>
+
+
 
         )
     }
@@ -325,7 +363,7 @@ class DashBoard extends React.Component {
 const mapStateToProps = state => {
     return {
         userId: state.authReducer.userId,
-
+        isAdmin: state.authReducer.isAdmin
     }
 }
 
