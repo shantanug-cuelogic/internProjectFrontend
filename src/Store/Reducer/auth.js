@@ -19,7 +19,7 @@ const reducer = (state = initialState , action) => {
 
             case actionTypes.LOGOUT :{
                localStorage.removeItem('authToken');
-               localStorage.removeItem('userId');
+               localStorage.removeItem('email');
 
                 return {
                  
@@ -37,6 +37,9 @@ const reducer = (state = initialState , action) => {
 
             case actionTypes.AUTHENTICATE : {
              
+                localStorage.setItem("authToken",action.authToken);
+                localStorage.setItem("email",action.email);
+
                 return {
                     ...state,
                     auth : true,

@@ -173,7 +173,7 @@ class Editor extends Component {
 
 
     handlePost = () => {
-        console.log(this.state)
+      
         let validation = this.validation();
         if (validation) {
 
