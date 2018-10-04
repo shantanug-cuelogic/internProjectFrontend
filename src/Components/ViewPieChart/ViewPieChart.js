@@ -3,69 +3,6 @@ import { PieChart, Pie, Sector, Cell,LabelList, Legend, Tooltip } from 'recharts
 import randomColor from 'randomcolor';
 import axios from 'axios';
 
-
-
-
-// const RADIAN = Math.PI / 180;
-
-// class ViewPieChart extends React.Component {
-
-
-//     state = {
-//         postData : []
-//     }
-
-    
-
-//      renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent,nameKey, index }) => {
-//         const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-//         const x = cx + radius * Math.cos(-midAngle * RADIAN);
-//         const y = cy + radius * Math.sin(-midAngle * RADIAN);
-//         console.log(this.state.postData[index].title);
-//         return (
-//             <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-//                 {/* {`${(percent * 100).toFixed(0)}%`} */}
-//                 {this.state.postData[index].title}
-//             </text>
-//         );
-//     };
-    
-
-
-
-//     render() {
-
-//         console.log(this.state.postData);
-
-        
-
-
-//         return (
-//             <PieChart width={800} height={400} onMouseEnter={this.onPieEnter}>
-//                 <Pie
-//                     data={data}
-//                     cx={400}
-//                     cy={200}
-//                     labelLine={false}
-//                     label={this.renderCustomizedLabel}
-
-//                     outerRadius={150}
-//                     fill="#8884d8"
-//                 >
-           
-                    // <Tooltip />
-//                 </Pie>
-//             </PieChart>
-//         );
-//     }
-// }
-
-// export default ViewPieChart;
-
-
-// const data = [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
-//                   {name: 'Group C', value: 300}, {name: 'Group D', value: 200}];
-                   
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
   const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle,
@@ -82,7 +19,6 @@ const renderActiveShape = (props) => {
 
   return (
     <g>
-      {/* <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>{payload.name}</text> */}
       <Sector
         cx={cx}
         cy={cy}
@@ -172,7 +108,7 @@ class TwoLevelPieChart extends React.Component{
         	activeIndex={this.state.activeIndex}
           activeShape={renderActiveShape} 
           data={data} 
-          cx={400} 
+          cx={415} 
           cy={200} 
           innerRadius={60}
           outerRadius={120} 

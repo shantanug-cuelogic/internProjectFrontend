@@ -5,12 +5,12 @@ const initialState = {
     auth : false,
     authToken : "",
     userId: "",
-    firstName:"Shantanu",
-    lastName:"Gade",
-    profileImage:"/require/userimage.jpg",
+    firstName:"",
+    lastName:"",
+    profileImage:"",
     isAdmin:false,
-    email:"shan@gmail.com",
-    gender:'Male'
+    email:"",
+    gender:''
 }
 
 const reducer = (state = initialState , action) => {
