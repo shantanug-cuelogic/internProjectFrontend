@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { element } from 'prop-types';
 import moment from 'moment';
-
+import ViewPieChart from '../ViewPieChart/ViewPieChart';
 const drawerWidth = 340;
 const styles = theme => ({
     root: {
@@ -52,7 +52,12 @@ const styles = theme => ({
         overflow: 'scroll'
     },
     RecentActivities: {
-        fontSize: 20
+        fontSize: 20,
+        color : '#262626'
+    },
+    PieChartContainer: {
+        marginLeft: 333,
+        marginTop: 20
     }
 });
 
@@ -63,7 +68,7 @@ class DashBoard extends React.Component {
         axios.get('/recentactivity/' + this.props.userId)
             .then((response) => {
                 if (response.data.success) {
-              console.log(response.data.result)
+
                     this.setState({
                         recentactivity: response.data.result
                     })
@@ -91,7 +96,7 @@ class DashBoard extends React.Component {
         let commentUrl = '/totalcomments/' + this.props.userId;
         axios.get(likeUrl)
             .then((response) => {
-                console.log(response.data);
+
                 if (response.data.success) {
 
                     this.setState({
@@ -105,7 +110,7 @@ class DashBoard extends React.Component {
             });
         axios.get(viewUrl)
             .then((response) => {
-                console.log(response.data);
+
                 if (response.data.success) {
                     this.setState({
                         views: response.data.viewCount
@@ -133,7 +138,7 @@ class DashBoard extends React.Component {
         axios.get(commentUrl)
             .then((response) => {
 
-                console.log(response.data)
+
                 if (response.data.success) {
                     this.setState({
                         comments: response.data.commentCount
@@ -164,12 +169,28 @@ class DashBoard extends React.Component {
             recentactivity = this.state.recentactivity.map((element, index) => {
                 return (
                     <div key={index}>
-                    <p className={classes.RecentActivities} >You {element.activityType}  {element.title} on { moment.unix(element.activityTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</p>
-                    <Divider />
-                </div>
+                        <p className={classes.RecentActivities} >You  {element.activityType} <b> {element.title}</b> on <i> {moment.unix(element.activityTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</i></p>
+                        <Divider />
+                    </div>
                 );
             });
         }
+
+        let viewStatistics = null;
+
+        if(this.state.posts === 0) {
+            viewStatistics = <p>YOU DONT HAVE ANY POSTS</p>
+        }
+        else if(this.state.views === 0) {
+            viewStatistics = <p>YOUR POST DONT HAVE ANY VIEWS YET</p>
+        } 
+        else {
+            viewStatistics = <Paper>
+            <ViewPieChart userId={this.props.userId} />
+            <Typography variant="caption" > Views per post </Typography>
+        </Paper>
+        }
+
 
         return (
             <div>
@@ -234,13 +255,24 @@ class DashBoard extends React.Component {
                         </Grid>
                     </Grid>
                 </Grid>
+                
+                
+                <div className={classes.PieChartContainer} >
+                    <Paper  >
+                        <Typography variant="display1" > Views Statistics </Typography>
+                        {viewStatistics}             
+
+                    </Paper>
+                </div>
+
+
                 <Paper className={classes.RecentActivityContainer} >
                     <Typography variant="display1" >
                         Recent Activity
                    </Typography>
                     <Paper className={classes.RecentActivity} >
 
-                       {recentactivity}
+                        {recentactivity}
 
                     </Paper>
                 </Paper>
