@@ -55,10 +55,10 @@ class TwoLevelPieChart extends React.Component{
     }
 
     componentDidMount() {
-        console.log(this.props.userId)
+
         axios.get('viewsperpost/'+this.props.userId)
         .then((response) => {
-            console.log(response.data.result);
+           
             if(response.data.success) {
                
                 this.setState ({

@@ -86,7 +86,8 @@ class DashBoard extends React.Component {
         likes: 0,
         posts: 0,
         comments: 0,
-        recentactivity: []
+        recentactivity: [],
+        followers : []
     };
 
     componentDidMount() {
@@ -149,6 +150,17 @@ class DashBoard extends React.Component {
             .catch((error) => {
                 console.log(error);
             });
+        axios.get('followersinfo/'+this.props.userId)
+            .then((response) => {
+                if(response.data.success) {
+                    this.setState({
+                        followers : response.data.result
+                    })
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })    
     }
 
     handleChange = key => (event, value) => {
@@ -189,6 +201,22 @@ class DashBoard extends React.Component {
             <ViewPieChart userId={this.props.userId} />
             <Typography variant="caption" > Views per post </Typography>
         </Paper>
+        }
+
+        let followers = null;
+
+        if (this.state.followers.length === 0) {
+            followers = <p>NO FOLLOWERS TO SHOW</p>
+        }
+        else {
+            followers = this.state.followers.map((element, index) => {
+                return (
+                    <div key={index}>
+                        <p className={classes.RecentActivities} > <b>{element.firstName}</b> followed you  on <i> {moment.unix(element.followTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</i></p>
+                        <Divider />
+                    </div>
+                );
+            });
         }
 
 
@@ -264,6 +292,17 @@ class DashBoard extends React.Component {
 
                     </Paper>
                 </div>
+
+                <Paper className={classes.RecentActivityContainer} >
+                    <Typography variant="display1" >
+                        Followers
+                   </Typography>
+                    <Paper className={classes.RecentActivity} >
+
+                        {followers}
+
+                    </Paper>
+                </Paper>        
 
 
                 <Paper className={classes.RecentActivityContainer} >
