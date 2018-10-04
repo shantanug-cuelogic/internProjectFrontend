@@ -21,8 +21,12 @@ import StarRatingComponent from 'react-star-rating-component';
 
 const style = theme => ({
 
+    root : {
+        marginTop:'10%'
+    },
+
     AuthorContainer: {
-        marginTop: '5%',
+      
         height: 70
     },
 
@@ -513,15 +517,15 @@ class Post extends Component {
 
 
         return (
-            <div>
-                 <div id="google_translate_element" style={{display:'inline', marginTop:'6%', float:'right'}} ></div>
+            <div className={classes.root}>
+                                     <div id="google_translate_element" style={{display:'inline', height:27 , float:'right'}} ></div>
 
                 <Grid
                     container
                     justify="center"
 
                 >
-                    <div className={classes.AuthorContainer} style={{ marginBottom: '3%' }} >
+                    <div className={classes.AuthorContainer} >
                         <NavLink to={authorProfileUrl} >
                             <Avatar src={this.state.authorProfileImage} className={classes.AuthorAvatar} style={{ float: 'left' }} ></Avatar>
                         </NavLink>
@@ -530,7 +534,10 @@ class Post extends Component {
                             {followButton}
                             <Typography variant="caption" >{this.state.authorEmail}</Typography>
                         </div>
+                        
+
                     </div>
+
                    
                 </Grid>
               
