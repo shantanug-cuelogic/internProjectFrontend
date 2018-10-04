@@ -90,6 +90,7 @@ class SignIn extends React.Component {
                         this.props.handleOpenSnackBar("Succesfully Signed In");
                         localStorage.setItem("authToken", response.data.authToken);
                         localStorage.setItem('userId', response.data.userId);
+                      console.log(response.data);
                         this.props.handleSignInState(response.data.authToken,
                             parseInt(response.data.userDetails.userId),
                             response.data.userDetails.firstName,

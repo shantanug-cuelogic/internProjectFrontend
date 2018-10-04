@@ -268,6 +268,11 @@ class Post extends Component {
 
     handlePostComment = () => {
         let comment = document.getElementById('comment').value;
+    
+    if(comment.length === 0) {
+        this.props.handleOpenSnackBar("Comment cannot be empty");
+    }
+    else {
         axios.put('/post/comment/', {
             authToken: localStorage.getItem('authToken'),
             postId: this.props.postId,
@@ -292,6 +297,9 @@ class Post extends Component {
             .catch((error) => {
                 console.log(error)
             })
+    }
+    
+       
     }
     handleDeletePost = () => {
         axios.post('/post/delete', {
@@ -460,7 +468,7 @@ class Post extends Component {
                             commentContent={comment.commentContent}
                             firstName={comment.firstName}
                             lastName={comment.lastName}
-                            deleteButton={comment.userId == this.props.userId ? true : false}
+                            deleteButton={(comment.userId == this.props.userId) || (this.props.isAdmin === 1) ? true : false}
                             click={() => this.handleDeleteClick(comment.commentId)}
                         >
                         </Comment>
@@ -607,6 +615,7 @@ class Post extends Component {
 const mapStateToProps = state => {
     return {
         auth: state.authReducer.auth,
+        isAdmin : state.authReducer.isAdmin,
         authToken: state.authReducer.authToken,
         userId: state.authReducer.userId,
         postContent: state.postReducer.postContent,
