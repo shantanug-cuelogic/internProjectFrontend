@@ -28,19 +28,33 @@ import Snackbar from '@material-ui/core/Snackbar';
 class App extends Component {
 
   componentDidMount(){
-    // axios.post('/authenticate',{authToken:localStorage.getItem('authToken')})
-    // .then((response) =>{
+    axios.post('/authenticate',{
+      authToken:localStorage.getItem('authToken'),
+      email:localStorage.getItem('email')
+    })
+    .then((response) =>{
+console.log(response.data);
+      if(response.data.success) {
+        this.props.handleOpenSnackBar(`Welcome ${response.data.result.firstName}`);
+                       
+                        this.props.handleSignInState(localStorage.getItem('authToken'),
+                            parseInt(response.data.result.userId),
+                            response.data.result.firstName,
+                            response.data.result.lastName,
+                            response.data.result.profileImage,
+                            response.data.result.email,
+                            response.data.result.isAdmin,
+                            response.data.result.gender,
+                            response.data.result.followers,
+                        );
+      }
+      else if(!response.data.success) {
+       
+      }
+    })
+    .catch((error)=>{
 
-    //   if(response.data.success) {
-    //     this.props.authenticate(true,localStorage.getItem('authToken'),localStorage.getItem('userId'));
-    //   }
-    //   else if(!response.data.success) {
-    //     this.props.authenticate(false);
-    //   }
-    // })
-    // .catch((error)=>{
-
-    // });
+    });
   }
   handleCloseSnackBar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -171,7 +185,22 @@ const mapDispatchToProps = dispatch => {
     authenticate : (userStatus,token,id)=> dispatch({type:actionTypes.AUTHENTICATE_ON_RELOAD , status:userStatus , authToken:token, userId:id }),
     closeSnackBar : () => dispatch({
       type:actionTypes.SNACKBAR_CLOSE
-      })
+      }),
+      handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin, gender, followers) => dispatch({
+        type: actionTypes.AUTHENTICATE,
+        authToken: token, userId: id,
+        firstName: firstName,
+        lastName: lastName,
+        profileImage: profileImage,
+        email: email,
+        isAdmin: isAdmin,
+        gender: gender,
+        followers: followers
+    }),
+    handleOpenSnackBar: (snackBarMessage) => dispatch({
+      type: actionTypes.SNACKBAR_OPEN,
+      snackBarMessage: snackBarMessage
+  })
   }
 }
 

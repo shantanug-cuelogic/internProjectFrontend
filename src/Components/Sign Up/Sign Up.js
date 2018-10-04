@@ -174,8 +174,7 @@ class SignUpProcess extends React.Component {
               .then((response) => {
                   if (response.data.success) {
                     this.props.handleOpenSnackBar(`WELCOME ${this.state.formData.firstName} `)
-                      localStorage.setItem("authToken", response.data.authToken);
-                      localStorage.setItem('userId', response.data.userId);
+                   
                       this.props.handleSignInState(response.data.authToken,
                           parseInt(response.data.userDetails.userId),
                           response.data.userDetails.firstName,
