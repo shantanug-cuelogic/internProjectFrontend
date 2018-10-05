@@ -15,16 +15,20 @@ import PostHistoryIcon from '@material-ui/icons/ListAlt';
 import PostHistoryModal from './PostHistoryModal';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../../Store/Actions/actionTypes';
+import { Scrollbars } from 'react-custom-scrollbars';
+
 
 import axios from 'axios';
 
 const styles = theme => ({
     root: {
         width: '100%',
-        maxWidth: 300,
-
+        maxWidth: 700,
+        height:400,
+        overflow:'scroll',
         backgroundColor: theme.palette.background.paper,
-        marginTop: 10
+        marginTop: 10,
+        border : '2px'
     },
 });
 
@@ -125,6 +129,7 @@ class AllPosts extends React.Component {
 
 
         return (
+            
             <div className={classes.root}>
 
                 <List component="nav">

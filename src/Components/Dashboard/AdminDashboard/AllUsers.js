@@ -24,8 +24,10 @@ import axios from 'axios';
 const styles = theme => ({
     root: {
         width: '100%',
-        maxWidth: 300,
-
+   
+        maxWidth: 700,
+        height:400,
+        overflow:'scroll',
         backgroundColor: theme.palette.background.paper,
         marginTop: 10
     },
