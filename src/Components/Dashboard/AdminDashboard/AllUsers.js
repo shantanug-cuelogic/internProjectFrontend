@@ -119,13 +119,7 @@ class AllPosts extends React.Component {
             })
         }
 
-        // let postHistoryModal = null;
-        // if(this.state.open) {
-        //     postHistoryModal = <PostHistoryModal postId={this.state.postId} />
-        // }
-
-
-        return (
+         return (
             <div className={classes.root}>
 
                 <List component="nav">
