@@ -106,6 +106,7 @@ class DashBoard extends React.Component {
         followers: [],
         adminFeatures: false,
         feedbacks: [],
+        messages:[],
         expanded: null,
     };
 
@@ -190,7 +191,20 @@ class DashBoard extends React.Component {
             })
             .catch((error) => {
                 console.log(error)
+            });
+        axios.get('/message/'+this.props.userId)
+            .then((response)=>{
+              console.log(response.data);
+                if(response.data.success) {
+                    this.setState({
+                        messages:[...response.data.result]
+                    })
+                }
             })
+            .catch((error)=>{
+                console.log(error)
+            })
+            
     }
 
     handleChange = key => (event, value) => {
@@ -292,6 +306,40 @@ class DashBoard extends React.Component {
                 );
             });
         }
+
+
+        let messages = null;
+
+        if (this.state.messages.length === 0) {
+            messages = <p>NO MESSAGES TO SHOW</p>
+        }
+        else {
+            messages = this.state.messages.map((element, index) => {
+                return (
+                    <div key={index}>
+                        {/* <p className={classes.RecentActivities} > <b>{element.firstName}</b> : {element.feedback} <i> {moment.unix(element.feedbackTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</i></p>
+                        <Divider /> */}
+
+                        <ExpansionPanel>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                <Avatar src={element.profileImage} ></Avatar>
+                                <Typography variant="subheading" style={{marginLeft:20}} >{element.firstName} {element.lastName}</Typography>
+                                <Typography variant="caption" style={{fontSize:10, marginLeft:20 }} ><i>{moment.unix(element.messageTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</i></Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails>
+                                <Typography>
+                                  {element.message}
+                                </Typography>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
+
+                    </div>
+                );
+            });
+        }
+
+
+
 
         let adminButton = null;
         if (this.props.isAdmin) {
@@ -414,6 +462,17 @@ class DashBoard extends React.Component {
                                 <Paper className={classes.RecentActivity} >
 
                                     {feedback}
+                                </Paper>
+                            </Scrollbars>
+                        </Paper>
+                        <Paper className={classes.RecentActivityContainer} >
+                            <Typography variant="display1" >
+                                Messages
+                    </Typography>
+                            <Scrollbars >
+                                <Paper className={classes.RecentActivity} >
+
+                                    {messages}
                                 </Paper>
                             </Scrollbars>
                         </Paper>

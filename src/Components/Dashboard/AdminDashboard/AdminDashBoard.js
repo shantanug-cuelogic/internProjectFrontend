@@ -32,14 +32,16 @@ class AdminDashboard extends React.Component {
   handleAllPosts = () => {
     let currentState = this.state.showAllPosts;
     this.setState({
-      showAllPosts: !currentState
+      showAllPosts: !currentState,
+      showAllUsers:false
     });
   }
 
   handleAllUsers = () => {
     let currentState = this.state.showAllUsers;
     this.setState({
-      showAllUsers: !currentState
+      showAllUsers: !currentState,
+      showAllPosts:false
     });
   }
 

@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import FeedbackModal from '../FeedbackModal/FeedbackModal';
 import axios from 'axios';
 import CategoryGrid from '../Grids/Category Grid/CategoryGrid';
+import MessageModal from '../MessageModal/MessageModal';
 
 const styles = themes => ({
     paper: {
@@ -105,11 +106,16 @@ class Profile extends React.Component {
         let feedbackButton = null;
 
         if (this.props.auth) {
-            if (this.props.match.params.userId === this.props.userId) {
+            if (this.props.match.params.userId == this.props.userId) {
                 feedbackButton = null;
             }
             else {
-                feedbackButton = <FeedbackModal name={this.state.firstName} authorId={this.props.match.params.userId} />
+                feedbackButton = <div>
+                 <FeedbackModal name={this.state.firstName} authorId={this.props.match.params.userId} />
+                 <MessageModal name={this.state.firstName} authorId={this.props.match.params.userId}  />
+                </div>
+                
+               
             }
 
         }
