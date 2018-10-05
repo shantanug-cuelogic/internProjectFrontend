@@ -166,13 +166,15 @@ class SignUpProcess extends React.Component {
         password: this.state.formData.password
       })
         .then((response) => {
+          console.log(response.data);
+
           if (response.data.success) {
             axios.post('/login', {
               "email":  this.state.formData.email,
               "password": this.state.formData.password
           })
               .then((response) => {
-                  if (response.data.success) {
+                if (response.data.success) {
                     this.props.handleOpenSnackBar(`WELCOME ${this.state.formData.firstName} `)
                    
                       this.props.handleSignInState(response.data.authToken,
@@ -195,6 +197,10 @@ class SignUpProcess extends React.Component {
               .catch((error) => {
                   console.log(error)
               })
+
+          }
+          else if(response.data.message.errno === 1062) {
+            this.props.handleOpenSnackBar("Username already exists");
 
           }
          

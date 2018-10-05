@@ -202,18 +202,18 @@ class DashBoard extends React.Component {
 
         let viewStatistics = null;
 
-        // if(this.state.posts === 0) {
-        //     viewStatistics = <p>YOU DONT HAVE ANY POSTS</p>
-        // }
-        // else if(this.state.views === 0) {
-        //     viewStatistics = <p>YOUR POST DONT HAVE ANY VIEWS YET</p>
-        // } 
-        // else {
-        //     viewStatistics = <Paper>
-        //     <ViewPieChart userId={this.props.userId} />
-        //     <Typography variant="caption" > Views per post </Typography>
-        // </Paper>
-        // }
+        if(this.state.posts === 0) {
+            viewStatistics = <p>YOU DONT HAVE ANY POSTS</p>
+        }
+        else if(this.state.views === 0) {
+            viewStatistics = <p>YOUR POST DONT HAVE ANY VIEWS YET</p>
+        } 
+        else {
+            viewStatistics = <Paper>
+            <ViewPieChart userId={this.props.userId} />
+            <Typography variant="caption" > Views per post </Typography>
+        </Paper>
+        }
 
         let followers = null;
 
