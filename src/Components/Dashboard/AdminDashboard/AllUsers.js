@@ -24,10 +24,10 @@ import axios from 'axios';
 const styles = theme => ({
     root: {
         width: '100%',
-   
+
         maxWidth: 700,
-        height:400,
-        overflow:'scroll',
+        height: 400,
+        overflow: 'scroll',
         backgroundColor: theme.palette.background.paper,
         marginTop: 10
     },
@@ -59,27 +59,27 @@ class AllPosts extends React.Component {
     }
 
     handleDelete = (id, index) => {
-        axios.put('/deleteuser',{
+        axios.put('/deleteuser', {
             authToken: this.props.authToken,
-            userIdtoDelete : id
+            userIdtoDelete: id
         })
-        .then((response)=>{
-            console.log(response.data);
-            if(response.data.success) {
-                let updatedUsers = this.state.AllUsers;
-                updatedUsers.splice(index,1);
-                this.setState({
-                    AllUsers : [...updatedUsers]
-                });
-                this.props.handleOpenSnackBar("User Deleted");
-            }
-            else {
-                this.props.handleOpenSnackBar("Something went wrong please try again later");
-            }
-        })
-        .catch((error)=>{
-            console.log(error);
-        })
+            .then((response) => {
+                console.log(response.data);
+                if (response.data.success) {
+                    let updatedUsers = this.state.AllUsers;
+                    updatedUsers.splice(index, 1);
+                    this.setState({
+                        AllUsers: [...updatedUsers]
+                    });
+                    this.props.handleOpenSnackBar("User Deleted");
+                }
+                else {
+                    this.props.handleOpenSnackBar("Something went wrong please try again later");
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
     render() {
 
@@ -106,9 +106,13 @@ class AllPosts extends React.Component {
                             />
 
                             <ListItemSecondaryAction>
-                                <IconButton aria-label="Delete" onClick={()=>this.handleDelete(element.userId , index)} >
-                                    <DeleteIcon />
-                                </IconButton>
+
+                                {element.isAdmin === 1 ? null :
+                                    <IconButton aria-label="Delete" onClick={() => this.handleDelete(element.userId, index)} >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                }
+
 
                             </ListItemSecondaryAction>
                         </ListItem>
@@ -119,7 +123,7 @@ class AllPosts extends React.Component {
             })
         }
 
-         return (
+        return (
             <div className={classes.root}>
 
                 <List component="nav">
@@ -137,7 +141,8 @@ class AllPosts extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        authToken: state.authReducer.authToken
+        authToken: state.authReducer.authToken,
+        isAdmin: state.authReducer.isAdmin
     }
 }
 const mapDispatchToProps = dispatch => {
