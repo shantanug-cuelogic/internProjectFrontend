@@ -1,7 +1,19 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { Paper, Drawer, Divider, Typography, Button } from '@material-ui/core';
+import {
+    Paper,
+    Drawer,
+    Divider,
+    Typography,
+    Button,
+    ExpansionPanel,
+    ExpansionPanelSummary,
+    ExpansionPanelDetails,
+    Avatar,
+
+} from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Profile from '../Profile/Profile';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -92,7 +104,9 @@ class DashBoard extends React.Component {
         comments: 0,
         recentactivity: [],
         followers: [],
-        adminFeatures: false
+        adminFeatures: false,
+        feedbacks: [],
+        expanded: null,
     };
 
     componentDidMount() {
@@ -165,6 +179,17 @@ class DashBoard extends React.Component {
             })
             .catch((error) => {
                 console.log(error)
+            });
+        axios.get('/feedback/' + this.props.userId)
+            .then((response) => {
+                if (response.data.success) {
+                    this.setState({
+                        feedbacks: [...response.data.result]
+                    })
+                }
+            })
+            .catch((error) => {
+                console.log(error)
             })
     }
 
@@ -174,8 +199,15 @@ class DashBoard extends React.Component {
         });
     };
 
+    handleChangePanel = panel => (event, expanded) => {
+        this.setState({
+            expanded: expanded ? panel : false,
+        });
+    };
+
+
     handleAdminFeatureToggle = () => {
-      let currentState = this.state.adminFeatures;
+        let currentState = this.state.adminFeatures;
         this.setState({
             adminFeatures: !currentState
         })
@@ -202,17 +234,17 @@ class DashBoard extends React.Component {
 
         let viewStatistics = null;
 
-        if(this.state.posts === 0) {
+        if (this.state.posts === 0) {
             viewStatistics = <p>YOU DONT HAVE ANY POSTS</p>
         }
-        else if(this.state.views === 0) {
+        else if (this.state.views === 0) {
             viewStatistics = <p>YOUR POST DONT HAVE ANY VIEWS YET</p>
-        } 
+        }
         else {
             viewStatistics = <Paper>
-            <ViewPieChart userId={this.props.userId} />
-            <Typography variant="caption" > Views per post </Typography>
-        </Paper>
+                <ViewPieChart userId={this.props.userId} />
+                <Typography variant="caption" > Views per post </Typography>
+            </Paper>
         }
 
         let followers = null;
@@ -231,9 +263,39 @@ class DashBoard extends React.Component {
             });
         }
 
+        let feedback = null;
+
+        if (this.state.feedbacks.length === 0) {
+            feedback = <p>NO FEEDBACKS TO SHOW</p>
+        }
+        else {
+            feedback = this.state.feedbacks.map((element, index) => {
+                return (
+                    <div key={index}>
+                        {/* <p className={classes.RecentActivities} > <b>{element.firstName}</b> : {element.feedback} <i> {moment.unix(element.feedbackTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</i></p>
+                        <Divider /> */}
+
+                        <ExpansionPanel>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                <Avatar src={element.profileImage} ></Avatar>
+                                <Typography variant="subheading" style={{marginLeft:20}} >{element.firstName} {element.lastName}</Typography>
+                                <Typography variant="caption" style={{fontSize:10, marginLeft:20 }} ><i>{moment.unix(element.feedbackTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</i></Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails>
+                                <Typography>
+                                  {element.feedback}
+                                </Typography>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
+
+                    </div>
+                );
+            });
+        }
+
         let adminButton = null;
-        if(this.props.isAdmin) {
-        adminButton = <Button variant="contained" color="secondary" style={{ marginTop: 20 }} onClick={this.handleAdminFeatureToggle} > ADMIN</Button>
+        if (this.props.isAdmin) {
+            adminButton = <Button variant="contained" color="secondary" style={{ marginTop: 20 }} onClick={this.handleAdminFeatureToggle} > ADMIN</Button>
         }
 
 
@@ -257,14 +319,14 @@ class DashBoard extends React.Component {
                     </Drawer>
                 </div>
                 <div className={classes.HeaderContainer}>
-                            <Typography variant="display2" > DASHBOARD </Typography>
+                    <Typography variant="display2" > DASHBOARD </Typography>
                 </div>
                 {this.state.adminFeatures ?
                     <AdminDashboard />
                     :
                     <div>
 
-                        
+
                         <Grid container className={classes.root} spacing={16}>
 
                             <Grid item xs={12}>
@@ -341,9 +403,17 @@ class DashBoard extends React.Component {
                                 <Paper className={classes.RecentActivity} >
 
                                     {recentactivity}
+                                </Paper>
+                            </Scrollbars>
+                        </Paper>
+                        <Paper className={classes.RecentActivityContainer} >
+                            <Typography variant="display1" >
+                                Feedbacks
+                    </Typography>
+                            <Scrollbars >
+                                <Paper className={classes.RecentActivity} >
 
-
-
+                                    {feedback}
                                 </Paper>
                             </Scrollbars>
                         </Paper>
