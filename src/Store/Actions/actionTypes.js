@@ -26,3 +26,12 @@ export const THEME_HANDLER = "THEME_HANDLER";
 
 export const SNACKBAR_OPEN ="SNACKBAR_OPEN";
 export const SNACKBAR_CLOSE ="SNACKBAR_CLOSE";
+///////////////////////////////DASHBOARD////////////////////////////////
+export const USER_RECENT_ACTIVITY = "USER_RECENT_ACTIVITY";
+export const FOLLOWER_INFO = "FOLLOWER_INFO";
+export const LIKES = "LIKES";
+export const VIEWS = "VIEWS";
+export const COMMENTS = "COMMENTS";
+export const POSTS = "POSTS";
+export const FEEDBACKS = "FEEDBACKS";
+export const MESSAGES = "MESSAGES";

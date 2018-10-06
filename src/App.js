@@ -15,7 +15,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actionTypes from './Store/Actions/actionTypes';
 import EditPost from './Containers/Post/EditPost';
-import Dashboard from './Components/Dashboard/Dashboard';
+import Dashboard from './Containers/Dashboard/Dashboard';
 import Category from './Components/Category/Category';
 import SearchPost from './Components/SearchPost/SearchPost';
 import AuthorProfile from './Components/AuthorProfile/AuthorProfile';
