@@ -35,3 +35,8 @@ export const COMMENTS = "COMMENTS";
 export const POSTS = "POSTS";
 export const FEEDBACKS = "FEEDBACKS";
 export const MESSAGES = "MESSAGES";
+
+/////////////////////////////AUTHORINFO/////////////////////////////////
+
+export const FETCH_AUTHOR_INFO = 'FETCH_AUTHOR_INFO';
+export const AUTHOR_FOLLOWED_ALLOWED ="AUTHOR_FOLLOWED_ALLOWED"; 

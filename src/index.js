@@ -13,6 +13,7 @@ import categoryPostReducer from './Store/Reducer/categoryPostReducer';
 import themeReducer from './Store/Reducer/themeReducer';
 import snackBarReducer from './Store/Reducer/SnackBarReducer';
 import dashboardReducer from './Store/Reducer/dashboardReducer';
+import authorReducer from './Store/Reducer/authorReducer';
 const store = createStore(combineReducers(
     { authReducer: authReducer,
          postReducer: postReducer, 
@@ -20,7 +21,8 @@ const store = createStore(combineReducers(
          categoryPostReducer:categoryPostReducer,
          themeReducer:themeReducer,
          snackBarReducer:snackBarReducer,
-         dashboardReducer : dashboardReducer   
+         dashboardReducer : dashboardReducer,
+         authorReducer : authorReducer   
         }));
 
 const app = (
