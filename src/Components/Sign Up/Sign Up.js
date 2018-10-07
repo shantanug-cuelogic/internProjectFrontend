@@ -1,18 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { Paper, TextField, Input, Grid, Avatar, Divider, Snackbar } from '@material-ui/core';
 import axios from 'axios';
-import ProfileUpload from '../ImageUploadPreviev/ImageUploadPreview';
 import validator from 'validator';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
+import GoogleLogin from 'react-google-login';
+
 const styles = theme => ({
   root: {
     width: '80%',
@@ -151,6 +149,9 @@ class SignUpProcess extends React.Component {
         }
       }
     }
+  }
+   responseGoogle = (response) => {
+    console.log(response);
   }
 
 
@@ -298,6 +299,14 @@ class SignUpProcess extends React.Component {
 
 
             </ValidatorForm>
+            <Grid item>
+            <GoogleLogin
+    clientId="1037924891905-tvs0e6v77hbarrgtn8spp12im30llfi7.apps.googleusercontent.com"
+    buttonText="Login"
+    onSuccess={this.responseGoogle}
+    onFailure={this.responseGoogle}
+  />
+            </Grid>
 
             <Grid item>
 
