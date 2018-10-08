@@ -4,17 +4,14 @@ import {
     Paper,
     Grid,
     Typography,
-    Button,
-    
-   
 } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
 import FeedbackModal from '../FeedbackModal/FeedbackModal';
-import axios from 'axios';
 import CategoryGrid from '../Grids/Category Grid/CategoryGrid';
 import MessageModal from '../MessageModal/MessageModal';
+import AuthorProfileServices from '../../Services/AuthorProfileService';
 
 const styles = themes => ({
     paper: {
@@ -51,53 +48,28 @@ class Profile extends React.Component {
         lastName: '',
         email: '',
         profileImage: '',
-        noofposts: '',
+        
         followers: '',
         authorPosts: []
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        
+        const authorInformaton = await AuthorProfileServices.getAuthorInformation(this.props.match.params.userId);
+        const {firstName,lastName,email,profileImage,followers} = authorInformaton;
+        this.setState({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            profileImage: profileImage,
+            followers: followers
+        });
+       const allAuthorPosts = await AuthorProfileServices.getAuthorPosts(this.props.match.params.userId) 
+       this.setState({
+        authorPosts: [...allAuthorPosts],
 
-        axios.get('/userprofile/' + this.props.match.params.userId)
-            .then((response) => {
-                console.log(response.data);
-                this.setState({
-                    firstName: response.data[0].firstName,
-                    lastName: response.data[0].lastName,
-                    email: response.data[0].email,
-                    profileImage: response.data[0].profileImage,
-                    followers: response.data[0].followers
-                });
-
-                axios.get('/totalposts/' + this.props.match.params.userId)
-                    .then((response) => {
-                        if (response.data.success) {
-                            this.setState({
-                                noofposts: response.data.postCount
-                            })
-                        }
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
-
-
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        axios.get('/post/' + this.props.match.params.userId)
-            .then((response) => {
-                console.log(response.data);
-                if (response.data.success) {
-                    this.setState({
-                        authorPosts: [...response.data.result]
-                    });
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            })
+    });
+       
     }
 
     render() {
@@ -111,13 +83,10 @@ class Profile extends React.Component {
             }
             else {
                 feedbackButton = <div>
-                 <FeedbackModal name={this.state.firstName} authorId={this.props.match.params.userId} />
-                 <MessageModal name={this.state.firstName} authorId={this.props.match.params.userId}  />
+                    <FeedbackModal name={this.state.firstName} authorId={this.props.match.params.userId} />
+                    <MessageModal name={this.state.firstName} authorId={this.props.match.params.userId} />
                 </div>
-                
-               
             }
-
         }
 
         let authorPost = null;
@@ -162,7 +131,7 @@ class Profile extends React.Component {
                 <Divider className={classes.Divider} />
                 <Typography variant="display2" > {this.state.firstName + " " + this.state.lastName}</Typography>
                 <Divider className={classes.Divider} />
-                <Typography variant="display1" >No of Post: {this.state.noofposts} </Typography>
+                <Typography variant="display1" >No of Post: {this.state.authorPosts.length} </Typography>
                 <Divider className={classes.Divider} />
                 <Typography variant="display1" >No of Followers: {this.state.followers} </Typography>
                 <Divider className={classes.Divider} />
@@ -170,15 +139,15 @@ class Profile extends React.Component {
                 <Divider className={classes.Divider} />
                 {feedbackButton}
                 <Divider className={classes.Divider} />
-                <Typography variant="display1" style={{marginTop:30}} >All {this.state.firstName}'s Posts</Typography>
-                <Divider style={{marginBottom:30}} />
-                 <Grid container
-                        direction="row"
-                        spacing={24}
-                        justify="center" >
-                        {authorPost}
-                        
-                    </Grid>
+                <Typography variant="display1" style={{ marginTop: 30 }} >All {this.state.firstName}'s Posts</Typography>
+                <Divider style={{ marginBottom: 30 }} />
+                <Grid container
+                    direction="row"
+                    spacing={24}
+                    justify="center" >
+                    {authorPost}
+
+                </Grid>
             </div>
         );
     }

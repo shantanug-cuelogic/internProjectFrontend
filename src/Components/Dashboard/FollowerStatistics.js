@@ -6,18 +6,10 @@ import moment from 'moment';
 
 import {
     Paper,
-    Drawer,
     Divider,
-    Typography,
-    Button,
-    ExpansionPanel,
-    ExpansionPanelSummary,
-    ExpansionPanelDetails,
-    Avatar,
-
+    Typography
 } from '@material-ui/core';
 
-const drawerWidth = 340;
 const styles = theme => ({
     RecentActivityContainer: {
         height: 300,

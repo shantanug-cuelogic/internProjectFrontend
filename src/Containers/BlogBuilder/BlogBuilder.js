@@ -1,12 +1,12 @@
 import React from 'react';
 import Carousel from '../../Components/Carousel/Carousel';
-import Menu from '../Menu/Menu';
+import Menu from '../../Components/Menu/Menu';
 import { withStyles } from '@material-ui/core/styles';
-import {Paper, Typography} from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import SubHeader from '../../Components/Layout/SubHeader/SubHeader';
 const style = {
-    Container :{
-     
+    Container: {
+
     }
 }
 
@@ -14,12 +14,11 @@ class BlogBuilder extends React.Component {
 
 
     render() {
-const { classes } = this.props;
+        const { classes } = this.props;
         return (
             <div className={classes.Container}>
                 <SubHeader />
-                <Carousel />   
-                
+                <Carousel />
                 <Paper><Menu /></Paper>
             </div>
         );

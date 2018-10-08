@@ -1,10 +1,16 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper, Grid, Typography, Button, TextField, MenuItem } from '@material-ui/core';
+import {
+    Paper,
+    Grid,
+    Typography,
+    Button,
+    TextField,
+    MenuItem,
+    Divider
+} from '@material-ui/core';
 import axios from 'axios';
-import { Divider } from '@material-ui/core';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 import ProfilePic from '../ImageUploadPreviev/ImageUploadPreview';
 import EditIcon from '@material-ui/icons/Create';
 import * as actionTypes from '../../Store/Actions/actionTypes';
@@ -61,7 +67,7 @@ class Profile extends React.Component {
         lastName: this.props.lastName,
         changeGender: false,
         gender: this.props.gender,
-       
+
     }
 
     handleFirstNameChange = () => {
@@ -89,7 +95,7 @@ class Profile extends React.Component {
     handleOnChangeLastname = (event) => {
         this.setState({
             lastName: event.target.value,
-      
+
         })
 
     }
@@ -273,11 +279,11 @@ class Profile extends React.Component {
                                 </Button>
                             </Grid>
                         </Grid>
-                        
-                            <Button variant="contained" color="primary" onClick={this.handleUpdateProfile} className={classes.UpdateButton} >
-                                Update
+
+                        <Button variant="contained" color="primary" onClick={this.handleUpdateProfile} className={classes.UpdateButton} >
+                            Update
                             </Button>
-                            
+
 
                     </Grid>
                 </Paper>

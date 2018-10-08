@@ -9,8 +9,6 @@ import {
 } from '@material-ui/core';
 import ViewPieChart from '../ViewPieChart/ViewPieChart';
 
-
-const drawerWidth = 340;
 const styles = theme => ({
     PieChartContainer: {
         marginLeft: 333,
@@ -38,25 +36,23 @@ class ViewStatistics extends React.Component {
             </Paper>
         }
 
-        return(
+        return (
 
             <div className={classes.PieChartContainer} >
-                            <Paper  >
-                                <Typography variant="display1" > Views Statistics </Typography>
-                                {viewStatistics}
-
-
-                            </Paper>
-                        </div>
-);
+                <Paper  >
+                    <Typography variant="display1" > Views Statistics </Typography>
+                    {viewStatistics}
+                </Paper>
+            </div>
+        );
     }
 }
 
 const mapStateToProps = state => {
     return {
-        userId : state.authReducer.userId,
-        posts : state.dashboardReducer.posts,
-        views : state.dashboardReducer.views,
+        userId: state.authReducer.userId,
+        posts: state.dashboardReducer.posts,
+        views: state.dashboardReducer.views,
 
     }
 }

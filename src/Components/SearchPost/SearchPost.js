@@ -5,7 +5,15 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import CategoryGrid from '../Grids/Category Grid/CategoryGrid';
-import { Grid, Button, MenuItem, FormControl, InputLabel, Select, Paper, Divider } from '@material-ui/core';
+import {
+    Grid,
+    Button,
+    MenuItem,
+    FormControl,
+    InputLabel,
+    Select,
+    Divider
+} from '@material-ui/core';
 import { withRouter } from 'react-router';
 
 

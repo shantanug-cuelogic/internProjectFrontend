@@ -46,9 +46,6 @@ class Author extends React.Component {
 
             if (response.data.success) {
                     this.props.handleOpenSnackBar(response.data.message);
-                    // this.setState({
-                    //     allowedToFollow: false
-                    // });
                     this.props.handleAuthorFollowAllowed(false);
                 }
             })
@@ -66,9 +63,6 @@ class Author extends React.Component {
             .then((response) => {
 
                 if (response.data.success) {
-                    // this.setState({
-                    //     allowedToFollow: true
-                    // });
                     this.props.handleAuthorFollowAllowed(true);
                     this.props.handleOpenSnackBar(response.data.message);
                 }

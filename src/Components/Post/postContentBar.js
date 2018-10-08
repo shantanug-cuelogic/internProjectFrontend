@@ -1,9 +1,9 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
-import { Typography, Paper, Button, TextField, Divider, Avatar, Grid } from '@material-ui/core';
+import { Paper, Button } from '@material-ui/core';
 import StarRatingComponent from 'react-star-rating-component';
-import RateModal from '../Modal/Modal';
+import RateModal from '../RatingModal/RatingModal';
 import { NavLink } from "react-router-dom";
 import LikeIcon from '@material-ui/icons/ThumbUp';
 import UnlikeIcon from '@material-ui/icons/ThumbDown';

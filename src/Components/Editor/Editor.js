@@ -4,15 +4,20 @@ import 'froala-editor/css/froala_style.min.css';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'font-awesome/css/font-awesome.css';
 import FroalaEditor from 'react-froala-wysiwyg';
-import { Button, Paper, TextField, MenuItem, Snackbar } from '@material-ui/core';
+import {
+    Button,
+    Paper,
+    TextField,
+    MenuItem,
+    Input,
+    InputLabel,
+    FormHelperText,
+    FormControl,
+    InputAdornment
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
 import Thumbnail from '../ImageUploadPreviev/ImageUploadPreview';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import validator from 'validator';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
@@ -20,7 +25,7 @@ import { withRouter } from 'react-router';
 
 
 const styles = {
-    
+
     TitleContainer: {
         padding: '5%'
     },
@@ -29,17 +34,17 @@ const styles = {
         paddingRight: '5%',
 
     },
-  
+
     CategoryContainer: {
         paddingLeft: '5%',
         paddingRight: '5%',
         paddingBottom: '5%'
     },
-    PostButtonContainer :{
-        paddingBotttom:'5%'
+    PostButtonContainer: {
+        paddingBotttom: '5%'
     },
-    EditorContainer : {
-        padding:'5%'
+    EditorContainer: {
+        padding: '5%'
     }
 
 }
@@ -76,8 +81,6 @@ class Editor extends Component {
     state = {
         model: '',
         Category: '',
-
-
     }
 
     config = {
@@ -159,7 +162,7 @@ class Editor extends Component {
         let validation = this.validation();
         if (validation) {
 
-             console.log(typeof(userId));   
+            console.log(typeof (userId));
             const formData = new FormData();
             formData.append('file', document.getElementById('profilepic').files[0]);
             formData.append('title', document.getElementById('postTitle').value);
@@ -167,7 +170,7 @@ class Editor extends Component {
             formData.append('category', this.state.Category);
             formData.append('authToken', this.props.authToken);
             formData.append('userId', this.props.userId);
-            formData.append('isDraft',0);
+            formData.append('isDraft', 0);
 
 
             axios.post('post/create', formData, {
@@ -180,7 +183,7 @@ class Editor extends Component {
                 .then((response) => {
                     console.log(response.data);
                     if (response.data.success) {
-                    
+
                         this.props.handleOpenSnackBar('Post Created Successfully!!');
                         this.props.history.push('/post/' + response.data.id);
                     }
@@ -194,37 +197,36 @@ class Editor extends Component {
     }
 
     handleDiscardPost = () => {
-        
-            const formData = new FormData();
-            formData.append('file', document.getElementById('profilepic').files[0]);
-            formData.append('title', document.getElementById('postTitle').value);
-            formData.append('postContent', this.state.model);
-            formData.append('category', this.state.Category);
-            formData.append('authToken', this.props.authToken);
-            formData.append('userId', this.props.userId);
-            formData.append('isDraft',1);
-            
 
-            axios.post('post/create', formData, {
-                headers: {
-                    'accept': 'application/json',
-                    'Accept-Language': 'en-US,en;q=0.8',
-                    'Content-Type': `multipart/form-data;`,
+        const formData = new FormData();
+        formData.append('file', document.getElementById('profilepic').files[0]);
+        formData.append('title', document.getElementById('postTitle').value);
+        formData.append('postContent', this.state.model);
+        formData.append('category', this.state.Category);
+        formData.append('authToken', this.props.authToken);
+        formData.append('userId', this.props.userId);
+        formData.append('isDraft', 1);
+
+
+        axios.post('post/create', formData, {
+            headers: {
+                'accept': 'application/json',
+                'Accept-Language': 'en-US,en;q=0.8',
+                'Content-Type': `multipart/form-data;`,
+            }
+        })
+            .then((response) => {
+                if (response.data.success) {
+
+                    this.props.handleOpenSnackBar('Post Saved as Draft');
+                    this.props.history.push('/');
                 }
-            })
-                .then((response) => {
-                    console.log(response.data);
-                    if (response.data.success) {
-                    
-                        this.props.handleOpenSnackBar('Post Saved as Draft');
-                        this.props.history.push('/');
-                    }
 
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+
     }
 
     render() {
@@ -245,7 +247,6 @@ class Editor extends Component {
                         <TextField
                             select
                             fullWidth
-                            // className={classNames(classes.margin, classes.textField)}
                             variant="outlined"
                             label="With Select"
                             value={this.state.Category}
@@ -279,10 +280,10 @@ class Editor extends Component {
                         />
                     </div>
 
-                     <div className={classes.PostButtonContainer} > 
-                     <Button variant="contained" color="primary" onClick={this.handlePost} style={{marginRight:30}} >Post</Button>
-                     <Button variant="outlined" color="primary" onClick={this.handleDiscardPost}  > DISCARD </Button>           
-                     </div>
+                    <div className={classes.PostButtonContainer} >
+                        <Button variant="contained" color="primary" onClick={this.handlePost} style={{ marginRight: 30 }} >Post</Button>
+                        <Button variant="outlined" color="primary" onClick={this.handleDiscardPost}  > DISCARD </Button>
+                    </div>
 
                 </Paper>
             </div>
@@ -295,8 +296,8 @@ class Editor extends Component {
 const mapStateToProps = state => {
     return {
         auth: state.authReducer.auth,
-        userId : state.authReducer.userId,
-        authToken : state.authReducer.authToken
+        userId: state.authReducer.userId,
+        authToken: state.authReducer.authToken
     }
 }
 

@@ -41,7 +41,7 @@ class App extends Component {
       email:localStorage.getItem('email')
     })
     .then((response) =>{
-console.log(response.data);
+
       if(response.data.success) {
         this.props.handleOpenSnackBar(`Welcome ${response.data.result.firstName}`);
                        
