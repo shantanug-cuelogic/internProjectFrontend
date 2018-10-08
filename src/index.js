@@ -12,14 +12,17 @@ import signUpReducer from './Store/Reducer/signUp';
 import categoryPostReducer from './Store/Reducer/categoryPostReducer';
 import themeReducer from './Store/Reducer/themeReducer';
 import snackBarReducer from './Store/Reducer/SnackBarReducer';
-
+import dashboardReducer from './Store/Reducer/dashboardReducer';
+import authorReducer from './Store/Reducer/authorReducer';
 const store = createStore(combineReducers(
     { authReducer: authReducer,
          postReducer: postReducer, 
          signUpReducer: signUpReducer ,
          categoryPostReducer:categoryPostReducer,
          themeReducer:themeReducer,
-         snackBarReducer:snackBarReducer   
+         snackBarReducer:snackBarReducer,
+         dashboardReducer : dashboardReducer,
+         authorReducer : authorReducer   
         }));
 
 const app = (

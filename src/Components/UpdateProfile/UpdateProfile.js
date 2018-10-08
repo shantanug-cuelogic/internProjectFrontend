@@ -60,7 +60,8 @@ class Profile extends React.Component {
         changeLastName: false,
         lastName: this.props.lastName,
         changeGender: false,
-        gender: this.props.gender
+        gender: this.props.gender,
+        showUpdateButton: false
     }
 
     handleFirstNameChange = () => {
@@ -81,18 +82,21 @@ class Profile extends React.Component {
 
     handleOnChangeFirstname = (event) => {
         this.setState({
-            firstName: event.target.value
+            firstName: event.target.value,
+            showUpdateButton: true,
         })
     }
     handleOnChangeLastname = (event) => {
         this.setState({
-            lastName: event.target.value
+            lastName: event.target.value,
+            showUpdateButton: true,
         })
 
     }
     handleOnChangeGender = (event) => {
         this.setState({
-            gender: event.target.value
+            gender: event.target.value,
+            showUpdateButton: true,
         })
 
     }
@@ -270,10 +274,13 @@ class Profile extends React.Component {
                                 </Button>
                             </Grid>
                         </Grid>
+                        {this.state.showUpdateButton ?
+                            <Button variant="contained" color="primary" onClick={this.handleUpdateProfile} className={classes.UpdateButton} >
+                                Update
+                            </Button>
+                            :
+                            null}
 
-                        <Button variant="contained" color="primary" onClick={this.handleUpdateProfile} className={classes.UpdateButton} >
-                            Update
-                    </Button>
                     </Grid>
                 </Paper>
             </div>

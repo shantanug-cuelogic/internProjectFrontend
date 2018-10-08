@@ -8,16 +8,16 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Comment from '../Comment/Comment'
 import { withRouter } from 'react-router';
 import { NavLink } from "react-router-dom";
-import LikeIcon from '@material-ui/icons/ThumbUp';
-import UnlikeIcon from '@material-ui/icons/ThumbDown';
+
 import Visibility from '@material-ui/icons/Visibility';
-import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
 import Snackbar from '@material-ui/core/Snackbar';
 import Slide from '@material-ui/core/Slide';
 import postService from '../../Services/PostService';
 import RateModal from '../../Components/Modal/Modal';
 import StarRatingComponent from 'react-star-rating-component';
-
+import Author from '../../Components/Post/Author';
+import PostContent from '../../Components/Post/PostContent';
+import PostContentBar from '../../Components/Post/postContentBar';
 
 const style = theme => ({
 
@@ -118,13 +118,8 @@ class Post extends Component {
         firstName: '',
         lastName: '',
         likeAllowed: true,
-        authorFirstName: "",
-        authorLastName: "",
-        authorProfileImage: "",
-        authorEmail: "",
-        authorId: '',
-        allowedToFollow: null,
-        rating:0
+        rating:0,
+
     }
 
     componentDidMount() {
@@ -163,22 +158,7 @@ class Post extends Component {
                                     console.log(error);
                                 });
 
-                            axios.post('/post/like/allowed', {
-                                authToken: this.props.authToken,
-                                postIdToLike: response.data.result[0].postId
-                            })
-                                .then((response) => {
-                                    if (response.data.success) {
-                                        this.props.allowToLikePostReducer(true);
-
-                                    }
-                                    else {
-                                        this.props.allowToLikePostReducer(false);
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.log(error)
-                                });
+                           
 
                             axios.post('/post/view/add', {
                                 authToken: this.props.authToken,
@@ -211,13 +191,19 @@ class Post extends Component {
                     axios.get('/userprofile/' + response.data.result[0].userId)
                         .then((response) => {
 
-                            this.setState({
-                                authorFirstName: response.data[0].firstName,
-                                authorLastName: response.data[0].lastName,
-                                authorProfileImage: response.data[0].profileImage,
-                                authorEmail: response.data[0].email,
-                                authorId: response.data[0].userId,
-                            });
+                            let    authorFirstName= response.data[0].firstName;
+                            let    authorLastName= response.data[0].lastName;
+                              let  authorProfileImage= response.data[0].profileImage;
+                               let authorEmail= response.data[0].email;
+                                let authorId= response.data[0].userId;
+
+                            this.props.handleAuthorInfo(
+                                authorFirstName,
+                                authorLastName,
+                                authorProfileImage,
+                                authorEmail,
+                                authorId
+                            );
 
                             if (this.props.auth) {
                                 axios.post('/follower/allowed', {
@@ -226,14 +212,16 @@ class Post extends Component {
                                 })
                                     .then((response) => {
                                         if (response.data.success) {
-                                            this.setState({
-                                                allowedToFollow: true
-                                            });
+                                            // this.setState({
+                                            //     allowedToFollow: true
+                                            // });
+                                            this.props.handleAuthorFollowAllowed(true);
                                         }
                                         else {
-                                            this.setState({
-                                                allowedToFollow: false
-                                            })
+                                            // this.setState({
+                                            //     allowedToFollow: false
+                                            // })
+                                            this.props.handleAuthorFollowAllowed(false);
                                         }
                                     })
                                     .catch((error) => {
@@ -305,24 +293,7 @@ class Post extends Component {
     
        
     }
-    handleDeletePost = () => {
-        axios.post('/post/delete', {
-            authToken: localStorage.getItem('authToken'),
-            postIdtoDelete: this.props.postId
-        })
-            .then((response) => {
-                if (response.data.success) {
-
-                    this.props.handleOpenSnackBar("Post Deleted Succesfully")
-                    this.props.deletePostToReducer();
-                    this.props.history.push('/');
-
-                }
-            })
-            .catch((error) => {
-
-            })
-    }
+    
     handleDeleteClick = (commentId) => {
 
         axios.put('/post/comment/delete', {
@@ -346,116 +317,13 @@ class Post extends Component {
             })
     }
 
-    handleLike = () => {
 
-        if (this.props.allowedToLike) {
-            axios.post('/post/like/add', {
-                postIdToLike: this.props.postId,
-                authToken: localStorage.getItem('authToken')
-            })
-                .then((response) => {
-                    if (response.data.success) {
-
-                        axios.get('/post/like/totallikes/' + this.props.postId)
-                            .then((response) => {
-                                if (response.data.success) {
-                                    this.props.totalLikesToPostReducer(response.data.count)
-                                }
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            });
-
-                        this.props.allowToLikePostReducer(false);
-
-                    }
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        }
-
-        else if (!this.props.allowedToLike) {
-            axios.put('/post/like/remove', {
-                postIdToUnlike: this.props.postId,
-                authToken: localStorage.getItem('authToken')
-            })
-                .then((response) => {
-                    if (response.data.success) {
-
-                        axios.get('/post/like/totallikes/' + this.props.postId)
-                            .then((response) => {
-                                if (response.data.success) {
-                                    this.props.totalLikesToPostReducer(response.data.count)
-                                }
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                            });
-                        this.props.allowToLikePostReducer(true);
-
-                    }
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        }
-        this.props.allowToLikePostReducer(!this.props.allowedToLike);
-    }
-
-    handleFollow = () => {
-        axios.post('/follower/add', {
-            authToken: this.props.authToken,
-            userIdToFollow: this.state.authorId
-        })
-            .then((response) => {
-                if (response.data.success) {
-                    this.props.handleOpenSnackBar(response.data.message);
-                    this.setState({
-                        allowedToFollow: false
-                    });
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-
-    }
-
-    handleUnfollow = () => {
-        axios.put('/follower/unfollow', {
-            authToken: this.props.authToken,
-            userIdToUnfollow: this.state.authorId
-        })
-            .then((response) => {
-                if (response.data.success) {
-                    this.setState({
-                        allowedToFollow: true
-                    });
-                    this.props.handleOpenSnackBar(response.data.message);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }
     
 
     render() {
-        let authorProfileUrl = "/authorprofile/" + this.props.postUserId;
-        const { classes } = this.props;
-
-        let editPostUrl = '/editpost/' + this.props.postId
-        let editDeleteButton = null;
-
-        if (this.props.postUserId === this.props.userId) {
-            editDeleteButton = <div className={classes.EditButton}>
-                <Button color="primary" variant="contained" component={NavLink} to={editPostUrl}>Edit Post</Button>
-                <Button variant="outlined" className={classes.DeleteButton} onClick={this.handleDeletePost} >Delete Post</Button>
-            </div>
-        }
-
-
+       
+        const { classes } = this.props;      
+        
         let comments = null;
         if (this.props.allcomments.length === 0) {
             comments = <Typography variant="body2" > NO COMMENTS ON THIS POST YET</Typography>
@@ -482,111 +350,25 @@ class Post extends Component {
             })
         }
 
-        let likeButton = null;
+        
 
-        if (this.props.auth) {
-            if (this.props.allowedToLike) {
-                likeButton = <Button onClick={this.handleLike}>
-                    <LikeIcon className={classes.LikeButton} color="primary" />
-                </Button>
-            }
-            else {
-                likeButton = <Button onClick={this.handleLike}>
-                    <UnlikeIcon className={classes.LikeButton} color="primary" />
-                </Button>
-            }
-        }
-
-        let followButton = null;
-        if (this.state.authorId !== this.props.userId) {
-
-            if (this.state.allowedToFollow === true) {
-                followButton = <div>
-                    <Button variant="outlined" color="primary" size="small" onClick={this.handleFollow} > Follow</Button>
-                </div>
-            }
-            else if (this.state.allowedToFollow === false) {
-                followButton = <div>
-                    <Button variant="outlined" color="primary" size="small" onClick={this.handleUnfollow} > Unfollow</Button>
-                </div>
-            }
-            else {
-                followButton = null
-            }
-        }
-
+      
 
         return (
             <div className={classes.root}>
                                      <div id="google_translate_element" style={{display:'inline', height:27 , float:'right'}} ></div>
 
-                <Grid
-                    container
-                    justify="center"
-
-                >
-                    <div className={classes.AuthorContainer} >
-                        <NavLink to={authorProfileUrl} >
-                            <Avatar src={this.state.authorProfileImage} className={classes.AuthorAvatar} style={{ float: 'left' }} ></Avatar>
-                        </NavLink>
-                        <div className={classes.AuthorInfo} style={{ float: 'left', marginLeft: 20 }}>
-                            <Typography variant="subheading">{this.state.authorFirstName + " " + this.state.authorLastName}</Typography>
-                            {followButton}
-                            <Typography variant="caption" >{this.state.authorEmail}</Typography>
-                        </div>
-                        
-
-                    </div>
-
-                   
-                </Grid>
-              
-                <Paper>
-                    <div className={classes.HeaderContainer}>
-                        <Typography variant="display2" color="textPrimary"> {this.props.postTitle} </Typography>
-                    </div>
-                    <Divider />
-                    <div className={classes.PostContainer}>
-                        <Typography variant="body2" >
-                            <style jsx="true">
-                                {`
-                                    img {
-                                    max-width : 100%
-                                         }
-                                `}
-                            </style>
-                            {ReactHtmlParser(this.props.postContent)}
-                        </Typography>
-                    </div>
-                </Paper>
-                <div className={classes.EditButtonContainer}>
-                    <Paper >
-                        {editDeleteButton}
-                        {likeButton}
-                        <div style={{ display: 'inline', marginRight: '10px' }}>
-                            <p style={{ display: 'inline', marginRight: '10px' }}>Likes : {this.props.likes}</p>
-                            <p style={{ display: 'inline' }}>Views : {this.props.views} </p>
-                        </div>
-                        <div style={{display:'inline', marginRight: 10}} >
-                        <StarRatingComponent 
-                        editing={false}
-                        starCount={5}
-                        value={this.state.rating}
-                        />
-                        </div>
-                        
-                        <Button variant="outlined" component={NavLink} to={authorProfileUrl}>
-                            View Authors Profile
-                    </Button>
-                       {this.props.auth ? 
-                         <div className={classes.RatingContainer}>
-                         <RateModal ButtonName="Rate this post" postId={parseInt(this.props.match.params.id)} style={{display:'inline'}} />
-                         </div>
-                        : null}
-                       
-                        
-                    </Paper>
-                </div>
+                
+              <Author
+                userId={this.props.userId} 
+                postUserId = {this.props.postUserId}
+                />
+               <PostContent /> 
+               <PostContentBar
+               postUserId = {this.props.postUserId}
+               postId={this.props.match.params.id}
+               rating ={this.state.rating} /> 
+                
 
                 {this.props.auth ?
                     <div className={classes.CommentContainer}>
@@ -662,19 +444,9 @@ const mapDispatchToProps = dispatch => {
             index: index
         }),
 
-        deletePostToReducer: () => dispatch({
-            type: actionTypes.DELETE_POST
-        }),
+        
 
-        allowToLikePostReducer: (status) => dispatch({
-            type: actionTypes.ALLOWED_TO_LIKE_POST,
-            allowToLike: status
-        }),
-
-        totalLikesToPostReducer: (likes) => dispatch({
-            type: actionTypes.TOTAL_LIKE_TO_POST,
-            totalLikes: likes
-        }),
+        
 
         totalViewsToPostReducer: (views) => dispatch({
             type: actionTypes.TOTAL_VIEWS_TO_POST,
@@ -683,10 +455,21 @@ const mapDispatchToProps = dispatch => {
         handleOpenSnackBar: (snackBarMessage) => dispatch({
             type: actionTypes.SNACKBAR_OPEN,
             snackBarMessage: snackBarMessage
+        }),
+        handleAuthorInfo : (authorFirstName,authorLastName,authorProfileImage,authorEmail,authorId) => dispatch({
+            type:actionTypes.FETCH_AUTHOR_INFO,
+            authorFirstName:authorFirstName,
+            authorLastName:authorLastName,
+            authorProfileImage:authorProfileImage,
+            authorEmail:authorEmail,
+            authorId:authorId            
+
+        }),
+
+        handleAuthorFollowAllowed : (allowedToFollow) => dispatch({
+            type:actionTypes.AUTHOR_FOLLOWED_ALLOWED,
+            allowedToFollow:allowedToFollow
         })
-
-
-
     }
 }
 

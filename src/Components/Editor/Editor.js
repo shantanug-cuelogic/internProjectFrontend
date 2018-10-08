@@ -16,6 +16,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import validator from 'validator';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
+import { withRouter } from 'react-router';
+
 
 const styles = {
     
@@ -307,4 +309,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Editor));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Editor)));

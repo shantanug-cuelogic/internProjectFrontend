@@ -88,7 +88,7 @@ class SignIn extends React.Component {
                 .then((response) => {
                     if (response.data.success) {
                         this.props.handleOpenSnackBar("Succesfully Signed In");
-                       
+
                         this.props.handleSignInState(response.data.authToken,
                             parseInt(response.data.userDetails.userId),
                             response.data.userDetails.firstName,
@@ -110,6 +110,9 @@ class SignIn extends React.Component {
                     console.log(error)
                 })
         }
+    }
+    responseGoogle = (response) => {
+        console.log(response);
     }
 
     render() {
@@ -151,6 +154,7 @@ class SignIn extends React.Component {
                         <Button variant="outlined" color="primary" className={classes.Button} component={NavLink} to="/forgotpassword" >forgot password</Button>
 
                     </div>
+                    
                 </Paper>
 
             </div>
