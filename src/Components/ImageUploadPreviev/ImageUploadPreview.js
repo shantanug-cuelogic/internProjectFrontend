@@ -42,7 +42,6 @@ const styles = theme => ({
 class Upload extends React.Component {
     constructor(props) {
         super(props)
-       console.log(this.props.src)
         this.state = {
             file: this.props.src
         }
@@ -54,7 +53,7 @@ class Upload extends React.Component {
         this.setState({
             file: file
         })
-        // this.props.imageStoreToReducer(event.target.files[0]);
+        
     }
 
     render() {
