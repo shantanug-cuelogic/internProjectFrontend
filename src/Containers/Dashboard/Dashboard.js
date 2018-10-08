@@ -46,7 +46,7 @@ class DashBoard extends React.Component {
             .then((response) => {
                 if (response.data.success) {
                     this.props.handleRecentUserActivity(response.data.result)
-                    
+
                 }
             })
             .catch((error) => {
@@ -65,7 +65,7 @@ class DashBoard extends React.Component {
         followers: [],
         adminFeatures: false,
         feedbacks: [],
-        messages:[],
+        messages: [],
         expanded: null,
     };
 
@@ -79,9 +79,7 @@ class DashBoard extends React.Component {
 
                 if (response.data.success) {
                     this.props.handleLikes(response.data.likeCount);
-                    // this.setState({
-                    //     likes: response.data.likeCount
-                    // })
+
                 }
 
             })
@@ -93,9 +91,6 @@ class DashBoard extends React.Component {
 
                 if (response.data.success) {
                     this.props.handleViews(response.data.viewCount)
-                    // this.setState({
-                    //     views: response.data.viewCount
-                    // })
                 }
 
             })
@@ -105,7 +100,7 @@ class DashBoard extends React.Component {
         axios.get(postUrl)
             .then((response) => {
                 if (response.data.success) {
-                 this.props.handlePosts(response.data.postCount);
+                    this.props.handlePosts(response.data.postCount);
                     // this.setState({
                     //     posts: response.data.postCount
                     // })
@@ -122,7 +117,7 @@ class DashBoard extends React.Component {
 
 
                 if (response.data.success) {
-                  this.props.handleComments(response.data.commentCount)
+                    this.props.handleComments(response.data.commentCount)
                     // this.setState({
                     //     comments: response.data.commentCount
                     // });
@@ -134,6 +129,7 @@ class DashBoard extends React.Component {
             });
         axios.get('followersinfo/' + this.props.userId)
             .then((response) => {
+                console.log(response.data);
                 if (response.data.success) {
                     this.props.handleFollowers(response.data.result)
                     // this.setState({
@@ -156,20 +152,20 @@ class DashBoard extends React.Component {
             .catch((error) => {
                 console.log(error)
             });
-        axios.get('/message/'+this.props.userId)
-            .then((response)=>{
-              console.log(response.data);
-                if(response.data.success) {
+        axios.get('/message/' + this.props.userId)
+            .then((response) => {
+
+                if (response.data.success) {
                     this.props.handleMessages(response.data.result);
                     // this.setState({
                     //     messages:[...response.data.result]
                     // })
                 }
             })
-            .catch((error)=>{
+            .catch((error) => {
                 console.log(error)
             })
-            
+
     }
 
     handleChange = key => (event, value) => {
@@ -240,47 +236,47 @@ class DashBoard extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        userId:  state.authReducer.userId,
+        userId: state.authReducer.userId,
         isAdmin: state.authReducer.isAdmin,
-     
+
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        handleRecentUserActivity : (recentActivity) => dispatch ({
-            type :actionTypes.USER_RECENT_ACTIVITY,
-            recentActivity : recentActivity
+        handleRecentUserActivity: (recentActivity) => dispatch({
+            type: actionTypes.USER_RECENT_ACTIVITY,
+            recentActivity: recentActivity
         }),
-        handleLikes : (likes) =>dispatch( {
-            type : actionTypes.LIKES ,
-            likes : likes
+        handleLikes: (likes) => dispatch({
+            type: actionTypes.LIKES,
+            likes: likes
         }),
-        handleViews : (posts) =>dispatch( {
-            type : actionTypes.POSTS ,
-            posts : posts
+        handleViews: (posts) => dispatch({
+            type: actionTypes.POSTS,
+            posts: posts
         }),
-        handlePosts : (views) =>dispatch( {
-            type : actionTypes.VIEWS ,
-            views : views
+        handlePosts: (views) => dispatch({
+            type: actionTypes.VIEWS,
+            views: views
         }),
-        handleComments : (comments) =>dispatch( {
-            type : actionTypes.COMMENTS ,
-            comments : comments
+        handleComments: (comments) => dispatch({
+            type: actionTypes.COMMENTS,
+            comments: comments
         }),
-        handleFollowers  : (followers) => dispatch({
+        handleFollowers: (followers) => dispatch({
             type: actionTypes.FOLLOWER_INFO,
-            followers : followers
+            followers: followers
         }),
-        handleFeedbacks : (feedbacks) =>  dispatch ({
-            type : actionTypes.FEEDBACKS,
-            feedbacks : feedbacks
+        handleFeedbacks: (feedbacks) => dispatch({
+            type: actionTypes.FEEDBACKS,
+            feedbacks: feedbacks
         }),
-        handleMessages : (messages) => dispatch({
+        handleMessages: (messages) => dispatch({
             type: actionTypes.MESSAGES,
-            messages : messages
+            messages: messages
         })
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(DashBoard));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(DashBoard));

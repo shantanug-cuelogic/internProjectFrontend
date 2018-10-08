@@ -158,22 +158,7 @@ class Post extends Component {
                                     console.log(error);
                                 });
 
-                            axios.post('/post/like/allowed', {
-                                authToken: this.props.authToken,
-                                postIdToLike: response.data.result[0].postId
-                            })
-                                .then((response) => {
-                                    if (response.data.success) {
-                                        this.props.allowToLikePostReducer(true);
-
-                                    }
-                                    else {
-                                        this.props.allowToLikePostReducer(false);
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.log(error)
-                                });
+                           
 
                             axios.post('/post/view/add', {
                                 authToken: this.props.authToken,

@@ -10,7 +10,7 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import GoogleLogin from 'react-google-login';
-
+// import  { FontAwesome } from 'react-google-login';
 const styles = theme => ({
   root: {
     width: '80%',
@@ -132,12 +132,12 @@ class SignUpProcess extends React.Component {
             return false;
           }
           else {
-            if(!validator.isEmail(this.state.formData.email)) {
+            if (!validator.isEmail(this.state.formData.email)) {
               this.props.handleOpenSnackBar('Enter Valid Email Id');
               return false;
             }
             else {
-              if(this.state.formData.password === this.state.formData.repeatPassword) {
+              if (this.state.formData.password === this.state.formData.repeatPassword) {
                 return true;
               }
               else {
@@ -150,67 +150,128 @@ class SignUpProcess extends React.Component {
       }
     }
   }
-   responseGoogle = (response) => {
-    console.log(response);
-  }
+  responseGoogleSuccess = (GoogleResponse) => {
 
+
+    axios.post('/register', {
+      firstName: GoogleResponse.w3.ofa,
+      lastName: GoogleResponse.w3.wea,
+      isAdmin: false,
+      email: GoogleResponse.w3.U3,
+      password: "google",
+      profileImage: GoogleResponse.w3.Paa
+    })
+      .then((response) => {
+        console.log(response.data);
+
+        if (response.data.success) {
+          axios.post('/login', {
+            "email": GoogleResponse.w3.U3,
+            "password": "google"
+          })
+            .then((response) => {
+              if (response.data.success) {
+                this.props.handleOpenSnackBar(`Welcome ${GoogleResponse.w3.ofa} `)
+
+                this.props.handleSignInState(response.data.authToken,
+                  parseInt(response.data.userDetails.userId),
+                  response.data.userDetails.firstName,
+                  response.data.userDetails.lastName,
+                  response.data.userDetails.profileImage,
+                  response.data.userDetails.email,
+                  response.data.userDetails.isAdmin,
+                  response.data.userDetails.gender,
+                  response.data.userDetails.followers,
+                );
+                this.props.history.push('/');
+              }
+              else {
+                this.props.handleOpenSnackBar("Username or Password is Wrong")
+              }
+
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+
+        }
+        else if (response.data.message.errno === 1062) {
+          this.props.handleOpenSnackBar("Username already exists");
+
+        }
+
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+
+
+
+
+
+
+  }
+  responseGoogleFailure = (response) => {
+    this.props.handleOpenSnackBar("Some Error occurred please try again later");
+  }
 
   handleSubmit = () => {
 
     let validation = this.validation();
-    if(validation) {
+    if (validation) {
       axios.post('/register', {
         firstName: this.state.formData.firstName,
         lastName: this.state.formData.lastName,
         isAdmin: false,
         email: this.state.formData.email,
-        password: this.state.formData.password
+        password: this.state.formData.password,
+        profileImage: '/require/userimage.jpg'
       })
         .then((response) => {
           console.log(response.data);
 
           if (response.data.success) {
             axios.post('/login', {
-              "email":  this.state.formData.email,
+              "email": this.state.formData.email,
               "password": this.state.formData.password
-          })
+            })
               .then((response) => {
                 if (response.data.success) {
-                    this.props.handleOpenSnackBar(`WELCOME ${this.state.formData.firstName} `)
-                   
-                      this.props.handleSignInState(response.data.authToken,
-                          parseInt(response.data.userDetails.userId),
-                          response.data.userDetails.firstName,
-                          response.data.userDetails.lastName,
-                          response.data.userDetails.profileImage,
-                          response.data.userDetails.email,
-                          response.data.userDetails.isAdmin,
-                          response.data.userDetails.gender,
-                          response.data.userDetails.followers,
-                      );
-                      this.props.history.push('/');
-                  }
-                  else {
-                      this.props.handleOpenSnackBar("Username or Password is Wrong")
-                  }
+                  this.props.handleOpenSnackBar(`WELCOME ${this.state.formData.firstName} `)
+
+                  this.props.handleSignInState(response.data.authToken,
+                    parseInt(response.data.userDetails.userId),
+                    response.data.userDetails.firstName,
+                    response.data.userDetails.lastName,
+                    response.data.userDetails.profileImage,
+                    response.data.userDetails.email,
+                    response.data.userDetails.isAdmin,
+                    response.data.userDetails.gender,
+                    response.data.userDetails.followers,
+                  );
+                  this.props.history.push('/');
+                }
+                else {
+                  this.props.handleOpenSnackBar("Username or Password is Wrong")
+                }
 
               })
               .catch((error) => {
-                  console.log(error)
+                console.log(error)
               })
 
           }
-          else if(response.data.message.errno === 1062) {
+          else if (response.data.message.errno === 1062) {
             this.props.handleOpenSnackBar("Username already exists");
 
           }
-         
+
         })
         .catch((error) => {
           console.log(error);
         })
     }
-   
+
 
 
   }
@@ -299,23 +360,28 @@ class SignUpProcess extends React.Component {
 
 
             </ValidatorForm>
-            <Grid item>
-            <GoogleLogin
-    clientId="1037924891905-tvs0e6v77hbarrgtn8spp12im30llfi7.apps.googleusercontent.com"
-    buttonText="Login"
-    onSuccess={this.responseGoogle}
-    onFailure={this.responseGoogle}
-  />
-            </Grid>
+
 
             <Grid item>
 
               <Button className={classes.SignUpButton} variant="contained" color="primary" onClick={this.handleSubmit}  > SIGN UP</Button>
 
             </Grid>
+            <Grid item>
+              <GoogleLogin
+                clientId="599277057661-j0btjigrm4lqv5hf36gijnb1pv94mkec.apps.googleusercontent.com"
+                buttonText="Login"
+                onSuccess={this.responseGoogleSuccess}
+                onFailure={this.responseGoogleFailure}
+              >
+                
+                <span> Login with Google</span>
+              </GoogleLogin>
+
+            </Grid>
           </Paper>
         </Grid>
-       
+
       </div>
     );
   }
@@ -327,32 +393,32 @@ SignUpProcess.propTypes = {
 
 const mapStateToProps = state => {
   return {
-      auth: state.authReducer.auth,
-      authToken: state.authReducer.authToken,
-      firstName: state.authReducer.firstName
+    auth: state.authReducer.auth,
+    authToken: state.authReducer.authToken,
+    firstName: state.authReducer.firstName
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-      handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin , gender,followers) => dispatch({
-          type: actionTypes.AUTHENTICATE,
-          authToken: token, userId: id,
-          firstName: firstName,
-          lastName: lastName,
-          profileImage: profileImage,
-          email: email,
-          isAdmin: isAdmin,
-          gender:gender,
-          followers:followers
-     }),
-     handleOpenSnackBar : (message) => dispatch ({
-       type:actionTypes.SNACKBAR_OPEN,
-       snackBarMessage: message
-     })
+    handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin, gender, followers) => dispatch({
+      type: actionTypes.AUTHENTICATE,
+      authToken: token, userId: id,
+      firstName: firstName,
+      lastName: lastName,
+      profileImage: profileImage,
+      email: email,
+      isAdmin: isAdmin,
+      gender: gender,
+      followers: followers
+    }),
+    handleOpenSnackBar: (message) => dispatch({
+      type: actionTypes.SNACKBAR_OPEN,
+      snackBarMessage: message
+    })
   }
 }
 
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(SignUpProcess));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SignUpProcess));

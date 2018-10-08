@@ -40,7 +40,7 @@ const styles = theme => ({
 
 class FollowerStatistics extends React.Component {
     render() {
-const { classes } = this.props;
+        const { classes } = this.props;
         let followers = null;
 
         if (this.props.followers.length === 0) {
@@ -57,26 +57,26 @@ const { classes } = this.props;
             });
         }
 
-        return(
+        return (
             <Paper className={classes.RecentActivityContainer} >
-                            <Typography variant="display1" >
-                                Followers
+                <Typography variant="display1" >
+                    Followers
                     </Typography>
-                            <Paper className={classes.RecentActivity} >
-                                <Scrollbars>
-                                    {followers}
-                                </Scrollbars>
+                <Paper className={classes.RecentActivity} >
+                    <Scrollbars>
+                        {followers}
+                    </Scrollbars>
 
 
-                            </Paper>
-                        </Paper>
+                </Paper>
+            </Paper>
         );
     }
 }
 
-const mapStateToProps =  state => {
+const mapStateToProps = state => {
     return {
-        followers : state.dashboardReducer.followers
+        followers: state.dashboardReducer.followers
     }
 }
 

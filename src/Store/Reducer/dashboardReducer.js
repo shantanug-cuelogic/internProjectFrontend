@@ -21,10 +21,12 @@ const reducer = (state = initialState , action) => {
             case actionTypes.USER_RECENT_ACTIVITY : {
             console.log(action);
                 return {
+                    ...state,
                     recentActivity : [ ...action.recentActivity]
                 }
             }
             case actionTypes.FOLLOWER_INFO : {
+                console.log(action)
                 return {
                     ...state,
                     followers : [ ...action.followers]
@@ -32,7 +34,7 @@ const reducer = (state = initialState , action) => {
             }
 
             case actionTypes.LIKES : {
-                console.log(action)
+             
                 return {
                     ...state,
                     likes: action.likes
