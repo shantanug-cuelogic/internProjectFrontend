@@ -1,16 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import { Button, TextField } from '@material-ui/core';
 import { connect } from 'react-redux';
-import * as actionTypes from '../../Store/Actions/actionTypes';  
+import * as actionTypes from '../../Store/Actions/actionTypes';
 import axios from 'axios';
 
 function getModalStyle() {
-  const top = 50 
-  const left = 50 
+  const top = 50
+  const left = 50
 
   return {
     top: `${top}%`,
@@ -43,27 +42,26 @@ class FeedbackModal extends React.Component {
   };
 
   handleFeedbackSubmit = () => {
-      let feedbackText = document.getElementById('feedback').value;
-      if(feedbackText.length === 0 || feedbackText === ' ' ) {
-        this.props.handleOpenSnackBar("Feedback is empty");
-      }
-      else {
-        axios.post('/feedback',{
-            authToken:this.props.authToken,
-            authorId : this.props.authorId,
-            feedback : feedbackText
+    let feedbackText = document.getElementById('feedback').value;
+    if (feedbackText.length === 0 || feedbackText === ' ') {
+      this.props.handleOpenSnackBar("Feedback is empty");
+    }
+    else {
+      axios.post('/feedback', {
+        authToken: this.props.authToken,
+        authorId: this.props.authorId,
+        feedback: feedbackText
+      })
+        .then((response) => {
+          if (response.data.success) {
+            this.props.handleOpenSnackBar(`Feedback sent to ${this.props.name}`);
+            this.handleClose();
+          }
         })
-        .then((response)=>{
-            console.log(response.data);
-            if(response.data.success) {
-                this.props.handleOpenSnackBar(`Feedback sent to ${this.props.name}`);
-                this.handleClose();
-            }
+        .catch((error) => {
+          console.log(error);
         })
-        .catch((error)=>{
-            console.log(error);
-        })
-      }
+    }
   }
 
   render() {
@@ -71,7 +69,6 @@ class FeedbackModal extends React.Component {
 
     return (
       <div>
-       
         <Button onClick={this.handleOpen} variant="outlined" color="primary" >GIVE FEEDBACK TO {this.props.name}</Button>
         <Modal
           aria-labelledby="simple-modal-title"
@@ -81,16 +78,14 @@ class FeedbackModal extends React.Component {
         >
           <div style={getModalStyle()} className={classes.paper}>
             <Typography variant="title" > FEEDBACK </Typography>
-
-          <TextField
-          id="feedback"
-          label="Feedback"
-            fullWidth
-          margin="normal"
-        />
-
+            <TextField
+              id="feedback"
+              label="Feedback"
+              fullWidth
+              margin="normal"
+            />
             <Button variant="contained" color="primary" onClick={this.handleFeedbackSubmit} > SEND  </Button>
-            <Button variant="outlined" color="primary" onClick={this.handleClose} style={{marginLeft:20}} >CANCEL</Button>
+            <Button variant="outlined" color="primary" onClick={this.handleClose} style={{ marginLeft: 20 }} >CANCEL</Button>
           </div>
         </Modal>
       </div>
@@ -98,19 +93,19 @@ class FeedbackModal extends React.Component {
   }
 }
 
-const mapStateToProps =  state => {
-    return {
-        authToken : state.authReducer.authToken
-    }
+const mapStateToProps = state => {
+  return {
+    authToken: state.authReducer.authToken
+  }
 }
 
 const mapDispatchToProps = dispatch => {
-    return {
-        handleOpenSnackBar: (snackBarMessage) => dispatch({
-            type: actionTypes.SNACKBAR_OPEN,
-            snackBarMessage: snackBarMessage
-        })
-    }
+  return {
+    handleOpenSnackBar: (snackBarMessage) => dispatch({
+      type: actionTypes.SNACKBAR_OPEN,
+      snackBarMessage: snackBarMessage
+    })
+  }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(FeedbackModal));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(FeedbackModal));

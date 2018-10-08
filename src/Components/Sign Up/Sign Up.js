@@ -1,16 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import { Paper, TextField, Input, Grid, Avatar, Divider, Snackbar } from '@material-ui/core';
+import {
+  Paper,
+  Grid,
+  Button,
+  Typography,
+} from '@material-ui/core';
 import axios from 'axios';
 import validator from 'validator';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import GoogleLogin from 'react-google-login';
-// import  { FontAwesome } from 'react-google-login';
+
 const styles = theme => ({
   root: {
     width: '80%',
@@ -204,15 +207,9 @@ class SignUpProcess extends React.Component {
       .catch((error) => {
         console.log(error);
       })
-
-
-
-
-
-
   }
   responseGoogleFailure = (response) => {
-    this.props.handleOpenSnackBar("Some Error occurred please try again later");
+    // this.props.handleOpenSnackBar("Some Error occurred please try again later");
   }
 
   handleSubmit = () => {
@@ -374,7 +371,7 @@ class SignUpProcess extends React.Component {
                 onSuccess={this.responseGoogleSuccess}
                 onFailure={this.responseGoogleFailure}
               >
-                
+
                 <span> Sign up with Google</span>
               </GoogleLogin>
 

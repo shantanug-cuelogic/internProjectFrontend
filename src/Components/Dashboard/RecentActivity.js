@@ -6,17 +6,9 @@ import moment from 'moment';
 
 import {
     Paper,
-    Drawer,
     Divider,
     Typography,
-    Button,
-    ExpansionPanel,
-    ExpansionPanelSummary,
-    ExpansionPanelDetails,
-    Avatar,
-
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const styles = theme => ({
     RecentActivityContainer: {

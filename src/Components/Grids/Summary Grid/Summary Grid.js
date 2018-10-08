@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import { Grid,Paper,Typography } from '@material-ui/core';
 import { NavLink } from "react-router-dom";
 import ReactHtmlParser from 'react-html-parser';
 
@@ -13,8 +11,6 @@ const styles = theme => ({
     maxWidth: '100%',
     padding: theme.spacing.unit * 2,
     margin: '3%',
-    // height:'200px'
-
   },
   image: {
     width: 128,
@@ -30,12 +26,12 @@ const styles = theme => ({
     color: 'black',
     textDecoration: 'none'
   },
-  ThumbnailContainer : {
-    height:230,
-    width:400
+  ThumbnailContainer: {
+    height: 230,
+    width: 400
   },
-  Thumbnail:{
-    height:'23'
+  Thumbnail: {
+    height: '23'
   }
 });
 
@@ -46,41 +42,13 @@ const options = {
 };
 
 function transform(node, index) {
-
-  // return null to block certain elements
-  // don't allow <span> elements
   if (node.type === 'tag' && node.name === 'img') {
     return null;
   }
   if (node.type === 'tag' && node.name === 'video') {
     return null;
   }
-
-  // Transform <ul> into <ol>
-  // A node can be modified and passed to the convertNodeToElement function which will continue to render it and it's children
-  // if (node.type === 'tag' && node.name === 'ul') {
-  //   node.name = 'ol';
-  //   return convertNodeToElement(node, index, transform);
-  // }
-
-  // return an <i> element for every <b>
-  // a key must be included for all elements
-  // if (node.type === 'tag' && node.name === 'b') {
-  //   return <i key={index}>I am now in italics, not bold</i>;
-  // }
-
-  // all links must open in a new window
-  // if (node.type === 'tag' && node.name === 'a') {
-  //   node.attribs.target = '_blank';
-  //   return convertNodeToElement(node, index, transform);
-
-
 }
-
-
-
-
-
 function ComplexGrid(props) {
   const { classes } = props;
   let url = "/post/" + props.postId;
@@ -88,68 +56,38 @@ function ComplexGrid(props) {
   return (
     <div>
       <Paper className={classes.root}>
-        {/* <Grid container spacing={16}>
-        
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={16}>
-            <Grid item xs>
-              <Typography gutterBottom variant="subheading">
-                {props.title}
-              </Typography>
-              <Typography gutterBottom>{props.date}</Typography>
-              <Typography color="textSecondary"></Typography>
-          <div>{ReactHtmlParser(content,options)}</div>
-              
-            </Grid>
-            
-          </Grid>
-          <Grid item>
-            <Typography variant="subheading">{props.views}</Typography>
-            <Typography variant="subheading">{props.likes}</Typography>
-          </Grid>
-          <Grid item>
-         <div>
-          <ul>
-            <li>
-            <NavLink to={url} className={classes.Links} >Continue Reading</NavLink>
-            </li>
-          </ul> 
-          </div>
-          </Grid>
-        </Grid>
-      </Grid> */}
-      <NavLink to={url} className={classes.Links} >
-        <div className={classes.PostContainer}>
-          <Grid container
-            direction="row"
+        <NavLink to={url} className={classes.Links} >
+          <div className={classes.PostContainer}>
+            <Grid container
+              direction="row"
 
-            alignItems="stretch" >
-            <style jsx="true">
-              {`
+              alignItems="stretch" >
+              <style jsx="true">
+                {`
                      img {
                      max-width : 100%
                          }
                                 `}
-            </style>
-            <Grid item sm={6}>
-              <div className={classes.PostTextContainer} style={{ display: "inline" }}>
-                <Typography gutterBottom variant="headline" style={{ display: "inline" }}>
-                  {props.title}
-                </Typography>
-                <div style={{ display: 'inline' }}>
-                  {ReactHtmlParser(content, options)}
+              </style>
+              <Grid item sm={6}>
+                <div className={classes.PostTextContainer} style={{ display: "inline" }}>
+                  <Typography gutterBottom variant="headline" style={{ display: "inline" }}>
+                    {props.title}
+                  </Typography>
+                  <div style={{ display: 'inline' }}>
+                    {ReactHtmlParser(content, options)}
+                  </div>
                 </div>
-              </div>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <div className={classes.ThumbnailContainer}>
-                <img src={props.thumbnail} style={{height:230}} alt="Thumbnail"></img>
-              </div>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <div className={classes.ThumbnailContainer}>
+                  <img src={props.thumbnail} style={{ height: 230 }} alt="Thumbnail"></img>
+                </div>
+              </Grid>
+
             </Grid>
 
-          </Grid>
-
-        </div>
+          </div>
         </NavLink>
       </Paper>
     </div>

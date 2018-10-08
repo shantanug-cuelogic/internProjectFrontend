@@ -5,16 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import {
     Paper,
-    Drawer,
-    Divider,
     Typography,
-    Button,
-    ExpansionPanel,
-    ExpansionPanelSummary,
-    ExpansionPanelDetails,
-    Avatar,
     Grid
-
 } from '@material-ui/core';
 
 
@@ -29,46 +21,10 @@ const styles = theme => ({
         width: 200,
         backgroundColor: fade(theme.palette.primary.light, 0.25)
     },
-    control: {
-        padding: theme.spacing.unit * 2,
-    },
-    HeaderContainer: {
-        marginTop: '7%',
-        marginLeft: '30%'
-    },
-    drawerPaper: {
-        zIndex: 1,
-        width: drawerWidth,
-        overflow: 'hidden'
-    },
-    ProfileContainer: {
-        marginTop: '15%',
-        overflowY: 'scroll'
-
-    },
     Icons: {
         padding: '0%'
     },
-    RecentActivityContainer: {
-        height: 300,
-        marginTop: 20,
-        marginLeft: 333
-    },
-    RecentActivity: {
-        height: 230,
-        marginLeft: 20,
-        marginRight: 20,
-        padding: 10,
-        overflow: 'scroll'
-    },
-    RecentActivities: {
-        fontSize: 20,
-        color: '#262626'
-    },
-    PieChartContainer: {
-        marginLeft: 333,
-        marginTop: 20
-    }
+   
 });
 
 

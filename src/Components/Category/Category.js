@@ -5,115 +5,108 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import CategoryGrid from '../Grids/Category Grid/CategoryGrid';
-import {Grid} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { withRouter } from 'react-router'
 
 
 
 const styles = {
-    PostContainer : {
- marginTop:'10%'
-    },
+    PostContainer: {
+        marginTop: '10%'
+    }
 }
 
 class Category extends React.PureComponent {
 
     componentDidMount() {
-        axios.get('/post/category/'+this.props.match.params.id)
-        .then((response)=>{
-            if(response.data.success) {
-                this.props.categoryFetchPostReducer(response.data.result);
-            }
-        })
-        .catch((error)=>{
-            console.log(error);
-        })
+        axios.get('/post/category/' + this.props.match.params.id)
+            .then((response) => {
+                if (response.data.success) {
+                    this.props.categoryFetchPostReducer(response.data.result);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
-
-  
-
     componentWillReceiveProps(nextProps) {
-       
-        if(this.props.match.params.id !== nextProps.match.params.id)
-        axios.get('/post/category/'+nextProps.match.params.id)
-        .then((response)=>{
-        
-            if(response.data.success) {
-                this.props.categoryFetchPostReducer(response.data.result);
-            }
-        })
-        .catch((error)=>{
-            console.log(error);
-        })
-        
+
+        if (this.props.match.params.id !== nextProps.match.params.id)
+            axios.get('/post/category/' + nextProps.match.params.id)
+                .then((response) => {
+
+                    if (response.data.success) {
+                        this.props.categoryFetchPostReducer(response.data.result);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
     }
 
+    render() {
+        let posts = null;
+        if (this.props.categoryPosts.length === 0) {
+            posts = <p>NO POST AVAILABLE FOR CURRENT CATEGORY</p>
+        }
+        else {
+            posts = this.props.categoryPosts.map((post, index) => {
+                let link = `/post/${post.postId}`
+                return (
+                    <Grid item>
+                        <CategoryGrid
+                            key={index}
+                            postTitle={post.title}
+                            postContent={post.postContent}
+                            postId={post.postId}
+                            likes={post.likes}
+                            views={post.views}
+                            thumbnail={post.thumbnail}
+                            link={link}
+                        />
+                    </Grid>
+                );
+            });
+        }
 
-render() {
 
-
-    let posts =null ;
-    if(this.props.categoryPosts.length === 0 ) {
-        posts = <p>NO POST AVAILABLE FOR CURRENT CATEGORY</p>
-    }
-    else {
-        posts =  this.props.categoryPosts.map((post,index)=>{
-           let link =  `/post/${post.postId}`
-            return (
-                <Grid item>
-                <CategoryGrid
-                key={index}
-                postTitle = {post.title}
-                postContent = {post.postContent}
-                postId={post.postId}
-                likes={post.likes}
-                views ={post.views}
-                thumbnail={post.thumbnail}
-                link = {link}
-                />
-                </Grid>
-            );
-        });
-    }
-     
-    
-        const {classes} = this.props;
-        return(
+        const { classes } = this.props;
+        return (
             <div className={classes.Container}>
-                <SubHeader className={classes.SubHeaderContainer} /> 
+                <SubHeader className={classes.SubHeaderContainer} />
                 <div className={classes.PostContainer}>
-                
-                {/* <div>{ this.props.match.params.id}</div> */}
-               
-                <Grid container
-                direction="row" 
-                spacing={24}
-                justify="center" >
-                {posts}
-                </Grid>
+
+                    {/* <div>{ this.props.match.params.id}</div> */}
+
+                    <Grid container
+                        direction="row"
+                        spacing={24}
+                        justify="center" >
+                        {posts}
+                    </Grid>
+                </div>
             </div>
-            </div>
-            
-            
+
+
         )
     }
 }
 
-const mapStateToProps = state =>{
+const mapStateToProps = state => {
     return {
         categoryPosts: state.categoryPostReducer.categoryPosts
     }
 }
 
-const mapDispatchToProps = dispatch =>{
+const mapDispatchToProps = dispatch => {
     return {
-        
-        categoryFetchPostReducer : (posts) => dispatch({
+
+        categoryFetchPostReducer: (posts) => dispatch({
             type: actionTypes.FETCH_POST_CATEGORY,
-            categoryPosts : posts
+            categoryPosts: posts
         })
 
     }
 }
 
-export default withRouter (connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Category)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Category)));

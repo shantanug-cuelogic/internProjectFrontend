@@ -17,7 +17,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { Scrollbars } from 'react-custom-scrollbars';
 import AdminDashboard from './AdminDashboard/AdminDashBoard';
 import * as actionTypes from '../../Store/Actions/actionTypes';
-
+import DashboardServices from '../../Services/DashboardService';
 import UserDashboard from './UserDashboard/UserDashboard';
 
 const drawerWidth = 340;
@@ -40,19 +40,6 @@ const styles = theme => ({
 
 class DashBoard extends React.Component {
 
-    constructor(props) {
-        super(props)
-        axios.get('/recentactivity/' + this.props.userId)
-            .then((response) => {
-                if (response.data.success) {
-                    this.props.handleRecentUserActivity(response.data.result)
-
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }
 
 
     state = {
@@ -69,103 +56,28 @@ class DashBoard extends React.Component {
         expanded: null,
     };
 
-    componentDidMount() {
+    async componentDidMount() {
+
+        const userRecentActivity = await DashboardServices.getUserRecentActivity(this.props.userId);
+        this.props.handleRecentUserActivity(userRecentActivity)
         let likeUrl = '/totallikes/' + this.props.userId;
         let viewUrl = '/totalviews/' + this.props.userId;
         let postUrl = '/totalposts/' + this.props.userId;
         let commentUrl = '/totalcomments/' + this.props.userId;
-        axios.get(likeUrl)
-            .then((response) => {
-
-                if (response.data.success) {
-                    this.props.handleLikes(response.data.likeCount);
-
-                }
-
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        axios.get(viewUrl)
-            .then((response) => {
-
-                if (response.data.success) {
-                    this.props.handleViews(response.data.viewCount)
-                }
-
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        axios.get(postUrl)
-            .then((response) => {
-                if (response.data.success) {
-                    this.props.handlePosts(response.data.postCount);
-                    // this.setState({
-                    //     posts: response.data.postCount
-                    // })
-
-                }
-
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
-        axios.get(commentUrl)
-            .then((response) => {
-
-
-                if (response.data.success) {
-                    this.props.handleComments(response.data.commentCount)
-                    // this.setState({
-                    //     comments: response.data.commentCount
-                    // });
-                }
-
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        axios.get('followersinfo/' + this.props.userId)
-            .then((response) => {
-                console.log(response.data);
-                if (response.data.success) {
-                    this.props.handleFollowers(response.data.result)
-                    // this.setState({
-                    //     followers: response.data.result
-                    // })
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            });
-        axios.get('/feedback/' + this.props.userId)
-            .then((response) => {
-                if (response.data.success) {
-                    this.props.handleFeedbacks(response.data.result);
-                    // this.setState({
-                    //     feedbacks: [...response.data.result]
-                    // })
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            });
-        axios.get('/message/' + this.props.userId)
-            .then((response) => {
-
-                if (response.data.success) {
-                    this.props.handleMessages(response.data.result);
-                    // this.setState({
-                    //     messages:[...response.data.result]
-                    // })
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-
+        const likeCount = await DashboardServices.getLikeCount(likeUrl);
+        this.props.handleLikes(likeCount);
+        const viewCount = await DashboardServices.getViewCount(viewUrl);
+        this.props.handleViews(viewCount);
+        const postCount = await DashboardServices.getPostCount(postUrl);
+        this.props.handlePosts(postCount);
+        const commentCount = await DashboardServices.getCommentCount(commentUrl);
+        this.props.handleComments(commentCount);
+        const followerInformation = await DashboardServices.getFollowerInformation(this.props.userId);
+        this.props.handleFollowers(followerInformation);
+        const feedbacks = await DashboardServices.getFeedbacks(this.props.userId);
+        this.props.handleFeedbacks(feedbacks);
+        const messages = await DashboardServices.getMessages(this.props.userId);
+        this.props.handleMessages(messages);
     }
 
     handleChange = key => (event, value) => {

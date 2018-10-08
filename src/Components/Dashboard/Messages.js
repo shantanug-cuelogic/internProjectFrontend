@@ -6,10 +6,7 @@ import moment from 'moment';
 
 import {
     Paper,
-    Drawer,
-    Divider,
     Typography,
-    Button,
     ExpansionPanel,
     ExpansionPanelSummary,
     ExpansionPanelDetails,
@@ -40,61 +37,51 @@ const styles = theme => ({
 
 class FollowerStatistics extends React.Component {
     render() {
-const { classes } = this.props;
-     
+        const { classes } = this.props;
+       let messages = null;
+        if (this.props.messages.length === 0) {
+            messages = <p>NO MESSAGES TO SHOW</p>
+        }
+        else {
+            messages = this.props.messages.map((element, index) => {
+                return (
+                    <div key={index}>
+                        <ExpansionPanel>
+                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                <Avatar src={element.profileImage} ></Avatar>
+                                <Typography variant="subheading" style={{ marginLeft: 20 }} >{element.firstName} {element.lastName}</Typography>
+                                <Typography variant="caption" style={{ fontSize: 10, marginLeft: 20 }} ><i>{moment.unix(element.messageTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</i></Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails>
+                                <Typography>
+                                    {element.message}
+                                </Typography>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
 
-
-let messages = null;
-
-if (this.props.messages.length === 0) {
-    messages = <p>NO MESSAGES TO SHOW</p>
-}
-else {
-    messages = this.props.messages.map((element, index) => {
+                    </div>
+                );
+            });
+        }
         return (
-            <div key={index}>
-                {/* <p className={classes.RecentActivities} > <b>{element.firstName}</b> : {element.feedback} <i> {moment.unix(element.feedbackTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</i></p>
-                <Divider /> */}
-
-                <ExpansionPanel>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        <Avatar src={element.profileImage} ></Avatar>
-                        <Typography variant="subheading" style={{marginLeft:20}} >{element.firstName} {element.lastName}</Typography>
-                        <Typography variant="caption" style={{fontSize:10, marginLeft:20 }} ><i>{moment.unix(element.messageTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</i></Typography>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        <Typography>
-                          {element.message}
-                        </Typography>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-
-            </div>
-        );
-    });
-}
-
-
-
-        return(
             <Paper className={classes.RecentActivityContainer} >
-                            <Typography variant="display1" >
-                                Messages
+                <Typography variant="display1" >
+                    Messages
                     </Typography>
-                            <Scrollbars >
-                                <Paper className={classes.RecentActivity} >
+                <Scrollbars >
+                    <Paper className={classes.RecentActivity} >
 
-                                    {messages}
-                                </Paper>
-                            </Scrollbars>
-                        </Paper>
+                        {messages}
+                    </Paper>
+                </Scrollbars>
+            </Paper>
         );
     }
 }
 
-const mapStateToProps =  state => {
+const mapStateToProps = state => {
     return {
-        messages : state.dashboardReducer.messages
+        messages: state.dashboardReducer.messages
     }
 }
 

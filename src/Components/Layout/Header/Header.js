@@ -1,24 +1,26 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
+import {
+    AppBar,
+    Toolbar,
+    Divider,
+    Typography,
+    Avatar,
+    Button,
+    Input,
+    Grid,
+    Menu,
+    MenuItem,
+    Switch
+} from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import SearchIcon from '@material-ui/icons/Search';
-import Input from '@material-ui/core/Input';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { NavLink } from "react-router-dom";
 import { connect } from 'react-redux';
 import * as actionTypes from '../../../Store/Actions/actionTypes';
-import Grid from '@material-ui/core/Grid';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import axios from 'axios';
 import { withRouter } from 'react-router'
-import Switch from '@material-ui/core/Switch';
 
 
 const style = theme => ({
@@ -120,20 +122,16 @@ class Header extends React.Component {
             let url = '/post/search/?search=' + search;
             axios.get(url)
                 .then((response) => {
-
-
                     this.props.history.push('/signin');
                     this.props.history.push({
                         pathname: '/search',
                         search: '?search=' + search,
                         state: { searchResult: response.data }
-                    })
-
+                    });
                 })
                 .catch((error) => {
                     console.log(error);
                 })
-
         }
     }
 
@@ -150,8 +148,8 @@ class Header extends React.Component {
         return (
             <AppBar position="fixed" color="primary" className={classes.HeaderContainer} >
                 <Toolbar>
-                    <NavLink to='/' style={{textDecoration:'none'}}>
-                        <Typography variant="title" style={{color:"white"}}>
+                    <NavLink to='/' style={{ textDecoration: 'none' }}>
+                        <Typography variant="title" style={{ color: "white" }}>
                             BlogIt
                         </Typography>
                     </NavLink>
@@ -174,28 +172,23 @@ class Header extends React.Component {
                                 id="searchString"
                                 onKeyDown={this.handleSearch}
                             />
-                            
+
                         </div>
-                        
+
                         <Switch
                             checked={this.state.checkedB}
                             onChange={this.handleChangeTheme}
                             checked={!this.props.isDark}
                             color="primary"
                         />
-
-
-
                         {this.props.auth ?
-
                             <nav className={classes.ButtonContainer}>
-
                                 <Grid container
                                     direction="row">
                                     <Grid item>
                                         <Button color="inherit" size="small" className={classes.button} component={NavLink} to="/">
-                                        <HomeIcon className={classes.IconLeft} />
-                                    Home
+                                            <HomeIcon className={classes.IconLeft} />
+                                            Home
                                         </Button>
                                     </Grid>
                                     <Grid item>
@@ -210,17 +203,11 @@ class Header extends React.Component {
                                             aria-owns={this.state.anchorEl ? 'simple-menu' : null}
                                             aria-haspopup="true"
                                             onClick={this.handleClick}>
-                                            
+
                                         </Avatar>
                                     </Grid>
                                 </Grid>
-
-
-
-
                             </nav>
-
-
                             : <nav className={classes.ButtonContainer}>
                                 <Button color="inherit" size="small" className={classes.button} component={NavLink} to="/signin"> SignIn</Button>
                                 <Button color="inherit" size="small" className={classes.button} component={NavLink} to="/signup"> SIGNUP</Button>
@@ -269,7 +256,7 @@ const mapDispatchToProps = dispatch => {
         logout: () => dispatch({ type: actionTypes.LOGOUT }),
         resetPostReducer: () => dispatch({ type: actionTypes.RESET_POST_CONTENT }),
         changeThemeReducer: (status) => dispatch({ type: actionTypes.THEME_HANDLER, ChangeTheme: status }),
-        handleOpenSnackBar : (message) => dispatch({
+        handleOpenSnackBar: (message) => dispatch({
             type: actionTypes.SNACKBAR_OPEN,
             snackBarMessage: message
         })

@@ -41,11 +41,6 @@ class SimpleModal extends React.Component {
     rating:0
   };
 
-  componentDidMount() {
-    console.log("in component did mount this",this.props.postId);
-  }
-
-
   handleOpen = () => {
     this.setState({ open: true });
   };

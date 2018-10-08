@@ -1,16 +1,20 @@
 import React from 'react';
-import Paper from '@material-ui/core/Paper';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
+import {
+    Paper,
+    Input,
+    InputLabel,
+    FormHelperText,
+    FormControl,
+    Grid,
+    Typography,
+    Button,
+    Slide,
+
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import { Typography, Button } from '@material-ui/core';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
-import Slide from '@material-ui/core/Slide';
 import validator from 'validator';
 import { NavLink } from 'react-router-dom';
 
@@ -154,7 +158,7 @@ class SignIn extends React.Component {
                         <Button variant="outlined" color="primary" className={classes.Button} component={NavLink} to="/forgotpassword" >forgot password</Button>
 
                     </div>
-                    
+
                 </Paper>
 
             </div>
