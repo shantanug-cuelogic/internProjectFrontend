@@ -29,196 +29,176 @@ class App extends Component {
 
 
   componentWillMount() {
-    let routes = null;
-    if (this.props.auth) {
-      routes = <div>
-        <Route path='/editor' component={Editor}></Route>
-        <Route path='/createpost' component={Editor} ></Route>
-
-      </div>
-  
-    }
+   
   }
 
 
 
 
-  componentDidMount() {
-    axios.post('/authenticate', {
-      authToken: localStorage.getItem('authToken'),
-      email: localStorage.getItem('email')
+  componentDidMount(){
+    axios.post('/authenticate',{
+      authToken:localStorage.getItem('authToken'),
+      email:localStorage.getItem('email')
     })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.success) {
-          this.props.handleOpenSnackBar(`Welcome ${response.data.result.firstName}`);
+    .then((response) =>{
+console.log(response.data);
+      if(response.data.success) {
+        this.props.handleOpenSnackBar(`Welcome ${response.data.result.firstName}`);
+                       
+                        this.props.handleSignInState(localStorage.getItem('authToken'),
+                            parseInt(response.data.result.userId),
+                            response.data.result.firstName,
+                            response.data.result.lastName,
+                            response.data.result.profileImage,
+                            response.data.result.email,
+                            response.data.result.isAdmin,
+                            response.data.result.gender,
+                            response.data.result.followers,
+                        );
+      }
+      else if(!response.data.success) {
+       
+      }
+    })
+    .catch((error)=>{
 
-          this.props.handleSignInState(localStorage.getItem('authToken'),
-            parseInt(response.data.result.userId),
-            response.data.result.firstName,
-            response.data.result.lastName,
-            response.data.result.profileImage,
-            response.data.result.email,
-            response.data.result.isAdmin,
-            response.data.result.gender,
-            response.data.result.followers,
-          );
-        }
-        else if (!response.data.success) {
-
-        }
-      })
-      .catch((error) => {
-
-      });
+    });
   }
   handleCloseSnackBar = (event, reason) => {
     if (reason === 'clickaway') {
-      return;
+        return;
     }
     this.props.closeSnackBar();
-
-  };
+   
+};
 
 
 
   render() {
+    let updateRoute = null;
+    if(this.props.postUserId === this.props.userId) {
+      updateRoute = <Route path = '/editpost/:id' component={EditPost}></Route>
+    }
 
-    // const theme = createMuiTheme({
-    //   palette: {
-    //     primary: {
-    //       light: '#757ce8',
-    //       main: '#3f50b5',
-    //       dark: '#002884',
-    //       contrastText: '#fff',
-    //     },
-    //     secondary: {
-    //       light: '#ff7961',
-    //       main: '#f44336',
-    //       dark: '#ba000d',
-    //       contrastText: '#000',
-    //     },
-    //   },
-    // })
-
-    const theme =
-      this.props.isDark ?
-        createMuiTheme({
-          palette: {
-            primary: {
-              light: '#616161',
-              main: '#212121',
-              dark: '#212121',
-              contrastText: '#fff',
-            },
-            secondary: {
-              light: '#ff7961',
-              main: '#f44336',
-              dark: '#ba000d',
-              contrastText: '#000',
-            },
-          },
-        }) :
-        createMuiTheme({
-          palette: {
-            primary: {
-              light: '#757ce8',
-              main: '#3f50b5',
-              dark: '#002884',
-              contrastText: '#fff',
-            },
-            secondary: {
-              light: '#ff7961',
-              main: '#f44336',
-              dark: '#ba000d',
-              contrastText: '#000',
-            },
-          },
-        })
+const theme = 
+this.props.isDark ?
+createMuiTheme({
+  palette: {
+    primary: {
+      light: '#616161',
+      main: '#212121',
+      dark: '#212121',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },
+  },
+}) : 
+createMuiTheme({
+  palette: {
+    primary: {
+      light: '#757ce8',
+      main: '#3f50b5',
+      dark: '#002884',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },
+  },
+})
 
 
 
     return (
       <MuiThemeProvider theme={theme}>
-        <div className="App">
-
-
-          <Layout logout={this.logout} />
-          <div style={{ textAlign: 'center', width: '90%', marginLeft: '5%', marginRight: '5%' }}>
+      <div className="App">
+        
+          
+          <Layout  logout={this.logout}/>
+         <div style={{ textAlign: 'center', width: '90%', marginLeft: '5%', marginRight: '5%' }}>
             <Switch>
-              <Route path='/signin' component={SignIn}></Route>
+                <Route path='/signin' component={SignIn}></Route>
+                <Route path='/editor' component={Editor}></Route>
+                <Route path='/signup' component={SignUp}></Route>
+                <Route path='/profile' component={Profile}></Route>
+                <Route path='/post/:id' component={Post} ></Route>
+                {updateRoute}
 
-              <Route path='/signup' component={SignUp}></Route>
-              <Route path='/profile' component={Profile}></Route>
-              <Route path='/post/:id' component={Post} ></Route>
-              <Route path='/editpost/:id' component={EditPost}></Route>
-
-              <Route path='/dashboard' component={Dashboard} ></Route>
-              <Route path='/category/:id' component={Category} ></Route>
-              <Route path='/search' component={SearchPost} ></Route>
-              <Route path='/authorprofile/:userId' component={AuthorProfile} ></Route>
-              <Route path='/forgotpassword' component={ForgotPassword}></Route>
-              <Route path='/recoverpassword/:authToken' component={PasswordRecover}></Route>
-              <Route path="/updateprofile" component={UpdateProfile}> </Route>
-              <Route path="/drafts" component={Drafts}> </Route>
-              <Route path="/drafteditor/:id" component={DraftEditor}> </Route>
-              <Route path='/' exact component={BlogBuilder}></Route>
+                <Route path='/createpost' component={Editor} ></Route>
+                <Route path = '/dashboard' component = {Dashboard} ></Route>
+                <Route path='/category/:id' component = {Category} ></Route>
+                <Route path ='/search' component={SearchPost} ></Route>
+                <Route path ='/authorprofile/:userId' component={AuthorProfile} ></Route>
+                <Route path='/forgotpassword' component={ForgotPassword}></Route>
+                <Route path='/recoverpassword/:authToken' component={PasswordRecover}></Route>
+                <Route path="/updateprofile" component={UpdateProfile}> </Route>
+                <Route path="/drafts" component={Drafts}> </Route>
+                <Route path="/drafteditor/:id" component={DraftEditor}> </Route>
+                <Route path='/' exact component={BlogBuilder}></Route>
             </Switch>
           </div>
           <Snackbar
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center',
-            }}
-            open={this.props.open}
-            TransitionComponent={this.TransitionUp}
-            variant="error"
-            autoHideDuration={1000}
-            onClose={this.handleCloseSnackBar}
-            ContentProps={{
-              'aria-describedby': 'message-id',
-            }}
-            message={<span id="message-id">{this.props.snackBarMessage}  </span>}
-          />
-        </div>
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    open={this.props.open}
+                    TransitionComponent={this.TransitionUp}
+                    variant="error"
+                    autoHideDuration={1000}
+                    onClose={this.handleCloseSnackBar}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">{this.props.snackBarMessage}  </span>}
+            />
+      </div>
       </MuiThemeProvider>
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = state =>{
   return {
-    auth: state.authReducer.auth,
-    userId: state.authReducer.userId,
+    auth : state.authReducer.auth,
+    userId : state.authReducer.userId,
     isDark: state.themeReducer.isDark,
     open: state.snackBarReducer.open,
     snackBarMessage: state.snackBarReducer.snackBarMessage,
-    postUserId: state.postReducer.userId
+    postUserId :  state.postReducer.userId
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  return {
-    authenticate: (userStatus, token, id) => dispatch({ type: actionTypes.AUTHENTICATE_ON_RELOAD, status: userStatus, authToken: token, userId: id }),
-    closeSnackBar: () => dispatch({
-      type: actionTypes.SNACKBAR_CLOSE
-    }),
-    handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin, gender, followers) => dispatch({
-      type: actionTypes.AUTHENTICATE,
-      authToken: token, userId: id,
-      firstName: firstName,
-      lastName: lastName,
-      profileImage: profileImage,
-      email: email,
-      isAdmin: isAdmin,
-      gender: gender,
-      followers: followers
+  return{
+    authenticate : (userStatus,token,id)=> dispatch({type:actionTypes.AUTHENTICATE_ON_RELOAD , status:userStatus , authToken:token, userId:id }),
+    closeSnackBar : () => dispatch({
+      type:actionTypes.SNACKBAR_CLOSE
+      }),
+      handleSignInState: (token, id, firstName, lastName, profileImage, email, isAdmin, gender, followers) => dispatch({
+        type: actionTypes.AUTHENTICATE,
+        authToken: token, userId: id,
+        firstName: firstName,
+        lastName: lastName,
+        profileImage: profileImage,
+        email: email,
+        isAdmin: isAdmin,
+        gender: gender,
+        followers: followers
     }),
     handleOpenSnackBar: (snackBarMessage) => dispatch({
       type: actionTypes.SNACKBAR_OPEN,
       snackBarMessage: snackBarMessage
-    })
+  })
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(App));

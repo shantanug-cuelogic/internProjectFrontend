@@ -375,7 +375,7 @@ class SignUpProcess extends React.Component {
                 onFailure={this.responseGoogleFailure}
               >
                 
-                <span> Login with Google</span>
+                <span> Sign up with Google</span>
               </GoogleLogin>
 
             </Grid>
