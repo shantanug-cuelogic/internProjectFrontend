@@ -2,16 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import green from '@material-ui/core/colors/green';
+import { Divider,AppBar,Tabs,Tab,Typography, } from '@material-ui/core';
 import axios from 'axios';
 import SummaryGrid from '../../Components/Grids/Summary Grid/Summary Grid';
-import { Divider } from '@material-ui/core';
-import { connect } from 'react-redux';
-
+import styles from './MenuStyle';
 
 function TabContainer(props) {
   const { children, dir } = props;
@@ -28,34 +22,6 @@ TabContainer.propTypes = {
   dir: PropTypes.string.isRequired,
 };
 
-const styles = theme => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    width: '80%',
-    position: 'relative',
-    minHeight: 200,
-    marginTop: "7%",
-    marginLeft: '10%',
-    marginRight: '10%',
-
-  },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2,
-  },
-  fabGreen: {
-    color: theme.palette.common.white,
-    backgroundColor: green[500],
-  },
-  header: {
-    position: 'sticky',
-    top: '63px',
-
-
-  },
-
-});
 
 class FloatingActionButtonZoom extends React.Component {
   state = {
@@ -162,19 +128,5 @@ FloatingActionButtonZoom.propTypes = {
 };
 
 
-const mapStateToProps = state => {
-  return {
-    auth: state.authReducer.auth,
-    userId: state.authReducer.userId,
-    postContent: state.postReducer.postContent,
-    postTitle: state.postReducer.postTitle,
-    postId: state.postReducer.postId,
-    postUserId: state.postReducer.userId,
-    allcomments: state.postReducer.allcomments,
-    allowedToLike: state.postReducer.allowedToLike,
-    likes: state.postReducer.likes,
-    views: state.postReducer.views
-  }
-}
 
-export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(FloatingActionButtonZoom));
+export default withStyles(styles, { withTheme: true })(FloatingActionButtonZoom);

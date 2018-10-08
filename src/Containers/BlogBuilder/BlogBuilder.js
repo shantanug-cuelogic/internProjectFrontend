@@ -1,22 +1,13 @@
 import React from 'react';
 import Carousel from '../../Components/Carousel/Carousel';
 import Menu from '../../Components/Menu/Menu';
-import { withStyles } from '@material-ui/core/styles';
 import { Paper } from '@material-ui/core';
 import SubHeader from '../../Components/Layout/SubHeader/SubHeader';
-const style = {
-    Container: {
-
-    }
-}
 
 class BlogBuilder extends React.Component {
-
-
     render() {
-        const { classes } = this.props;
         return (
-            <div className={classes.Container}>
+            <div >
                 <SubHeader />
                 <Carousel />
                 <Paper><Menu /></Paper>
@@ -25,4 +16,4 @@ class BlogBuilder extends React.Component {
     }
 }
 
-export default withStyles(style)(BlogBuilder);
+export default BlogBuilder;
