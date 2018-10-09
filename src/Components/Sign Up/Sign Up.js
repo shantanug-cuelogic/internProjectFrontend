@@ -254,7 +254,7 @@ class SignUpProcess extends React.Component {
             </Grid>
             <Grid item>
               <GoogleLogin
-                clientId="599277057661-j0btjigrm4lqv5hf36gijnb1pv94mkec.apps.googleusercontent.com"
+                clientId="520363330227-oa4794e458pmqq4v13stdpe2pucecfi5.apps.googleusercontent.com"
                 buttonText="Login"
                 onSuccess={this.responseGoogleSuccess}
                 onFailure={this.responseGoogleFailure}

@@ -4,45 +4,44 @@ import axios from 'axios';
 
 class PopularPosts extends React.Component {
     state = {
-        popularPosts : []
+        popularPosts: []
     }
-    componentDidMount(){
+    componentDidMount() {
         axios.get('/post/popular')
-        .then((response)=>{
-            console.log(response.data)
-            this.setState({
-                popularPosts:[...response.data.result]
+            .then((response) => {
+                this.setState({
+                    popularPosts: [...response.data.result]
+                });
+            })
+            .catch((error) => {
+                console.log(error)
             });
-        })
-        .catch((error)=>{
-            console.log(error)
-        });
     }
 
     render() {
-       let popularPosts = null;
-      console.log(this.state.popularPosts);
-       if(this.state.popularPosts.length !== 0) {
-        popularPosts = this.state.popularPosts.map((post,index)=>{
-             let url = "/post/"+post.postId;
-    
-            return(
-                <PopularPost
-                    url={url}
-                    postTitle={post.title}
-                    postContent={post.postContent}
-                    views={post.views}
-                    thumbnail={post.thumbnail}
-                />
-    
-            );
-        })
-       }
-        return(
-        <div>
-        {popularPosts}
-        </div>
-            
+        let popularPosts = null;
+        if (this.state.popularPosts.length !== 0) {
+            popularPosts = this.state.popularPosts.map((post, index) => {
+                let url = "/post/" + post.postId;
+
+                return (
+                    <PopularPost
+                        key={index}   
+                        url={url}
+                        postTitle={post.title}
+                        postContent={post.postContent}
+                        views={post.views}
+                        thumbnail={post.thumbnail}
+                    />
+
+                );
+            })
+        }
+        return (
+            <div>
+                {popularPosts}
+            </div>
+
         );
     }
 }

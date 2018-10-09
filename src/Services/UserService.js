@@ -125,8 +125,22 @@ class UserService {
             })
             .catch((error)=>{
                 console.log(error);
-            })
-        })
+            });
+        });
+    }
+    authenticateUser = () =>{
+        return new Promise ((resolve,reject)=>{
+            axios.post('/authenticate',{
+                authToken:localStorage.getItem('authToken'),
+                email:localStorage.getItem('email')
+              })
+              .then((response)=>{
+                  resolve(response.data);
+              })
+              .catch((error)=>{
+                  console.log(error);
+              })
+        });
     }
 
 }

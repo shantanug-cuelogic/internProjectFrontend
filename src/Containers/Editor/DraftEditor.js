@@ -124,7 +124,6 @@ class Editor extends Component {
     }
     render() {
         const { classes } = this.props;
-        console.log(this.state.thumbnail);
         let thumbnail = null;
         if (this.state.thumbnail !== null) {
             thumbnail = <Thumbnail src={this.state.thumbnail} />

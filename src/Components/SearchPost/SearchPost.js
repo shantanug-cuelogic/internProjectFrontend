@@ -7,7 +7,6 @@ import {
     Button,
     MenuItem,
     FormControl,
-    InputLabel,
     Select,
     Divider
 } from '@material-ui/core';
@@ -61,28 +60,28 @@ class SearchPost extends React.Component {
             this.props.handleOpenSnackBar("Enter both the filter fields");
         }
         else {
-           const filterResponse = await PostService.getPostsByFilter(this.state.filterName,this.state.filterValue);
-           if(filterResponse.success) {
-            this.setState({
-                searchResult: [...filterResponse.result]
-            });
-           }
-           else {
-            this.setState({
-                searchResult: []
-            });
-            this.props.handleOpenSnackBar(filterResponse.message)   
-           }
-    }
-}
-    handleOpenFilters = async () => {
-        const allPostResponse = await PostService.getAllPosts();
-            if(allPostResponse.success) {
+            const filterResponse = await PostService.getPostsByFilter(this.state.filterName, this.state.filterValue);
+            if (filterResponse.success) {
                 this.setState({
-                    searchByFilter: true,
-                    searchResult: [...allPostResponse.result]
+                    searchResult: [...filterResponse.result]
                 });
             }
+            else {
+                this.setState({
+                    searchResult: []
+                });
+                this.props.handleOpenSnackBar(filterResponse.message)
+            }
+        }
+    }
+    handleOpenFilters = async () => {
+        const allPostResponse = await PostService.getAllPosts();
+        if (allPostResponse.success) {
+            this.setState({
+                searchByFilter: true,
+                searchResult: [...allPostResponse.result]
+            });
+        }
     }
 
     render() {
@@ -124,8 +123,8 @@ class SearchPost extends React.Component {
                         <div className={classes.FilterContainer} >
                             <form autoComplete="off" style={{ display: 'inline' }}>
                                 <FormControl>
-                                    <InputLabel>Filter</InputLabel>
                                     <Select
+                                        style={{ width: 200 }}
                                         open={this.state.open}
                                         onClose={this.handleClose}
                                         onOpen={this.handleOpen}
@@ -144,8 +143,8 @@ class SearchPost extends React.Component {
                             {this.state.filterName === null ? null :
                                 <form autoComplete="off" style={{ display: 'inline', marginLeft: 30 }} >
                                     <FormControl>
-                                        <InputLabel>Filter Value</InputLabel>
                                         <Select
+                                            style={{ width: 200 }}
                                             open={this.state.filterOpen}
                                             onClose={this.handleFilterClose}
                                             onOpen={this.handleFilterOpen}
@@ -170,8 +169,8 @@ class SearchPost extends React.Component {
                 </div>
             </div>
         );
-    
-}
+
+    }
 }
 const mapStateToProps = state => {
     return {
