@@ -1,12 +1,9 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
 import SubHeader from '../Layout/SubHeader/SubHeader';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
-import CategoryGrid from '../Grids/Category Grid/CategoryGrid';
 import {
-    Grid,
     Button,
     MenuItem,
     FormControl,
@@ -15,27 +12,13 @@ import {
     Divider
 } from '@material-ui/core';
 import { withRouter } from 'react-router';
-
-
-const styles = theme => ({
-    PostContainer: {
-        marginTop: '10%'
-    },
-    formControl: {
-        margin: theme.spacing.unit,
-        minWidth: 120,
-    },
-    FilterContainer: {
-        marginBottom: 20
-    }
-
-})
-
-class SearchResult extends React.Component {
+import styles from './SearchPostStyle';
+import SearchResult from './SearchResult/SearchResult';
+import PostService from '../../Services/PostService';
+class SearchPost extends React.Component {
 
     constructor(props) {
         super(props)
-
         this.state = {
             searchByFilter: false,
             filterName: null,
@@ -44,7 +27,6 @@ class SearchResult extends React.Component {
             filterValue: null,
             searchResult: []
         };
-
     }
 
     componentDidMount() {
@@ -73,82 +55,39 @@ class SearchResult extends React.Component {
         this.setState({ filterOpen: false });
     };
 
-    handleFilter = () => {
+    handleFilter = async () => {
 
         if (this.state.filterName === null || this.state.filterValue === null) {
             this.props.handleOpenSnackBar("Enter both the filter fields");
         }
         else {
-            axios.get(`/post/${this.state.filterName}/${this.state.filterValue}`)
-                .then((response) => {
-                    if (response.data.success) {
-                        this.setState({
-                            searchResult: [...response.data.result]
-                        })
-                    }
-                    else {
-                        this.setState({
-                            searchResult: []
-                        });
-                        this.props.handleOpenSnackBar(response.data.message)
-                    }
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        }
-
-
+           const filterResponse = await PostService.getPostsByFilter(this.state.filterName,this.state.filterValue);
+           if(filterResponse.success) {
+            this.setState({
+                searchResult: [...filterResponse.result]
+            });
+           }
+           else {
+            this.setState({
+                searchResult: []
+            });
+            this.props.handleOpenSnackBar(filterResponse.message)   
+           }
     }
-    handleOpenFilters = () => {
-
-        axios.get('/post/')
-            .then((response) => {
-                console.log(response.data);
-                if (response.data.success) {
-                    this.setState({
-                        searchByFilter: true,
-                        searchResult: [...response.data.result]
-                    });
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+}
+    handleOpenFilters = async () => {
+        const allPostResponse = await PostService.getAllPosts();
+            if(allPostResponse.success) {
+                this.setState({
+                    searchByFilter: true,
+                    searchResult: [...allPostResponse.result]
+                });
+            }
     }
 
     render() {
-
-
-        let posts = null;
-        if (this.state.searchResult.length === 0) {
-            posts = <p>NO POST AVAILABLE FOR CURRENT SEARCH</p>
-        }
-        else {
-            posts = this.state.searchResult.map((post, index) => {
-                let link = `/post/${post.postId}`
-                return (
-                    <Grid item>
-                        <CategoryGrid
-                            key={index}
-                            postTitle={post.title}
-                            postContent={post.postContent}
-                            postId={post.postId}
-                            likes={post.likes}
-                            views={post.views}
-                            thumbnail={post.thumbnail}
-                            link={link}
-                        />
-                    </Grid>
-                );
-            });
-        }
-
-
-
-
+        const { classes } = this.props;
         let filter = [];
-
         if (this.state.filterName === 'year') {
             filter = [<MenuItem value="2017">2017</MenuItem>,
             <MenuItem value="2018">2018</MenuItem>,
@@ -157,7 +96,6 @@ class SearchResult extends React.Component {
         }
         else if (this.state.filterName === 'month') {
             filter = [
-
                 <MenuItem value={1}>Jan</MenuItem>,
                 <MenuItem value={2}>Feb</MenuItem>,
                 <MenuItem value={3}>March</MenuItem>,
@@ -177,19 +115,14 @@ class SearchResult extends React.Component {
             for (let i = 1; i < 32; i++) {
                 filter.push(<MenuItem value={i} >{i}</MenuItem>);
             }
-
         }
-
-        const { classes } = this.props;
         return (
             <div className={classes.Container}>
                 <SubHeader className={classes.SubHeaderContainer} />
                 <div className={classes.PostContainer}>
-
                     {this.state.searchByFilter ?
                         <div className={classes.FilterContainer} >
                             <form autoComplete="off" style={{ display: 'inline' }}>
-
                                 <FormControl>
                                     <InputLabel>Filter</InputLabel>
                                     <Select
@@ -200,10 +133,8 @@ class SearchResult extends React.Component {
                                         onChange={this.handleChange}
                                         inputProps={{
                                             name: 'filterName',
-
                                         }}
                                     >
-
                                         <MenuItem value="year">Year</MenuItem>
                                         <MenuItem value="month">Month</MenuItem>
                                         <MenuItem value="day">Day</MenuItem>
@@ -211,9 +142,7 @@ class SearchResult extends React.Component {
                                 </FormControl>
                             </form>
                             {this.state.filterName === null ? null :
-
                                 <form autoComplete="off" style={{ display: 'inline', marginLeft: 30 }} >
-
                                     <FormControl>
                                         <InputLabel>Filter Value</InputLabel>
                                         <Select
@@ -224,43 +153,26 @@ class SearchResult extends React.Component {
                                             onChange={this.handleChange}
                                             inputProps={{
                                                 name: 'filterValue',
-
                                             }}
                                         >
                                             {filter}
-
                                         </Select>
                                     </FormControl>
                                 </form>
-
                             }
                             <div style={{ marginTop: 20 }} >
                                 <Button variant="outlined" color="primary" onClick={this.handleFilter} > SEARCH </Button>
-
                             </div>
                         </div>
                         : <Button variant="outlined" color="primary" onClick={this.handleOpenFilters} > Search By Filter </Button>}
-
                     <Divider style={{ marginBottom: 20 }} />
-                    <Grid container
-                        direction="row"
-                        spacing={24}
-                        justify="center" >
-                        {posts}
-
-                    </Grid>
-
-
-
-
+                    < SearchResult searchResult={this.state.searchResult} />
                 </div>
             </div>
-
-
-        )
-    }
+        );
+    
 }
-
+}
 const mapStateToProps = state => {
     return {
         categoryPosts: state.categoryPostReducer.categoryPosts
@@ -269,7 +181,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-
         categoryFetchPostReducer: (posts) => dispatch({
             type: actionTypes.FETCH_POST_CATEGORY,
             categoryPosts: posts
@@ -278,8 +189,6 @@ const mapDispatchToProps = dispatch => {
             type: actionTypes.SNACKBAR_OPEN,
             snackBarMessage: snackBarMessage
         })
-
     }
 }
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SearchResult)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SearchPost)));

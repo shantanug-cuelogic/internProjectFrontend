@@ -7,64 +7,17 @@ import {
   Button,
   Typography,
 } from '@material-ui/core';
-import axios from 'axios';
 import validator from 'validator';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import GoogleLogin from 'react-google-login';
-
-const styles = theme => ({
-  root: {
-    width: '80%',
-    marginTop: '8%',
-    marginLeft: '10%'
-  },
-
-  Inputs: {
-    width: 600,
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 30
-  },
-  SignUpButton: {
-
-    marginBottom: 10
-  },
-
-  backButton: {
-    marginRight: theme.spacing.unit,
-  },
-  instructions: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
-  },
-  FormContainer: {
-    padding: '5%'
-  },
-  paper: {
-    height: 200,
-    width: 200
-  },
-
-  ProfileContainer: {
-    margin: '10%'
-  },
-
-  ProfileAvatar: {
-    marginTop: '',
-    marginLeft: 25,
-    height: 150,
-    width: 150
-  },
-});
-
-
+import styles from './SignupStyle';
+import UserService from '../../Services/UserService';
 
 class SignUpProcess extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       formData: {
         email: '',
@@ -76,7 +29,6 @@ class SignUpProcess extends React.Component {
       submitted: false,
       signUpButton: false,
     };
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -108,14 +60,10 @@ class SignUpProcess extends React.Component {
 
       return true;
     });
-
-
-
   }
 
   validation = () => {
     if (this.state.formData.firstName.length === 0) {
-
       this.props.handleOpenSnackBar('First Name is Empty');
       return false;
     }
@@ -153,127 +101,79 @@ class SignUpProcess extends React.Component {
       }
     }
   }
-  responseGoogleSuccess = (GoogleResponse) => {
+  responseGoogleSuccess = async (GoogleResponse) => {
+    const userRegisterResponse = await UserService.userSignUp(
+      GoogleResponse.w3.ofa,
+      GoogleResponse.w3.wea,
+      GoogleResponse.w3.U3,
+      "google",
+      GoogleResponse.w3.Paa
+    );
+    if (userRegisterResponse.success) {
+      const userSigninResponse = await UserService.userSignIn(GoogleResponse.w3.U3, "google");
+      if (userSigninResponse.success) {
+        this.props.handleOpenSnackBar(`Welcome ${GoogleResponse.w3.ofa} `);
 
-
-    axios.post('/register', {
-      firstName: GoogleResponse.w3.ofa,
-      lastName: GoogleResponse.w3.wea,
-      isAdmin: false,
-      email: GoogleResponse.w3.U3,
-      password: "google",
-      profileImage: GoogleResponse.w3.Paa
-    })
-      .then((response) => {
-        console.log(response.data);
-
-        if (response.data.success) {
-          axios.post('/login', {
-            "email": GoogleResponse.w3.U3,
-            "password": "google"
-          })
-            .then((response) => {
-              if (response.data.success) {
-                this.props.handleOpenSnackBar(`Welcome ${GoogleResponse.w3.ofa} `)
-
-                this.props.handleSignInState(response.data.authToken,
-                  parseInt(response.data.userDetails.userId),
-                  response.data.userDetails.firstName,
-                  response.data.userDetails.lastName,
-                  response.data.userDetails.profileImage,
-                  response.data.userDetails.email,
-                  response.data.userDetails.isAdmin,
-                  response.data.userDetails.gender,
-                  response.data.userDetails.followers,
-                );
-                this.props.history.push('/');
-              }
-              else {
-                this.props.handleOpenSnackBar("Username or Password is Wrong")
-              }
-
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-
-        }
-        else if (response.data.message.errno === 1062) {
-          this.props.handleOpenSnackBar("Username already exists");
-
-        }
-
-      })
-      .catch((error) => {
-        console.log(error);
-      })
+        this.props.handleSignInState(userSigninResponse.authToken,
+          userSigninResponse.userDetails.userId,
+          userSigninResponse.userDetails.firstName,
+          userSigninResponse.userDetails.lastName,
+          userSigninResponse.userDetails.profileImage,
+          userSigninResponse.userDetails.email,
+          userSigninResponse.userDetails.isAdmin,
+          userSigninResponse.userDetails.gender,
+          userSigninResponse.userDetails.followers,
+        );
+        this.props.history.push('/');
+      }
+      else {
+        this.props.handleOpenSnackBar("Username or Password is Wrong")
+      }
+    }
+    else if (userRegisterResponse.message.errno === 1062) {
+      this.props.handleOpenSnackBar("Username already exists");
+    }
   }
   responseGoogleFailure = (response) => {
-    // this.props.handleOpenSnackBar("Some Error occurred please try again later");
+    console.log(response)
   }
 
-  handleSubmit = () => {
+  handleSubmit = async () => {
 
     let validation = this.validation();
     if (validation) {
-      axios.post('/register', {
-        firstName: this.state.formData.firstName,
-        lastName: this.state.formData.lastName,
-        isAdmin: false,
-        email: this.state.formData.email,
-        password: this.state.formData.password,
-        profileImage: '/require/userimage.jpg'
-      })
-        .then((response) => {
-          console.log(response.data);
-
-          if (response.data.success) {
-            axios.post('/login', {
-              "email": this.state.formData.email,
-              "password": this.state.formData.password
-            })
-              .then((response) => {
-                if (response.data.success) {
-                  this.props.handleOpenSnackBar(`WELCOME ${this.state.formData.firstName} `)
-
-                  this.props.handleSignInState(response.data.authToken,
-                    parseInt(response.data.userDetails.userId),
-                    response.data.userDetails.firstName,
-                    response.data.userDetails.lastName,
-                    response.data.userDetails.profileImage,
-                    response.data.userDetails.email,
-                    response.data.userDetails.isAdmin,
-                    response.data.userDetails.gender,
-                    response.data.userDetails.followers,
-                  );
-                  this.props.history.push('/');
-                }
-                else {
-                  this.props.handleOpenSnackBar("Username or Password is Wrong")
-                }
-
-              })
-              .catch((error) => {
-                console.log(error)
-              })
-
-          }
-          else if (response.data.message.errno === 1062) {
-            this.props.handleOpenSnackBar("Username already exists");
-
-          }
-
-        })
-        .catch((error) => {
-          console.log(error);
-        })
+      const userRegisterResponse = await UserService.userSignUp(
+        this.state.formData.firstName,
+        this.state.formData.lastName,
+        this.state.formData.email,
+        this.state.formData.password,
+        '/require/userimage.jpg'
+      );
+      if (userRegisterResponse.success) {
+        const userSigninResponse = await UserService.userSignIn(this.state.formData.email, this.state.formData.password);
+        if (userSigninResponse.success) {
+          this.props.handleOpenSnackBar(`WELCOME ${this.state.formData.firstName} `)
+          this.props.handleSignInState(userSigninResponse.authToken,
+            userSigninResponse.userDetails.userId,
+            userSigninResponse.userDetails.firstName,
+            userSigninResponse.userDetails.lastName,
+            userSigninResponse.userDetails.profileImage,
+            userSigninResponse.userDetails.email,
+            userSigninResponse.userDetails.isAdmin,
+            userSigninResponse.userDetails.gender,
+            userSigninResponse.userDetails.followers,
+          );
+          this.props.history.push('/');
+        }
+        else {
+          this.props.handleOpenSnackBar("Username or Password is Wrong");
+        }
+      }
+      else if (userRegisterResponse.message.errno === 1062) {
+        this.props.handleOpenSnackBar("Username already exists");
+      }
     }
-
-
-
   }
-
-
   handleChange(event) {
     const { formData } = this.state;
     formData[event.target.name] = event.target.value;
@@ -281,11 +181,9 @@ class SignUpProcess extends React.Component {
   }
   render() {
     const { classes } = this.props;
-
     return (
       <div className={classes.root}>
         <Typography variant="display2" className={classes.Title} > SIGN UP </Typography>
-
         <Grid container
           direction="row"
           justify="center"
@@ -306,7 +204,6 @@ class SignUpProcess extends React.Component {
                   errorMessages={['this field is required', 'field cannot be empty']}
                 />
               </Grid>
-
               <Grid item>
                 <TextValidator
                   className={classes.Inputs}
@@ -318,9 +215,6 @@ class SignUpProcess extends React.Component {
                   errorMessages={['this field is required', 'field cannot be empty']}
                 />
               </Grid>
-
-
-
               <TextValidator
                 className={classes.Inputs}
                 label="Email"
@@ -354,15 +248,9 @@ class SignUpProcess extends React.Component {
                   value={this.state.formData.repeatPassword}
                 />
               </Grid>
-
-
             </ValidatorForm>
-
-
             <Grid item>
-
               <Button className={classes.SignUpButton} variant="contained" color="primary" onClick={this.handleSubmit}  > SIGN UP</Button>
-
             </Grid>
             <Grid item>
               <GoogleLogin
@@ -371,14 +259,11 @@ class SignUpProcess extends React.Component {
                 onSuccess={this.responseGoogleSuccess}
                 onFailure={this.responseGoogleFailure}
               >
-
                 <span> Sign up with Google</span>
               </GoogleLogin>
-
             </Grid>
           </Paper>
         </Grid>
-
       </div>
     );
   }
@@ -415,7 +300,4 @@ const mapDispatchToProps = dispatch => {
     })
   }
 }
-
-
-
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SignUpProcess));

@@ -9,41 +9,16 @@ import {
     Typography,
     Button,
     Slide,
-
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import validator from 'validator';
 import { NavLink } from 'react-router-dom';
-
-
-const styles = theme => ({
-    FormContainer: {
-        margin: '10%',
-
-    },
-    InputContainer: {
-        paddingLeft: '20%',
-        paddingRight: '20%'
-    },
-    ButtonContainer: {
-        marginTop: '5%',
-        marginBottom: '5%'
-    },
-    Button: {
-        margin: '3%'
-    },
-    Title: {
-        marginBottom: '3%'
-    }
-});
-
+import styles from './SignInStyle';
+import UserService from '../../Services/UserService';
 
 class SignIn extends React.Component {
-
-
     TransitionUp = (props) => {
         return <Slide {...props} direction="up" />;
     }
@@ -80,45 +55,33 @@ class SignIn extends React.Component {
     }
 
 
-    handleSignIn = () => {
+    handleSignIn = async () => {
 
         let validation = this.validation();
 
         if (validation) {
-            axios.post('/login', {
-                "email": document.getElementById('email').value,
-                "password": document.getElementById('password').value
-            })
-                .then((response) => {
-                    if (response.data.success) {
-                        this.props.handleOpenSnackBar("Succesfully Signed In");
+            const signinResponse = await UserService.userSignIn(document.getElementById('email').value, document.getElementById('password').value);
+            if (signinResponse.success) {
+                this.props.handleOpenSnackBar("Succesfully Signed In");
 
-                        this.props.handleSignInState(response.data.authToken,
-                            parseInt(response.data.userDetails.userId),
-                            response.data.userDetails.firstName,
-                            response.data.userDetails.lastName,
-                            response.data.userDetails.profileImage,
-                            response.data.userDetails.email,
-                            response.data.userDetails.isAdmin,
-                            response.data.userDetails.gender,
-                            response.data.userDetails.followers,
-                        );
-                        this.props.history.push('/');
-                    }
-                    else {
-                        this.props.handleOpenSnackBar("Username or Password is Wrong")
-                    }
+                this.props.handleSignInState(signinResponse.authToken,
+                    signinResponse.userDetails.userId,
+                    signinResponse.userDetails.firstName,
+                    signinResponse.userDetails.lastName,
+                    signinResponse.userDetails.profileImage,
+                    signinResponse.userDetails.email,
+                    signinResponse.userDetails.isAdmin,
+                    signinResponse.userDetails.gender,
+                    signinResponse.userDetails.followers,
+                );
+                this.props.history.push('/');
+            }
+            else {
+                this.props.handleOpenSnackBar("Username or Password is Wrong")
+            }
 
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
         }
     }
-    responseGoogle = (response) => {
-        console.log(response);
-    }
-
     render() {
         const { classes } = this.props;
         return (

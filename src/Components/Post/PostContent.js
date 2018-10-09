@@ -1,28 +1,23 @@
-import React  from 'react';
-import { Typography, Paper, Button, TextField, Divider, Avatar, Grid } from '@material-ui/core';
-import ReactHtmlParser, { convertNodeToElement } from 'react-html-parser';
+import React from 'react';
+import { Typography, Paper, Divider } from '@material-ui/core';
+import ReactHtmlParser from 'react-html-parser';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 
 
 const style = theme => ({
-
     HeaderContainer: {
-
         height: '70px',
         paddingTop: '3%'
     },
-
     PostContainer: {
-
         padding: '3%'
     },
-   
 });
 
 
 class PostContent extends React.Component {
-    render () {
+    render() {
         const { classes } = this.props;
         return (
             <div>
@@ -50,7 +45,7 @@ class PostContent extends React.Component {
 }
 const mapStateToProps = state => {
     return {
-        postTitle : state.postReducer.postTitle,
+        postTitle: state.postReducer.postTitle,
         postContent: state.postReducer.postContent
     }
 }

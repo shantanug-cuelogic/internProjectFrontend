@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
 import { Route, Switch } from "react-router-dom";
 import { withRouter } from 'react-router'
-import SignIn from './Components/SIgn In/Sign In';
+import SignIn from './Components/Sign In/Sign In';
 import SignUp from './Components/Sign Up/Sign Up';
 import BlogBuilder from './Containers/BlogBuilder/BlogBuilder';
 import Post from './Containers/Post/Post';
 import Profile from './Components/Profile/Profile';
-import Editor from './Components/Editor/Editor';
+import Editor from './Containers/Editor/Editor';
 import Layout from './Components/Layout/Layout';
 import Drafts from './Components/Drafts/Drafts';
-import DraftEditor from './Components/Editor/DraftEditor';
+import DraftEditor from './Containers/Editor/DraftEditor';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import * as actionTypes from './Store/Actions/actionTypes';
 import EditPost from './Containers/Post/EditPost';
 import Dashboard from './Containers/Dashboard/Dashboard';
-import Category from './Components/Category/Category';
+import Category from './Containers/Category/Category';
 import SearchPost from './Components/SearchPost/SearchPost';
-import AuthorProfile from './Components/AuthorProfile/AuthorProfile';
+import AuthorProfile from './Containers/AuthorProfile/AuthorProfile';
 import ForgotPassword from './Components/ForgotPassword/ForgotPassword';
 import PasswordRecover from './Components/PasswordRecover/PasswordRecover';
 import UpdateProfile from './Components/UpdateProfile/UpdateProfile';
@@ -26,15 +26,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 
 class App extends Component {
-
-
-  componentWillMount() {
-   
-  }
-
-
-
-
   componentDidMount(){
     axios.post('/authenticate',{
       authToken:localStorage.getItem('authToken'),
@@ -44,7 +35,6 @@ class App extends Component {
 
       if(response.data.success) {
         this.props.handleOpenSnackBar(`Welcome ${response.data.result.firstName}`);
-                       
                         this.props.handleSignInState(localStorage.getItem('authToken'),
                             parseInt(response.data.result.userId),
                             response.data.result.firstName,

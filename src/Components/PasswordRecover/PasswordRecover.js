@@ -1,32 +1,14 @@
 import React from 'react';
-import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
-import { Paper, TextField, Grid, Typography, Button, Snackbar } from '@material-ui/core';
+import { Paper, Grid, Typography, Button } from '@material-ui/core';
 import validator from 'validator';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import { connect } from 'react-redux';
-
-const Style = {
-    Container: {
-        marginTop: '10%',
-
-    },
-    FormContainer: {
-
-        width: '500px',
-        padding: '10%'
-
-    },
-
-
-}
-
-
+import Style from './PasswordRecoverStyle';
+import UserService from '../../Services/UserService';
 
 class ForgotPassword extends React.Component {
-
-
     constructor(props) {
         super(props)
         this.state = {
@@ -39,47 +21,30 @@ class ForgotPassword extends React.Component {
             repeatPassword: ''
         }
     }
-
-    componentDidMount() {
-
+    componentDidMount = async () => {
         ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
-
             if (value !== this.state.password) {
                 return false;
             }
-
             return true;
         });
-
         ValidatorForm.addValidationRule('isEmpty', (value) => {
             if (value.length === 0) {
-
                 return false;
             }
-
             return true;
         });
-
-        axios.post('/checkforgettoken', {
-            forgetToken: this.state.authToken
-        })
-            .then((response) => {
-                if (response.data.success) {
-                    this.setState({
-                        isValidToken: true,
-                        firstName: response.data.result[0].firstName,
-                        lastName: response.data.result[0].lastName,
-                        userId: response.data.result[0].userId
-                    });
-                    this.props.handleOpenSnackBar("User authenticated");
-                    
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        const forgetTokenCheckResponse = await UserService.checkForgetToken(this.state.authToken);
+        if (forgetTokenCheckResponse.success) {
+            this.setState({
+                isValidToken: true,
+                firstName: forgetTokenCheckResponse.result[0].firstName,
+                lastName: forgetTokenCheckResponse.result[0].lastName,
+                userId: forgetTokenCheckResponse.result[0].userId
+            });
+            this.props.handleOpenSnackBar("User authenticated");
+        }
     }
-
     validation = () => {
         let password = document.getElementById('password').value;
         let confirmpassword = document.getElementById('confirmpassword').value;
@@ -87,7 +52,6 @@ class ForgotPassword extends React.Component {
             this.props.handleOpenSnackBar("Password Cannot Be Empty");
             return false;
         }
-
         else {
             if (validator.isEmpty(confirmpassword)) {
                 this.props.handleOpenSnackBar("Password Cannot Be Empty");
@@ -104,37 +68,23 @@ class ForgotPassword extends React.Component {
             }
         }
     }
-
-    handleUpdatePassword = () => {
+    handleUpdatePassword = async () => {
         let validation = this.validation()
-
         if (validation) {
-            axios.put('/changepassword', {
-                userId: this.state.userId,
-                password: this.state.password
-            })
-                .then((response) => {
-                    if (response.data.success) {
-                        this.props.handleOpenSnackBar("Password Changed Succesfully");
-                        this.props.history.push('/signin');
-                    }
-                    else {
-                        this.props.handleOpenSnackBar(response.data.message);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
+            const updatePasswordResponse = await UserService.changeUserPassword(this.state.userId, this.state.password);
+            if (updatePasswordResponse.success) {
+                this.props.handleOpenSnackBar("Password Changed Succesfully");
+                this.props.history.push('/signin');
+            }
+            else {
+                this.props.handleOpenSnackBar(updatePasswordResponse.message);
+            }
         }
-
     }
-
-
     handleChangePassword = (event) => {
         this.setState({
             password: event.target.value
-        })
-
+        });
     }
     handleChangeRepeatPassword = (event) => {
         this.setState({
@@ -142,8 +92,6 @@ class ForgotPassword extends React.Component {
         });
 
     }
-
-
     render() {
         const { classes } = this.props;
         const Name = this.state.firstName + " " + this.state.lastName;
@@ -151,7 +99,6 @@ class ForgotPassword extends React.Component {
         if (this.state.isValidToken) {
             content = (
                 <div>
-
                     <Grid
                         container
                         justify="center"
@@ -190,27 +137,22 @@ class ForgotPassword extends React.Component {
                 </div>
             )
         }
-
-
         return (
             <div className={classes.Container} >
                 <Typography variant="display1">PASSWORD RECOVERY</Typography>
                 <ValidatorForm>
                     {content}
                 </ValidatorForm>
-
             </div>
         );
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        handleOpenSnackBar : (message) => dispatch({
+        handleOpenSnackBar: (message) => dispatch({
             type: actionTypes.SNACKBAR_OPEN,
-            snackBarMessage : message
+            snackBarMessage: message
         })
     }
 }
-
-
-export default connect(null,mapDispatchToProps)(withStyles(Style)(ForgotPassword));
+export default connect(null, mapDispatchToProps)(withStyles(Style)(ForgotPassword));

@@ -15,86 +15,13 @@ import {
 } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import SearchIcon from '@material-ui/icons/Search';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import { NavLink } from "react-router-dom";
 import { connect } from 'react-redux';
 import * as actionTypes from '../../../Store/Actions/actionTypes';
 import axios from 'axios';
 import { withRouter } from 'react-router'
-
-
-const style = theme => ({
-
-    button: {
-
-        marginLeft: 10,
-        marginRight: 10,
-
-    },
-    ButtonContainer: {
-        float: '',
-        display: 'inline'
-    },
-    NavigationUl: {
-        listStyle: 'none'
-    },
-    NavigationLi: {
-        display: 'inline'
-    },
-    Links: {
-        textDecoration: 'none',
-        color: 'black'
-    },
-    IconLeft: {
-
-    },
-    search: {
-        position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
-        '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
-        },
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing.unit,
-            width: 'auto',
-        },
-    },
-    searchIcon: {
-        width: theme.spacing.unit * 9,
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    inputRoot: {
-        color: 'inherit',
-        width: '100%',
-    },
-    inputInput: {
-        paddingTop: theme.spacing.unit,
-        paddingRight: theme.spacing.unit,
-        paddingBottom: theme.spacing.unit,
-        paddingLeft: theme.spacing.unit * 10,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        height: 30,
-        [theme.breakpoints.up('sm')]: {
-            width: 120,
-            '&:focus': {
-                width: 400,
-
-            },
-        },
-    },
-    HeaderContainer: {
-        zIndex: 1000
-    }
-});
+import style from './HeaderStyle';
+import PostService from '../../../Services/PostService';
 
 class Header extends React.Component {
 
@@ -116,34 +43,28 @@ class Header extends React.Component {
         this.props.handleOpenSnackBar("Successfully Logged Out");
     }
 
-    handleSearch = (e) => {
+    handleSearch = async (e) => {
         if (e.keyCode === 13) {
             let search = e.target.value;
             let url = '/post/search/?search=' + search;
-            axios.get(url)
-                .then((response) => {
-                    this.props.history.push('/signin');
-                    this.props.history.push({
-                        pathname: '/search',
-                        search: '?search=' + search,
-                        state: { searchResult: response.data }
-                    });
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
+            const searchPostResponse = await PostService.searchPost(url);
+            if (searchPostResponse.success) {
+                this.props.history.push('/signin');
+                this.props.history.push({
+                    pathname: '/search',
+                    search: '?search=' + search,
+                    state: { searchResult: searchPostResponse.result }
+                });
+            }
         }
     }
 
     handleChangeTheme = () => {
-        console.log(this.props.isDark);
         this.props.changeThemeReducer(!this.props.isDark);
-
     }
 
 
     render() {
-
         const { classes } = this.props;
         return (
             <AppBar position="fixed" color="primary" className={classes.HeaderContainer} >

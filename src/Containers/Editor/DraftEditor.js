@@ -17,84 +17,17 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import Thumbnail from '../ImageUploadPreviev/ImageUploadPreview';
+import Thumbnail from '../../Components/ImageUploadPreviev/ImageUploadPreview';
 import validator from 'validator';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
-
-const styles = {
-
-    TitleContainer: {
-        padding: '5%'
-    },
-    ThumbnailContainer: {
-        paddingLeft: '5%',
-        paddingRight: '5%',
-
-    },
-
-    CategoryContainer: {
-        paddingLeft: '5%',
-        paddingRight: '5%',
-        paddingBottom: '5%'
-    },
-    PostButtonContainer: {
-        paddingBotttom: '5%'
-    },
-    EditorContainer: {
-        padding: '5%'
-    }
-
-}
-
-const categories = [
-    {
-        value: 'TECHNOLOGY',
-        label: 'TECHNOLOGY'
-    },
-    {
-        value: 'TRAVEL',
-        label: 'TRAVEL'
-    },
-    {
-        value: 'STYLE',
-        label: 'STYLE'
-    },
-    {
-        value: 'BUSINESS',
-        label: 'BUSINESS'
-    },
-    {
-        value: 'POLITICS',
-        label: 'POLITICS'
-    },
-    {
-        value: 'SCIENCE',
-        label: 'SCIENCE'
-    },
-
-];
+import styles from './EditorStyle';
+import categories from './PostCategory';
+import config from './EditorConfig';
+import EditorService from '../../Services/EditorService';
 
 class Editor extends Component {
-
-    constructor(props) {
-        super(props);
-        axios.get('/post/getpost/' + this.props.match.params.id)
-            .then((response) => {
-                if (response.data.success) {
-                    this.setState({
-                        model: response.data.result[0].postContent,
-                        Category: response.data.result[0].category,
-                        title: response.data.result[0].title,
-                        thumbnail: response.data.result[0].thumbnail
-                    })
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
-
+    
     state = {
         model: '',
         Category: '',
@@ -102,39 +35,21 @@ class Editor extends Component {
         thumbnail: null
 
     }
-
-    config = {
-        codeMirrorOptions: {
-            tabSize: 4
-        },
-
-        videoDefaultDisplay: 'inline',
-        videoAllowedTypes: ['mp4'],
-        videoUpload: true,
-        videoUploadMethod: 'POST',
-        videoUploadParam: 'file_name',
-        videoUploadURL: 'http://localhost:3000/editor/videoupload',
-
-        imageUpload: true,
-        imageUploadMethod: 'POST',
-        imageUploadParam: 'file_name',
-        imageUploadRemoteUrls: true,
-        imageUploadURL: 'http://localhost:3000/editor/imageupload',
-
-        fileUpload: true,
-        fileUploadURL: 'http://localhost:3000/editor/fileupload',
-        fileUploadMethod: 'POST',
-        fileUploadParam: 'file_name',
-        colorsDefaultTab: 'background',
-        disableRightClick: true,
-        codeMirror: false
+    componentDidMount = async ()=>{
+        let getDraftPostResponse = await EditorService.getDraftPost(this.props.match.params.id);
+        if (getDraftPostResponse.success) {
+            this.setState({
+                model: getDraftPostResponse.result[0].postContent,
+                Category: getDraftPostResponse.result[0].category,
+                title: getDraftPostResponse.result[0].title,
+                thumbnail: getDraftPostResponse.result[0].thumbnail
+            });
+        }
     }
-
     handleModelChange = (model) => {
         this.setState({
             model: model
         });
-
     }
 
     handleCategoryChange = name => event => {
@@ -151,7 +66,6 @@ class Editor extends Component {
 
     validation = () => {
         let postTitle = document.getElementById('postTitle').value;
-        let image = document.getElementById('profilepic').files[0];
         if (validator.isEmpty(postTitle)) {
             this.props.handleOpenSnackBar('Post Title Cannot Be Empty');
             return false;
@@ -163,7 +77,6 @@ class Editor extends Component {
                 return false;
             }
             else {
-
                 if (validator.isEmpty(this.state.model)) {
                     this.props.handleOpenSnackBar('Post Content Cannot Be Empty');
                     return false;
@@ -171,18 +84,12 @@ class Editor extends Component {
                 else {
                     return true;
                 }
-
             }
         }
     }
-
-
-    handlePost = () => {
-
-        let validation = this.validation();
+    handlePost = async() => {
+       let validation = this.validation();
         if (validation) {
-
-
             const formData = new FormData();
             formData.append('file', document.getElementById('profilepic').files[0]);
             formData.append('title', this.state.title);
@@ -192,32 +99,14 @@ class Editor extends Component {
             formData.append('userId', this.props.userId);
             formData.append('isDraft', 0);
             formData.append('postId', this.props.match.params.id);
-
-
-            axios.put('/post/savepost', formData, {
-                headers: {
-                    'accept': 'application/json',
-                    'Accept-Language': 'en-US,en;q=0.8',
-                    'Content-Type': `multipart/form-data;`,
-                }
-            })
-                .then((response) => {
-                    console.log(response.data);
-                    if (response.data.success) {
-
-                        this.props.handleOpenSnackBar('Post Created Successfully!!');
-                        this.props.history.push('/post/' + response.data.id);
-                    }
-
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
+            const savePostResponse = await EditorService.saveDraftPost(formData);
+            if(savePostResponse.success) {
+                this.props.handleOpenSnackBar('Post Created Successfully!!');
+                this.props.history.push('/post/' + savePostResponse.id);
+            }
         }
-
     }
-
-    handleDiscardPost = () => {
+    handleDiscardPost = async () => {
 
         const formData = new FormData();
         formData.append('file', document.getElementById('profilepic').files[0]);
@@ -227,32 +116,13 @@ class Editor extends Component {
         formData.append('authToken', this.props.authToken);
         formData.append('userId', this.props.userId);
         formData.append('isDraft', 1);
-
-
-        axios.post('/post/create', formData, {
-            headers: {
-                'accept': 'application/json',
-                'Accept-Language': 'en-US,en;q=0.8',
-                'Content-Type': `multipart/form-data;`,
-            }
-        })
-            .then((response) => {
-                console.log(response.data);
-                if (response.data.success) {
-
-                    this.props.handleOpenSnackBar('Post Saved as Draft');
-                    this.props.history.push('/');
-                }
-
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-
+        let postBlogResponse = await EditorService.postBlog(formData);
+        if (postBlogResponse.success) {
+            this.props.handleOpenSnackBar('Post Saved as Draft');
+            this.props.history.push('/');
+        }
     }
-
     render() {
-
         const { classes } = this.props;
         console.log(this.state.thumbnail);
         let thumbnail = null;
@@ -274,7 +144,6 @@ class Editor extends Component {
                         <TextField
                             select
                             fullWidth
-                            // className={classNames(classes.margin, classes.textField)}
                             variant="outlined"
                             label="With Select"
                             value={this.state.Category}
@@ -290,35 +159,25 @@ class Editor extends Component {
                             ))}
                         </TextField>
                     </div>
-
-
                     <div className={classes.ThumbnailContainer}>
                         <InputLabel>Upload Your Thumbnail</InputLabel>
                         {thumbnail}
                     </div>
-
-
-
                     <div className={classes.EditorContainer}>
                         <FroalaEditor tag='textarea'
                             model={this.state.model}
                             onModelChange={this.handleModelChange}
-                            config={this.config}
-
+                            config={config}
                         />
                     </div>
-
                     <div className={classes.PostButtonContainer} >
                         <Button variant="contained" color="primary" onClick={this.handlePost} style={{ marginRight: 30 }} >Post</Button>
                         <Button variant="outlined" color="primary" onClick={this.handleDiscardPost}  > DISCARD </Button>
                     </div>
-
                 </Paper>
             </div>
-
-        )
+        );
     }
-
 }
 
 const mapStateToProps = state => {

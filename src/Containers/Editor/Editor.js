@@ -16,105 +16,24 @@ import {
     InputAdornment
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import axios from 'axios';
-import Thumbnail from '../ImageUploadPreviev/ImageUploadPreview';
+import Thumbnail from '../../Components/ImageUploadPreviev/ImageUploadPreview';
 import validator from 'validator';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import { withRouter } from 'react-router';
-
-
-const styles = {
-
-    TitleContainer: {
-        padding: '5%'
-    },
-    ThumbnailContainer: {
-        paddingLeft: '5%',
-        paddingRight: '5%',
-
-    },
-
-    CategoryContainer: {
-        paddingLeft: '5%',
-        paddingRight: '5%',
-        paddingBottom: '5%'
-    },
-    PostButtonContainer: {
-        paddingBotttom: '5%'
-    },
-    EditorContainer: {
-        padding: '5%'
-    }
-
-}
-
-const categories = [
-    {
-        value: 'TECHNOLOGY',
-        label: 'TECHNOLOGY'
-    },
-    {
-        value: 'TRAVEL',
-        label: 'TRAVEL'
-    },
-    {
-        value: 'STYLE',
-        label: 'STYLE'
-    },
-    {
-        value: 'BUSINESS',
-        label: 'BUSINESS'
-    },
-    {
-        value: 'POLITICS',
-        label: 'POLITICS'
-    },
-    {
-        value: 'SCIENCE',
-        label: 'SCIENCE'
-    },
-
-];
-
+import styles from './EditorStyle'
+import categories from './PostCategory';
+import config from './EditorConfig';
+import EditorService from '../../Services/EditorService';
 class Editor extends Component {
     state = {
         model: '',
         Category: '',
     }
-
-    config = {
-        codeMirrorOptions: {
-            tabSize: 4
-        },
-
-        videoDefaultDisplay: 'inline',
-        videoAllowedTypes: ['mp4'],
-        videoUpload: true,
-        videoUploadMethod: 'POST',
-        videoUploadParam: 'file_name',
-        videoUploadURL: 'http://localhost:3000/editor/videoupload',
-
-        imageUpload: true,
-        imageUploadMethod: 'POST',
-        imageUploadParam: 'file_name',
-        imageUploadRemoteUrls: true,
-        imageUploadURL: 'http://localhost:3000/editor/imageupload',
-
-        fileUpload: true,
-        fileUploadURL: 'http://localhost:3000/editor/fileupload',
-        fileUploadMethod: 'POST',
-        fileUploadParam: 'file_name',
-        colorsDefaultTab: 'background',
-        disableRightClick: true,
-        codeMirror: false
-    }
-
     handleModelChange = (model) => {
         this.setState({
             model: model
         });
-
     }
 
     handleCategoryChange = name => event => {
@@ -122,8 +41,6 @@ class Editor extends Component {
             Category: event.target.value,
         });
     };
-
-
     validation = () => {
         let postTitle = document.getElementById('postTitle').value;
         let image = document.getElementById('profilepic').files[0];
@@ -155,14 +72,9 @@ class Editor extends Component {
             }
         }
     }
-
-
-    handlePost = () => {
-
+    handlePost = async () => {
         let validation = this.validation();
         if (validation) {
-
-            console.log(typeof (userId));
             const formData = new FormData();
             formData.append('file', document.getElementById('profilepic').files[0]);
             formData.append('title', document.getElementById('postTitle').value);
@@ -171,33 +83,15 @@ class Editor extends Component {
             formData.append('authToken', this.props.authToken);
             formData.append('userId', this.props.userId);
             formData.append('isDraft', 0);
-
-
-            axios.post('post/create', formData, {
-                headers: {
-                    'accept': 'application/json',
-                    'Accept-Language': 'en-US,en;q=0.8',
-                    'Content-Type': `multipart/form-data;`,
-                }
-            })
-                .then((response) => {
-                    console.log(response.data);
-                    if (response.data.success) {
-
-                        this.props.handleOpenSnackBar('Post Created Successfully!!');
-                        this.props.history.push('/post/' + response.data.id);
-                    }
-
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
+            let postBlogResponse = await EditorService.postBlog(formData);
+            if (postBlogResponse.success) {
+                this.props.handleOpenSnackBar('Post Created Successfully!!');
+                this.props.history.push('/post/' + postBlogResponse.id);
+            }
         }
-
     }
 
-    handleDiscardPost = () => {
-
+    handleDiscardPost = async () => {
         const formData = new FormData();
         formData.append('file', document.getElementById('profilepic').files[0]);
         formData.append('title', document.getElementById('postTitle').value);
@@ -206,27 +100,11 @@ class Editor extends Component {
         formData.append('authToken', this.props.authToken);
         formData.append('userId', this.props.userId);
         formData.append('isDraft', 1);
-
-
-        axios.post('post/create', formData, {
-            headers: {
-                'accept': 'application/json',
-                'Accept-Language': 'en-US,en;q=0.8',
-                'Content-Type': `multipart/form-data;`,
-            }
-        })
-            .then((response) => {
-                if (response.data.success) {
-
-                    this.props.handleOpenSnackBar('Post Saved as Draft');
-                    this.props.history.push('/');
-                }
-
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-
+        let postBlogResponse = await EditorService.postBlog(formData);
+        if (postBlogResponse.success) {
+            this.props.handleOpenSnackBar('Post Saved as Draft');
+            this.props.history.push('/');
+        }
     }
 
     render() {
@@ -242,8 +120,7 @@ class Editor extends Component {
                             <FormHelperText id="postTitle"> Your Post Title Goes Here</FormHelperText>
                         </FormControl>
                     </div>
-
-                    <div className={classes.CategoryContainer}>
+                     <div className={classes.CategoryContainer}>
                         <TextField
                             select
                             fullWidth
@@ -262,35 +139,25 @@ class Editor extends Component {
                             ))}
                         </TextField>
                     </div>
-
-
                     <div className={classes.ThumbnailContainer}>
                         <InputLabel>Upload Your Thumbnail</InputLabel>
                         <Thumbnail />
                     </div>
-
-
-
                     <div className={classes.EditorContainer}>
                         <FroalaEditor tag='textarea'
                             model={this.state.model}
                             onModelChange={this.handleModelChange}
-                            config={this.config}
-
-                        />
+                            config={config}
+                         />
                     </div>
-
                     <div className={classes.PostButtonContainer} >
                         <Button variant="contained" color="primary" onClick={this.handlePost} style={{ marginRight: 30 }} >Post</Button>
                         <Button variant="outlined" color="primary" onClick={this.handleDiscardPost}  > DISCARD </Button>
                     </div>
-
                 </Paper>
             </div>
-
-        )
+        );
     }
-
 }
 
 const mapStateToProps = state => {
@@ -300,7 +167,6 @@ const mapStateToProps = state => {
         authToken: state.authReducer.authToken
     }
 }
-
 const mapDispatchToProps = dispatch => {
     return {
         handleOpenSnackBar: (message) => dispatch({

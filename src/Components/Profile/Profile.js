@@ -5,44 +5,9 @@ import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import {connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
-
-const styles =  themes => ({
-paper :{
-    height:200,
-    width:200
-},
-
-ProfileContainer : {
-    margin:'10%'
-},
-
-ProfileAvatar : {
-    marginTop:'',
-    marginLeft:25,
-    height:150,
-    width:150
-},
-
-ProfileInformation:{
-    height:30,
-    borderRadius:30,
-    
-},
-Divider : {
-    margin:10
-}
-
-});
+import styles from './ProfileStyle';
 
 class Profile extends React.Component{
-
-    constructor(props) {
-        super(props)
-
-    }
-
-    
     render() {
         const {classes} = this.props;
        let url = '/updateprofile' ;
@@ -92,10 +57,4 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-
-    }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Profile));
+export default connect(mapStateToProps)(withStyles(styles)(Profile));
