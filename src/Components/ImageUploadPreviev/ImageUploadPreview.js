@@ -12,8 +12,6 @@ const styles = theme => ({
         width: 150
     },
 });
-
-
 class Upload extends React.Component {
     constructor(props) {
         super(props)
@@ -22,18 +20,14 @@ class Upload extends React.Component {
         }
         this.handleChange = this.handleChange.bind(this)
     }
-
     handleChange(event) {
         let file = URL.createObjectURL(event.target.files[0]);
         this.setState({
             file: file
-        })
-
+        });
     }
-
     render() {
         const { classes } = this.props;
-
         return (
             <div>
                 <Grid
@@ -41,13 +35,10 @@ class Upload extends React.Component {
                     justify="center"
                 >
                     <Grid item style={{ marginBottom: 20 }}>
-
                         <Avatar src={this.state.file} className={classes.ProfileAvatar} />
-
                     </Grid>
                 </Grid>
                 <Divider />
-
                 <Input
                     fullWidth
                     id="profilepic"
@@ -56,11 +47,8 @@ class Upload extends React.Component {
                     helperText="Upload Yoour Profile Picture"
                     name="profilePicture"
                     onChange={this.handleChange}
-
                 >
                 </Input>
-
-
             </div>
         );
     }

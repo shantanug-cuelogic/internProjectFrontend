@@ -3,7 +3,7 @@ import { Grid, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import DraftGrid from '../Grids/Category Grid/CategoryGrid';
+import DraftGrid from '../Grids/PostGrid/PostGrid';
 
 const styles = {
     PostContainer: {

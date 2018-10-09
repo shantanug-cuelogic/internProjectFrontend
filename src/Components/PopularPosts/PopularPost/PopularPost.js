@@ -3,31 +3,7 @@ import {  NavLink } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
 import { Grid , Typography, Divider } from '@material-ui/core';
 import ReactHtmlParser from 'react-html-parser';
-
-
-const style = theme =>({
-    Links :{
-        textDecoration : 'none',
-        color:"black",
-    },
-    PostText : {
-        float : 'left',
-        padding:10,
-    },
-    ThumbnailContainer : {
-        backgroundColor:'white',
-        height:'350px',
-        width:'40%',
-        float:'right',
-        textAlign:'center',
-        
-    },
-    Thumbnail : {
-        height:'350px',
-        padding:'10px'
-    }
-});
-
+import style from './PopularPostStyle';
 
 const popularPost = (props) => {
 const { classes } = props;
@@ -47,7 +23,6 @@ const options = {
       }
 
 return(
-        
             <NavLink to={props.url} className={classes.Links} >
                     <Grid 
                     container

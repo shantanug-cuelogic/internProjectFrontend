@@ -5,18 +5,7 @@ import { Button, Paper, Grid } from '@material-ui/core';
 import { NavLink } from "react-router-dom";
 import { connect } from 'react-redux';
 import * as actionTypes from '../../../Store/Actions/actionTypes';
-
-const style = theme => ({
-    SubHeaderContainer: {
-        marginTop: '1%'
-    },
-    SubHeader: {
-        marginTop: '60px',
-        zIndex: 1000,
-        position: 'fixed'
-    }
-
-});
+import style from './SubHeaderStyle';
 
 class Header extends React.Component {
     render() {
@@ -34,9 +23,7 @@ class Header extends React.Component {
                         <Button variant="text" color="primary" component={NavLink} to='/category/business'> Business </Button>
                         <Button variant="text" color="primary" component={NavLink} to='/category/politics'> Politics </Button>
                         <Button variant="text" color="primary" component={NavLink} to='/category/science'> Science </Button>
-
                     </Paper>
-
                 </Grid>
             </div>
         );

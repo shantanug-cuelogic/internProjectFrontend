@@ -3,7 +3,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { Scrollbars } from 'react-custom-scrollbars';
 import moment from 'moment';
-
 import {
     Paper,
     Typography,
@@ -14,6 +13,7 @@ import {
 
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 
 const styles = theme => ({
     RecentActivityContainer: {
@@ -38,9 +38,7 @@ const styles = theme => ({
 class FollowerStatistics extends React.Component {
     render() {
         const { classes } = this.props;
-
         let feedback = null;
-
         if (this.props.feedbacks.length === 0) {
             feedback = <p>NO FEEDBACKS TO SHOW</p>
         }
@@ -48,9 +46,6 @@ class FollowerStatistics extends React.Component {
             feedback = this.props.feedbacks.map((element, index) => {
                 return (
                     <div key={index}>
-                        {/* <p className={classes.RecentActivities} > <b>{element.firstName}</b> : {element.feedback} <i> {moment.unix(element.feedbackTimeStamp).format('dddd, MMMM Do, YYYY h:mm:ss A')}</i></p>
-                <Divider /> */}
-
                         <ExpansionPanel>
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                 <Avatar src={element.profileImage} ></Avatar>
@@ -63,21 +58,15 @@ class FollowerStatistics extends React.Component {
                                 </Typography>
                             </ExpansionPanelDetails>
                         </ExpansionPanel>
-
                     </div>
                 );
             });
         }
-
-
         return (
             <Paper className={classes.RecentActivityContainer} >
-                <Typography variant="display1" >
-                    Feedbacks
-                    </Typography>
+                <Typography variant="display1" >Feedbacks</Typography>
                 <Scrollbars >
                     <Paper className={classes.RecentActivity} >
-
                         {feedback}
                     </Paper>
                 </Scrollbars>

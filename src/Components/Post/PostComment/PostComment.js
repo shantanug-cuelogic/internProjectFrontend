@@ -5,34 +5,7 @@ import { connect } from 'react-redux';
 import * as actionTypes from '../../../Store/Actions/actionTypes';
 import { NavLink } from 'react-router-dom';
 import postService from '../../../Services/PostService';
-
-const style = theme => ({
-    UserName: {
-        float: 'left',
-        marginTop: 40,
-        color: 'black',
-        marginLeft: 30
-    },
-    CommentContainer: {
-        marginBottom: '5%',
-        padding: '3%',
-        marginTop: '5%'
-
-    },
-    Comments: {
-        paddingLeft: '3%',
-        paddingRight: '3%'
-    },
-
-
-    PostCommentButton: {
-        marginBottom: '3%'
-    },
-    SigninLinkContainer: {
-        padding: 20
-    },
-
-})
+import style from './PostCommentStyle';
 
 
 class PostComment extends React.Component {

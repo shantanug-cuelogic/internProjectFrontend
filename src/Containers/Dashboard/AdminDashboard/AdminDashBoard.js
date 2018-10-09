@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -10,7 +9,6 @@ import InboxIcon from '@material-ui/icons/Receipt';
 import DraftsIcon from '@material-ui/icons/Face';
 import Allposts from './AllPosts';
 import AllUsers from './AllUsers';
-import { Scrollbars } from 'react-custom-scrollbars';
 const styles = theme => ({
   root: {
     width: '100%',
@@ -23,29 +21,24 @@ const styles = theme => ({
 });
 
 class AdminDashboard extends React.Component {
-
   state = {
     showAllPosts: false,
     showAllUsers: false
   }
-
   handleAllPosts = () => {
     let currentState = this.state.showAllPosts;
     this.setState({
       showAllPosts: !currentState,
-      showAllUsers:false
+      showAllUsers: false
     });
   }
-
   handleAllUsers = () => {
     let currentState = this.state.showAllUsers;
     this.setState({
       showAllUsers: !currentState,
-      showAllPosts:false
+      showAllPosts: false
     });
   }
-
-
   render() {
     const { classes } = this.props;
     return (
@@ -65,15 +58,11 @@ class AdminDashboard extends React.Component {
             <ListItemText primary="Users" />
           </ListItem>
         </List>
-        {/* <Scrollbars> */}
         {this.state.showAllPosts ? <Allposts /> : null}
         {this.state.showAllUsers ? <AllUsers /> : null}
-        {/* </Scrollbars> */}
-
       </div>
-    )
+    );
   }
-
 }
 
 export default withStyles(styles)(AdminDashboard);

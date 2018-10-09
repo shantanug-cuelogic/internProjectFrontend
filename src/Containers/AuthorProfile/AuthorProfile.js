@@ -4,42 +4,16 @@ import {
     Paper,
     Grid,
     Typography,
+    Avatar,
+    Divider,
+
 } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
-import FeedbackModal from '../FeedbackModal/FeedbackModal';
-import CategoryGrid from '../Grids/Category Grid/CategoryGrid';
-import MessageModal from '../MessageModal/MessageModal';
+import FeedbackModal from '../../Components/FeedbackModal/FeedbackModal';
+import MessageModal from '../../Components/MessageModal/MessageModal';
 import AuthorProfileServices from '../../Services/AuthorProfileService';
-
-const styles = themes => ({
-    paper: {
-        height: 200,
-        width: 200
-    },
-
-    ProfileContainer: {
-        margin: '10%'
-    },
-
-    ProfileAvatar: {
-        marginTop: '',
-        marginLeft: 25,
-        height: 150,
-        width: 150
-    },
-
-    ProfileInformation: {
-        height: 30,
-        borderRadius: 30,
-
-    },
-    Divider: {
-        margin: 10
-    }
-
-});
+import AuthorPosts from '../../Components/AuthorProfile/AuthorPosts';
+import styles from './AuthorProfileStyle';
 
 class Profile extends React.Component {
 
@@ -48,15 +22,14 @@ class Profile extends React.Component {
         lastName: '',
         email: '',
         profileImage: '',
-        
+
         followers: '',
         authorPosts: []
     }
 
     async componentDidMount() {
-        
         const authorInformaton = await AuthorProfileServices.getAuthorInformation(this.props.match.params.userId);
-        const {firstName,lastName,email,profileImage,followers} = authorInformaton;
+        const { firstName, lastName, email, profileImage, followers } = authorInformaton;
         this.setState({
             firstName: firstName,
             lastName: lastName,
@@ -64,19 +37,15 @@ class Profile extends React.Component {
             profileImage: profileImage,
             followers: followers
         });
-       const allAuthorPosts = await AuthorProfileServices.getAuthorPosts(this.props.match.params.userId) 
-       this.setState({
-        authorPosts: [...allAuthorPosts],
-
-    });
-       
+        const allAuthorPosts = await AuthorProfileServices.getAuthorPosts(this.props.match.params.userId)
+        this.setState({
+            authorPosts: [...allAuthorPosts],
+        });
     }
 
     render() {
         const { classes } = this.props;
-
         let feedbackButton = null;
-
         if (this.props.auth) {
             if (this.props.match.params.userId == this.props.userId) {
                 feedbackButton = null;
@@ -88,34 +57,6 @@ class Profile extends React.Component {
                 </div>
             }
         }
-
-        let authorPost = null;
-        if (this.state.authorPosts.length === 0) {
-            authorPost = <p>Author DONT HAVE ANY POST YET</p>
-        } else {
-            authorPost = this.state.authorPosts.map((post, index) => {
-
-                let link = `/post/${post.postId}`
-
-                return (
-                    <Grid item>
-                        <CategoryGrid
-                            key={index}
-                            postTitle={post.title}
-                            postContent={post.postContent}
-                            postId={post.postId}
-                            likes={post.likes}
-                            views={post.views}
-                            thumbnail={post.thumbnail}
-                            link={link}
-                        />
-                    </Grid>
-                )
-
-            })
-        }
-
-
         return (
             <div className={classes.ProfileContainer}>
                 <Grid
@@ -141,13 +82,7 @@ class Profile extends React.Component {
                 <Divider className={classes.Divider} />
                 <Typography variant="display1" style={{ marginTop: 30 }} >All {this.state.firstName}'s Posts</Typography>
                 <Divider style={{ marginBottom: 30 }} />
-                <Grid container
-                    direction="row"
-                    spacing={24}
-                    justify="center" >
-                    {authorPost}
-
-                </Grid>
+                <AuthorPosts authorPosts={this.state.authorPosts} />
             </div>
         );
     }
@@ -157,14 +92,6 @@ const mapStateToProps = state => {
     return {
         auth: state.authReducer.auth,
         userId: state.authReducer.userId.email,
-
     }
 }
-
-const mapDispatchToProps = dispatch => {
-    return {
-
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Profile));
+export default connect(mapStateToProps)(withStyles(styles)(Profile));

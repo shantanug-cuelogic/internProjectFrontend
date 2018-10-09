@@ -7,41 +7,40 @@ import style from './CarouselStyle';
 
 class Carousel extends React.Component {
     render() {
-        const {classes} = this.props;   
+        const { classes } = this.props;
 
         const settings = {
             className: "center",
             centerMode: false,
             infinite: true,
             centerPadding: "60px",
-            slidesToShow: 1 ,
+            slidesToShow: 1,
             speed: 2000,
             dots: true,
             autoplay: true,
             autoplaySpeed: 6000,
             pauseOnHover: true,
             adaptiveHeight: true,
-            
-          };
-        return(
-            
+
+        };
+        return (
+
             <div className={classes.Container}  >
                 <Typography variant="display1"  > Most Popular ... </Typography>
                 <Paper>
-                <div style={{overflow:'hidden'}}>
-                <Slider {...settings} className={classes.CarouselContainer}  >
-                    
-            <PopularPosts />                      
-            </Slider>
-            </div> 
-            </Paper>
-               
+                    <div style={{ overflow: 'hidden' }}>
+                        <Slider {...settings} className={classes.CarouselContainer}  >
+                            <PopularPosts />
+                        </Slider>
+                    </div>
+                </Paper>
+
             </div>
-            
-            )   
-    
+
+        )
+
     }
-   
+
 
 }
 

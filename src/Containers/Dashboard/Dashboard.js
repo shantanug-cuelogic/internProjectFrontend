@@ -1,19 +1,13 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import {
-    Paper,
     Drawer,
     Divider,
     Typography,
     Button,
-
 } from '@material-ui/core';
-
 import Profile from '../../Components/Profile/Profile';
-import axios from 'axios';
 import { connect } from 'react-redux';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import { Scrollbars } from 'react-custom-scrollbars';
 import AdminDashboard from './AdminDashboard/AdminDashBoard';
 import * as actionTypes from '../../Store/Actions/actionTypes';
@@ -39,9 +33,6 @@ const styles = theme => ({
 });
 
 class DashBoard extends React.Component {
-
-
-
     state = {
         spacing: '16',
         views: 0,
@@ -57,7 +48,6 @@ class DashBoard extends React.Component {
     };
 
     async componentDidMount() {
-
         const userRecentActivity = await DashboardServices.getUserRecentActivity(this.props.userId);
         this.props.handleRecentUserActivity(userRecentActivity)
         let likeUrl = '/totallikes/' + this.props.userId;
@@ -91,24 +81,18 @@ class DashBoard extends React.Component {
             expanded: expanded ? panel : false,
         });
     };
-
-
     handleAdminFeatureToggle = () => {
         let currentState = this.state.adminFeatures;
         this.setState({
             adminFeatures: !currentState
-        })
+        });
     }
-
     render() {
         const { classes } = this.props;
-
         let adminButton = null;
         if (this.props.isAdmin) {
             adminButton = <Button variant="contained" color="secondary" style={{ marginTop: 20 }} onClick={this.handleAdminFeatureToggle} > ADMIN</Button>
         }
-
-
         return (
             <div>
                 <div>
@@ -119,13 +103,10 @@ class DashBoard extends React.Component {
                         }}
                     >
                         <Scrollbars className={classes.ProfileContainer}>
-
                             {adminButton}
                             <Profile />
-
                         </Scrollbars>
                         <Divider />
-
                     </Drawer>
                 </div>
                 <div className={classes.HeaderContainer}>
@@ -139,10 +120,7 @@ class DashBoard extends React.Component {
                     </div >
                 }
             </div>
-
-
-
-        )
+        );
     }
 }
 
@@ -150,7 +128,6 @@ const mapStateToProps = state => {
     return {
         userId: state.authReducer.userId,
         isAdmin: state.authReducer.isAdmin,
-
     }
 }
 
