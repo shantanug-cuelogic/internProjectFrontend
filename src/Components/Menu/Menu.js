@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import { withStyles } from '@material-ui/core/styles';
-import { Divider,AppBar,Tabs,Tab,Typography, } from '@material-ui/core';
-import axios from 'axios';
+import { Divider, AppBar, Tabs, Tab, Typography, } from '@material-ui/core';
 import SummaryGrid from '../../Components/Grids/Summary Grid/Summary Grid';
 import styles from './MenuStyle';
+import PostService from '../../Services/PostService';
 
 function TabContainer(props) {
   const { children, dir } = props;
@@ -28,18 +28,11 @@ class FloatingActionButtonZoom extends React.Component {
     value: 0,
     posts: []
   };
-  componentDidMount() {
-    axios.get('/post/recent')
-      .then((response) => {
-        this.setState({
-          posts: response.data.result
-        })
-
-      })
-      .catch((error) => {
-        console.log(error)
-      });
-
+  componentDidMount = async () => {
+    const recentPostResponse = await PostService.fetchCategoryPost('recent');
+    this.setState({
+      posts: recentPostResponse.result
+    });
   }
   handleChange = (event, value) => {
     this.setState({ value });
@@ -49,16 +42,11 @@ class FloatingActionButtonZoom extends React.Component {
     this.setState({ value: index });
   };
 
-  handlePostCategory = (category) => {
-    axios.get(`/post/${category}`)
-      .then((response) => {
-        this.setState({
-          posts: response.data.result
-        })
-      })
-      .catch((error) => {
-        console.log(error)
-      });
+  handlePostCategory = async (category) => {
+    const categoryPostResponse = await PostService.fetchCategoryPost(category);
+    this.setState({
+      posts: categoryPostResponse.result
+    });
 
   }
 

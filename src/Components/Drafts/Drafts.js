@@ -2,8 +2,8 @@ import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import DraftGrid from '../Grids/PostGrid/PostGrid';
+import PostService from '../../Services/PostService';
 
 const styles = {
     PostContainer: {
@@ -13,27 +13,19 @@ const styles = {
 
 class Drafts extends React.Component {
 
-    constructor(props) {
-        super(props);
-
-        axios.get('/post/draft/' + this.props.userId)
-            .then((response) => {
-                console.log(response.data.result[0]);
-                this.setState({
-                    draftPosts: [...response.data.result]
-                })
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-
-    }
     state = {
         draftPosts: []
     }
+
+    componentDidMount = async() => {
+        const draftPostsResponse = await PostService.fetchDraftPosts(this.props.userId);
+        this.setState({
+            draftPosts: [...draftPostsResponse.result]
+        })
+    }   
+
     render() {
         const { classes } = this.props;
-        console.log(this.state.draftPosts);
 
         let posts = null;
         if (this.state.draftPosts.length === 0) {

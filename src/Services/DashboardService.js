@@ -98,31 +98,44 @@ class DashboardService {
     }
 
     getFeedbacks = (userId) => {
-        return new Promise ((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             axios.get('/feedback/' + userId)
-            .then((response) => {
-                if (response.data.success) {
-                    resolve(response.data.result);
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            });
+                .then((response) => {
+                    if (response.data.success) {
+                        resolve(response.data.result);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
         });
     }
 
     getMessages = (userId) => {
-        return new Promise ((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
             axios.get('/message/' + userId)
-            .then((response) => {
+                .then((response) => {
 
-                if (response.data.success) {
-                    resolve(response.data.result);
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+                    if (response.data.success) {
+                        resolve(response.data.result);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
+        });
+    }
+
+    getViewsPerPost = (userId) => {
+        return new Promise((resolve, reject) => {
+
+            axios.get('viewsperpost/' + userId)
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
         });
     }
 }

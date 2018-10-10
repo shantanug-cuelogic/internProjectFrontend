@@ -5,8 +5,7 @@ import Modal from '@material-ui/core/Modal';
 import { Button, TextField } from '@material-ui/core';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
-import axios from 'axios';
-
+import PostService from '../../Services/PostService';
 function getModalStyle() {
   const top = 50
   const left = 50
@@ -41,26 +40,17 @@ class FeedbackModal extends React.Component {
     this.setState({ open: false });
   };
 
-  handleFeedbackSubmit = () => {
+  handleFeedbackSubmit = async () => {
     let feedbackText = document.getElementById('feedback').value;
     if (feedbackText.length === 0 || feedbackText === ' ') {
       this.props.handleOpenSnackBar("Feedback is empty");
     }
     else {
-      axios.post('/feedback', {
-        authToken: this.props.authToken,
-        authorId: this.props.authorId,
-        feedback: feedbackText
-      })
-        .then((response) => {
-          if (response.data.success) {
+     const postFeedbackResponse = await PostService.sendFeedback(this.props.authorId,feedbackText);
+          if(postFeedbackResponse.success) {
             this.props.handleOpenSnackBar(`Feedback sent to ${this.props.name}`);
             this.handleClose();
           }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
     }
   }
 

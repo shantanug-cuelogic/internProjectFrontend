@@ -1,7 +1,7 @@
 import React from 'react';
 import { PieChart, Pie, Sector, Cell } from 'recharts';
 import randomColor from 'randomcolor';
-import axios from 'axios';
+import DashboardService from '../../Services/DashboardService';
 
 const renderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
@@ -54,24 +54,14 @@ class TwoLevelPieChart extends React.Component {
     postData: []
   }
 
-  componentDidMount() {
-
-    axios.get('viewsperpost/' + this.props.userId)
-      .then((response) => {
-
-        if (response.data.success) {
-
-          this.setState({
-            postData: [...response.data.result]
-          })
-        }
+  componentDidMount = async () => {
+    const viewsPerPostResponse = await DashboardService.getViewsPerPost(this.props.userId);
+    if (viewsPerPostResponse.success) {
+      this.setState({
+        postData: [...viewsPerPostResponse.result]
       })
-      .catch((error) => {
-        console.log(error);
-      })
+    }
   }
-
-
   getInitialState() {
     return {
       activeIndex: 0,
@@ -84,10 +74,7 @@ class TwoLevelPieChart extends React.Component {
     });
   }
   render() {
-
-
     let data = [];
-
     this.state.postData.map((element, index) => {
       let post = {
         name: element.title,
@@ -95,8 +82,6 @@ class TwoLevelPieChart extends React.Component {
       }
       data.push(post);
     })
-
-
     const COLORS = randomColor({
       count: this.state.postData.length,
       hue: '#3f50b5'

@@ -138,8 +138,26 @@ class UserService {
                   resolve(response.data);
               })
               .catch((error)=>{
-                  console.log(error);
-              })
+                reject(error);
+            })
+        });
+    }
+
+    updateUserProfile = (formData) => {
+        return new Promise ((resolve,reject)=>{
+            axios.put('/updateuserprofile', formData, {
+                headers: {
+                    'accept': 'application/json',
+                    'Accept-Language': 'en-US,en;q=0.8',
+                    'Content-Type': `multipart/form-data;`,
+                }
+            })
+                .then((response) => {
+                   resolve(response.data);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
         });
     }
 

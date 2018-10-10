@@ -111,15 +111,15 @@ class PostService {
     }
 
     deleteComment = (commentId) => {
-        return new Promise ((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
             axios.put('/post/comment/delete', {
                 commentIdtoDelete: commentId,
                 authToken: localStorage.getItem('authToken')
-    
+
             })
                 .then((response) => {
                     if (response.data.success) {
-                       resolve(response.data);   
+                        resolve(response.data);
                     }
                 })
                 .catch((error) => {
@@ -129,26 +129,26 @@ class PostService {
     }
 
     followAllowedCheck = (userId) => {
-      
-      return new Promise ((resolve, reject)=>{
-        axios.post('/follower/allowed', {
-            authToken: localStorage.getItem('authToken'),
-            userIdToFollow: userId
-        })
-            .then((response) => {
-                    resolve(response.data);
+
+        return new Promise((resolve, reject) => {
+            axios.post('/follower/allowed', {
+                authToken: localStorage.getItem('authToken'),
+                userIdToFollow: userId
             })
-            .catch((error) => {
-                console.log(error);
-            });
-      });
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        });
     }
 
     searchPost = (searchUrl) => {
-        return new Promise ((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             axios.get(searchUrl)
                 .then((response) => {
-                   resolve(response.data);
+                    resolve(response.data);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -157,22 +157,22 @@ class PostService {
     }
 
     getAllPosts = () => {
-        return new Promise ((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             axios.get('/post/')
-            .then((response) => {
-                resolve(response.data);
-            })
-            .catch((error) => {
-                console.log(error)
-            });
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    console.log(error)
+                });
         });
     }
 
-    getPostsByFilter = (filterName,filterValue) => {
-        return new Promise ((resolve,reject)=>{
+    getPostsByFilter = (filterName, filterValue) => {
+        return new Promise((resolve, reject) => {
             axios.get(`/post/${filterName}/${filterValue}`)
                 .then((response) => {
-                   resolve(response.data);
+                    resolve(response.data);
                 })
                 .catch((error) => {
                     console.log(error)
@@ -181,13 +181,13 @@ class PostService {
     }
 
     deletePost = (postId) => {
-        return new Promise ((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             axios.post('/post/delete', {
                 authToken: localStorage.getItem('authToken'),
                 postIdtoDelete: postId
             })
                 .then((response) => {
-                   resolve(response.data);
+                    resolve(response.data);
                 })
                 .catch((error) => {
                     console.log(error)
@@ -195,49 +195,143 @@ class PostService {
         });
     }
     addLike = (postId) => {
-        return new Promise ((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             axios.post('/post/like/add', {
                 postIdToLike: postId,
                 authToken: localStorage.getItem('authToken')
             })
-            .then((response)=>{
-                resolve(response.data);
-            })
-            .catch((error)=>{
-                console.log(error);
-            });
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         });
     }
     removeLike = (postId) => {
-        return new Promise ((resolve,reject)=>{
+        return new Promise((resolve, reject) => {
             axios.put('/post/like/remove', {
                 postIdToUnlike: postId,
                 authToken: localStorage.getItem('authToken')
             })
-            .then((response)=>{
-                resolve(response.data);
-            })
-            .catch((error)=>{
-                console.log(error);
-            });
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         });
     }
-    updatePost = (postId,postTitle,postContent,postCategory) => {
-        return new Promise((resolve,reject)=>{
+    updatePost = (postId, postTitle, postContent, postCategory) => {
+        return new Promise((resolve, reject) => {
             axios.put('/post/update', {
                 postIdtoUpdate: postId,
                 title: postTitle,
-                postContent:postContent,
+                postContent: postContent,
                 category: postCategory,
                 authToken: localStorage.getItem('authToken')
             })
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        });
+    }
+    fetchPostHistory = (postId) => {
+        return new Promise((resolve, reject) => {
+            axios.get('/post/history/' + postId)
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    reject(error)
+                });
+        });
+    }
+
+    fetchPopularPost = () => {
+        return new Promise((resolve, reject) => {
+            axios.get('/post/popular')
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
+    }
+
+    fetchDraftPosts = (userId) => {
+        return new Promise((resolve, reject) => {
+            axios.get('/post/draft/' + userId)
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
+    }
+
+    sendFeedback = (authorId, feedback) => {
+        return new Promise((resolve, reject) => {
+            axios.post('/feedback', {
+                authToken: localStorage.getItem('authToken'),
+                authorId: authorId,
+                feedback: feedback
+            })
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
+    }
+    fetchCategoryPost = (category) => {
+        return new Promise((resolve, reject) => {
+            axios.get('/post/'+category)
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    reject(error)
+                });
+        });
+    }
+    sendMeesage = (authorId,message) => {
+        return new Promise ((resolve,reject)=>{
+            axios.post('/message',{
+                authToken: localStorage.getItem('authToken'),
+                authorId : authorId,
+                message : message
+            })
             .then((response)=>{
-                resolve(response.data);
+               resolve(response.data);
             })
             .catch((error)=>{
-                console.log(error);
+                reject(error);
+            });
+        });
+    }
+    ratePost = (postId,ratings) => {
+        return new Promise((resolve,reject)=>{
+            axios.put('/post/ratings',{
+                authToken :localStorage.getItem('authToken'),
+                postId : postId,
+                rating: ratings
+            })
+            .then((response) =>{
+              resolve(response.data);
+            })
+            .catch((error) =>{
+                reject(error);
             })
         });
     }
+
 }
+
 export default new PostService();

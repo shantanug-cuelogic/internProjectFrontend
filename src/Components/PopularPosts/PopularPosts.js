@@ -1,21 +1,32 @@
 import React from 'react';
 import PopularPost from './PopularPost/PopularPost';
-import axios from 'axios';
+import Slider from "react-slick";
+import PostService from '../../Services/PostService';
+
+const settings = {
+    className: "center",
+    centerMode: false,
+    infinite: true,
+    centerPadding: "60px",
+    slidesToShow: 1,
+    speed: 2000,
+    dots: true,
+    autoplay: true,
+    autoplaySpeed: 6000,
+    pauseOnHover: true,
+    adaptiveHeight: false,
+    height: 370
+};
 
 class PopularPosts extends React.Component {
     state = {
         popularPosts: []
     }
-    componentDidMount() {
-        axios.get('/post/popular')
-            .then((response) => {
-                this.setState({
-                    popularPosts: [...response.data.result]
-                });
-            })
-            .catch((error) => {
-                console.log(error)
-            });
+    componentDidMount = async () => {
+        const popularPostResponse = await PostService.fetchPopularPost();
+        this.setState({
+            popularPosts: [...popularPostResponse.result]
+        });
     }
 
     render() {
@@ -26,7 +37,7 @@ class PopularPosts extends React.Component {
 
                 return (
                     <PopularPost
-                        key={index}   
+                        key={index}
                         url={url}
                         postTitle={post.title}
                         postContent={post.postContent}
@@ -38,9 +49,12 @@ class PopularPosts extends React.Component {
             })
         }
         return (
-            <div>
-                {popularPosts}
+            <div style={{ height: 370 }}>
+                <Slider {...settings} >
+                    {popularPosts}
+                </Slider>
             </div>
+
 
         );
     }

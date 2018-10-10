@@ -9,12 +9,11 @@ import {
     MenuItem,
     Divider
 } from '@material-ui/core';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import ProfilePic from '../ImageUploadPreviev/ImageUploadPreview';
 import EditIcon from '@material-ui/icons/Create';
 import * as actionTypes from '../../Store/Actions/actionTypes';
-
+import UserService from '../../Services/UserService';
 const styles = themes => ({
 
 
@@ -105,7 +104,7 @@ class Profile extends React.Component {
         })
 
     }
-    handleUpdateProfile = () => {
+    handleUpdateProfile = async () => {
 
 
         const formData = new FormData();
@@ -116,33 +115,19 @@ class Profile extends React.Component {
         formData.append('userIdtoUpdate', this.props.userId);
         formData.append('profileImage', this.props.profileImage);
 
-        axios.put('/updateuserprofile', formData, {
-            headers: {
-                'accept': 'application/json',
-                'Accept-Language': 'en-US,en;q=0.8',
-                'Content-Type': `multipart/form-data;`,
-            }
-        })
-            .then((response) => {
-                if (response.data.success) {
+        const updateUserProfileResponse = await UserService.updateUserProfile(formData);
+        if (updateUserProfileResponse.success) {
 
-                    this.props.updateUserToReducer(this.state.firstName, this.state.lastName, this.state.gender, response.data.profileImagePath);
-                    this.props.handleOpenSnackBar("Userprofile Updated Succesfully");
-                    this.props.history.push('/profile');
-                }
-                else {
-                    this.props.handleOpenSnackBar("Something Went Wrong Please Try Again Later");
-                }
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+            this.props.updateUserToReducer(this.state.firstName, this.state.lastName, this.state.gender, updateUserProfileResponse.profileImagePath);
+            this.props.handleOpenSnackBar("Userprofile Updated Succesfully");
+            this.props.history.push('/profile');
+        }
+        else {
+            this.props.handleOpenSnackBar("Something Went Wrong Please Try Again Later");
+        }
+
     }
-
-
-
-
-    render() {
+  render() {
         const { classes } = this.props;
 
         return (

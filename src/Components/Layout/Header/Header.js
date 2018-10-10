@@ -18,7 +18,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import { NavLink } from "react-router-dom";
 import { connect } from 'react-redux';
 import * as actionTypes from '../../../Store/Actions/actionTypes';
-import axios from 'axios';
 import { withRouter } from 'react-router'
 import style from './HeaderStyle';
 import PostService from '../../../Services/PostService';

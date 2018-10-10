@@ -16,7 +16,6 @@ import {
     InputAdornment
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import axios from 'axios';
 import Thumbnail from '../../Components/ImageUploadPreviev/ImageUploadPreview';
 import validator from 'validator';
 import { connect } from 'react-redux';
