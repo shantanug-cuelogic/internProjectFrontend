@@ -19,14 +19,12 @@ const reducer = (state = initialState , action) => {
         switch(action.type) {
 
             case actionTypes.USER_RECENT_ACTIVITY : {
-            console.log(action);
                 return {
                     ...state,
                     recentActivity : [ ...action.recentActivity]
                 }
             }
             case actionTypes.FOLLOWER_INFO : {
-                console.log(action)
                 return {
                     ...state,
                     followers : [ ...action.followers]
@@ -42,7 +40,6 @@ const reducer = (state = initialState , action) => {
             }
 
             case actionTypes.COMMENTS : {
-                console.log(action)
                 return {
                     ...state,
                     comments: action.comments

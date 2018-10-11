@@ -55,7 +55,7 @@ class DashboardService {
         return new Promise((resolve, reject) => {
             axios.get(postUrl)
                 .then((response) => {
-
+                    console.log(response.data);
                     if (response.data.success) {
                         resolve(response.data.postCount)
                     }
@@ -86,7 +86,6 @@ class DashboardService {
         return new Promise((resolve, reject) => {
             axios.get('followersinfo/' + userId)
                 .then((response) => {
-                    console.log(response.data);
                     if (response.data.success) {
                         resolve(response.data.result);
                     }

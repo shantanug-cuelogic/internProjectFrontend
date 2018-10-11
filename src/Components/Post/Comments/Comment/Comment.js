@@ -10,9 +10,22 @@ class Comment extends React.Component {
     render() {
         const { classes } =this.props;
         let deleteButton = null;
-        if (this.props.deleteButton) {
-            deleteButton = <Typography variant="caption" className={classes.DeleteButton} onClick={this.props.click} >DELETE COMMENT</Typography>
+        console.log(this.props.commentUserId);
+      if(this.props.commentUserId!==undefined){
+        if(this.props.auth) {
+            if(this.props.commentUserId === this.props.userId ) {
+                deleteButton = <Typography variant="caption" className={classes.DeleteButton} onClick={this.props.click} >DELETE COMMENT</Typography>
+            }
+            else if(this.props.isAdmin === 1) {
+                deleteButton = <Typography variant="caption" className={classes.DeleteButton} onClick={this.props.click} >DELETE COMMENT</Typography>
+            }
         }
+      }
+        
+        
+        // if (this.props.deleteButton) {
+        //     deleteButton = <Typography variant="caption" className={classes.DeleteButton} onClick={this.props.click} >DELETE COMMENT</Typography>
+        // }
         return (
             <Paper className={classes.AllComments}>
                 <Typography variant="body2" className={classes.UserName}>{this.props.firstName + " " + this.props.lastName}</Typography>
@@ -38,6 +51,7 @@ const mapStateToProps = state => {
         postId: state.postReducer.postId,
         postUserId: state.postReducer.userId,
         allcomments: state.postReducer.allcomments,
+        isAdmin: state.authReducer.isAdmin
     }
 }
 

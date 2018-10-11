@@ -59,6 +59,7 @@ class DashBoard extends React.Component {
         const viewCount = await DashboardServices.getViewCount(viewUrl);
         this.props.handleViews(viewCount);
         const postCount = await DashboardServices.getPostCount(postUrl);
+      console.log(postCount);
         this.props.handlePosts(postCount);
         const commentCount = await DashboardServices.getCommentCount(commentUrl);
         this.props.handleComments(commentCount);
@@ -141,13 +142,13 @@ const mapDispatchToProps = dispatch => {
             type: actionTypes.LIKES,
             likes: likes
         }),
-        handleViews: (posts) => dispatch({
-            type: actionTypes.POSTS,
-            posts: posts
-        }),
-        handlePosts: (views) => dispatch({
+        handleViews: (views) => dispatch({
             type: actionTypes.VIEWS,
             views: views
+        }),
+        handlePosts: (posts) => dispatch({
+            type: actionTypes.POSTS,
+            posts: posts
         }),
         handleComments: (comments) => dispatch({
             type: actionTypes.COMMENTS,

@@ -46,7 +46,8 @@ class Comments extends React.Component {
                             commentContent={comment.commentContent}
                             firstName={comment.firstName}
                             lastName={comment.lastName}
-                            deleteButton={(comment.userId === this.props.userId) || (this.props.isAdmin === 1) ? true : false}
+                            // deleteButton={(comment.userId == this.props.userId) || (this.props.isAdmin === 1) ? true : false}
+                           commentUserId={comment.userId}
                             click={() => this.handleDeleteComment(comment.commentId)}
                         >
                         </Comment>

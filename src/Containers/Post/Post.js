@@ -18,12 +18,13 @@ class Post extends Component {
         lastName: '',
         likeAllowed: true,
         rating: 0,
-  }
+    }
 
     async componentDidMount() {
         let requiredUrl = this.props.match.params.id;
         let postData = await postService.fetchAllPostData(requiredUrl);
         const { postContent, title, postId, userId, category } = postData;
+        let viewStatus = await postService.addViews(postId);
         let allcomments = await postService.fetchAllComments(postId);
         this.props.handleFetchPost(postId, userId, title, postContent, allcomments, category);
         let totalLikes = await postService.fetchTotalLikesToPost(postId);
@@ -49,6 +50,13 @@ class Post extends Component {
             else {
                 this.props.handleAuthorFollowAllowed(false);
             }
+        }
+        const checkLike = await postService.checkAlreadyLiked(postId);
+        if(checkLike.success) {
+          this.props.allowToLikePostReducer(true);
+        }
+        else if(!checkLike.success) {
+            this.props.allowToLikePostReducer(false);
         }
     }
     TransitionUp = (props) => {
@@ -130,7 +138,11 @@ const mapDispatchToProps = dispatch => {
         handleAuthorFollowAllowed: (allowedToFollow) => dispatch({
             type: actionTypes.AUTHOR_FOLLOWED_ALLOWED,
             allowedToFollow: allowedToFollow
-        })
+        }),
+        allowToLikePostReducer: (status) => dispatch({
+            type: actionTypes.ALLOWED_TO_LIKE_POST,
+            allowToLike: status
+        }),
     }
 }
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withStyles(style)(Post)));

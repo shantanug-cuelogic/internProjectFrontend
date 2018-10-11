@@ -21,10 +21,12 @@ class PostComment extends React.Component {
                     firstName: this.props.firstName,
                     lastName: this.props.lastName,
                     userId: this.props.userId,
-                    commentId: commentStatus.message.insertId,
+                    commentId:  commentStatus.insertId,
                     commentContent: comment
                 }
                 document.getElementById('comment').value = "";
+                console.log(updatedCommentData);
+
                 this.props.handleOpenSnackBar("Comment Posted !!");
                 this.props.postCommentToReducer(updatedCommentData);
             }
@@ -65,7 +67,8 @@ const mapStateToProps = state => {
         auth: state.authReducer.auth,
         firstName: state.authReducer.firstName,
         lastName: state.authReducer.lastName,
-        postId: state.postReducer.postId
+        postId: state.postReducer.postId,
+        userId: state.authReducer.userId
     }
 }
 

@@ -54,6 +54,7 @@ class App extends Component {
 
   };
   render() {
+   console.log(this.props.auth);
     let authenticatedRoutes = null;
     if (this.props.auth) {
       authenticatedRoutes =
@@ -84,8 +85,16 @@ class App extends Component {
               <Route path='/signin' component={SignIn}></Route>
               <Route path='/signup' component={SignUp}></Route>
               <Route path='/post/:id' component={Post} ></Route>
+              {/* <Route path='/editpost/:id' component={EditPost}></Route> */}
+              {/* <Route path='/editor' component={Editor}></Route>
+              <Route path='/profile' component={Profile}></Route>
+              <Route path='/createpost' component={Editor} ></Route>
+              <Route path='/dashboard' component={Dashboard} ></Route>
+              <Route path="/updateprofile" component={UpdateProfile}> </Route>
+              <Route path="/drafts" component={Drafts}> </Route>
+              <Route path="/drafteditor/:id" component={DraftEditor}> </Route> */}
               {updateRoute}
-              {authenticatedRoutes}
+             {authenticatedRoutes}
               <Route path='/category/:id' component={Category} ></Route>
               <Route path='/search' component={SearchPost} ></Route>
               <Route path='/authorprofile/:userId' component={AuthorProfile} ></Route>

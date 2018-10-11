@@ -5,7 +5,6 @@ class PostService {
         return new Promise((resolve, reject) => {
             axios.get('/post/getpost/' + postId)
                 .then((response) => {
-                    console.log(response.data)
                     if (response.data.success) {
 
                         resolve(response.data.result[0])
@@ -71,7 +70,6 @@ class PostService {
         return new Promise((resolve, reject) => {
             axios.get('/userprofile/' + userId)
                 .then((response) => {
-                    console.log(response.data);
                     resolve(response.data[0])
                 })
                 .catch((error) => {
@@ -193,6 +191,36 @@ class PostService {
                     console.log(error)
                 });
         });
+    }
+
+    addViews = (postId) => {
+        return new Promise((resolve,reject)=>{
+            axios.post('/post/view/add',{
+                postIdToView:postId,
+                authToken: localStorage.getItem('authToken')
+            })
+            .then((response)=>{
+                resolve(response.data);
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
+
+        });
+    }
+    checkAlreadyLiked = (postId) =>{
+        return new Promise((resolve,reject)=>{
+            axios.post('/post/like/allowed',{
+                postIdToLike:postId,
+                authToken : localStorage.getItem('authToken')
+            })
+            .then((response)=>{
+                resolve(response.data);
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
+        })
     }
     addLike = (postId) => {
         return new Promise((resolve, reject) => {

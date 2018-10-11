@@ -84,6 +84,7 @@ class Editor extends Component {
             formData.append('userId', this.props.userId);
             formData.append('isDraft', 0);
             let postBlogResponse = await EditorService.postBlog(formData);
+            console.log(postBlogResponse);
             if (postBlogResponse.success) {
                 this.props.handleOpenSnackBar('Post Created Successfully!!');
                 this.props.history.push('/post/' + postBlogResponse.id);
@@ -120,7 +121,7 @@ class Editor extends Component {
                             <FormHelperText id="postTitle"> Your Post Title Goes Here</FormHelperText>
                         </FormControl>
                     </div>
-                     <div className={classes.CategoryContainer}>
+                    <div className={classes.CategoryContainer}>
                         <TextField
                             select
                             fullWidth
@@ -148,7 +149,7 @@ class Editor extends Component {
                             model={this.state.model}
                             onModelChange={this.handleModelChange}
                             config={config}
-                         />
+                        />
                     </div>
                     <div className={classes.PostButtonContainer} >
                         <Button variant="contained" color="primary" onClick={this.handlePost} style={{ marginRight: 30 }} >Post</Button>
