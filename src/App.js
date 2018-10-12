@@ -54,7 +54,6 @@ class App extends Component {
 
   };
   render() {
-   console.log(this.props.auth);
     let authenticatedRoutes = null;
     if (this.props.auth) {
       authenticatedRoutes =

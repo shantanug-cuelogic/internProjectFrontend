@@ -89,7 +89,7 @@ class PostContentBar extends React.Component {
                     </Button>
                     {this.props.auth ?
                         <div className={classes.RatingContainer}>
-                            <RateModal ButtonName="Rate this post" postId={parseInt(this.props.postId)} style={{ display: 'inline' }} />
+                            <RateModal ButtonName="Rate this post" postId={this.props.postId} style={{ display: 'inline' }} />
                         </div>
                         : null}
 
