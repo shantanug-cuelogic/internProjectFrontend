@@ -23,10 +23,10 @@ class Post extends Component {
     async componentDidMount() {
         let requiredUrl = this.props.match.params.id;
         let postData = await postService.fetchAllPostData(requiredUrl);
-        const { postContent, title, postId, userId, category } = postData;
+        const { postContent, title, postId, userId, category, postTimestamp } = postData;
         let viewStatus = await postService.addViews(postId);
         let allcomments = await postService.fetchAllComments(postId);
-        this.props.handleFetchPost(postId, userId, title, postContent, allcomments, category);
+        this.props.handleFetchPost(postId, userId, title, postContent, allcomments, category, postTimestamp);
         let totalLikes = await postService.fetchTotalLikesToPost(postId);
         this.props.totalLikesToPostReducer(totalLikes);
         let totalViews = await postService.fetchTotalViewsToPost(postId);
@@ -52,10 +52,10 @@ class Post extends Component {
             }
         }
         const checkLike = await postService.checkAlreadyLiked(postId);
-        if(checkLike.success) {
-          this.props.allowToLikePostReducer(true);
+        if (checkLike.success) {
+            this.props.allowToLikePostReducer(true);
         }
-        else if(!checkLike.success) {
+        else if (!checkLike.success) {
             this.props.allowToLikePostReducer(false);
         }
     }
@@ -67,7 +67,6 @@ class Post extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <div id="google_translate_element" style={{ display: 'inline', height: 27, float: 'right' }} ></div>
                 <Author
                     userId={this.props.userId}
                     postUserId={this.props.postUserId}
@@ -105,7 +104,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        handleFetchPost: (postId, userId, postTitle, postContent, allcomments, category) => dispatch(
+        handleFetchPost: (postId, userId, postTitle, postContent, allcomments, category, postTimestamp) => dispatch(
             {
                 type: actionTypes.FETCH_POST,
                 postId: postId,
@@ -114,6 +113,7 @@ const mapDispatchToProps = dispatch => {
                 postContent: postContent,
                 allcomments: allcomments,
                 category: category,
+                postTimestamp: postTimestamp
             }),
         totalLikesToPostReducer: (likes) => dispatch({
             type: actionTypes.TOTAL_LIKE_TO_POST,

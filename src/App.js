@@ -57,7 +57,7 @@ class App extends Component {
     let authenticatedRoutes = null;
     if (this.props.auth) {
       authenticatedRoutes =
-        <HigherOrderComponent>
+        <Switch>
           <Route path='/editor' component={Editor}></Route>
           <Route path='/profile' component={Profile}></Route>
           <Route path='/createpost' component={Editor} ></Route>
@@ -65,7 +65,7 @@ class App extends Component {
           <Route path="/updateprofile" component={UpdateProfile}> </Route>
           <Route path="/drafts" component={Drafts}> </Route>
           <Route path="/drafteditor/:id" component={DraftEditor}> </Route>
-        </HigherOrderComponent>
+        </Switch>
 
 
     }
@@ -80,20 +80,22 @@ class App extends Component {
         <div className="App">
           <Layout logout={this.logout} />
           <div style={{ textAlign: 'center', width: '90%', marginLeft: '5%', marginRight: '5%' }}>
+        {/* <div id="google_translate_element" style={{ display: 'inline', height: 27, float: 'right' , marginTop:'10%' }} ></div> */}
+
             <Switch>
               <Route path='/signin' component={SignIn}></Route>
               <Route path='/signup' component={SignUp}></Route>
               <Route path='/post/:id' component={Post} ></Route>
-              {/* <Route path='/editpost/:id' component={EditPost}></Route> */}
-              {/* <Route path='/editor' component={Editor}></Route>
+              <Route path='/editpost/:id' component={EditPost}></Route>
+              <Route path='/editor' component={Editor}></Route>
               <Route path='/profile' component={Profile}></Route>
               <Route path='/createpost' component={Editor} ></Route>
               <Route path='/dashboard' component={Dashboard} ></Route>
               <Route path="/updateprofile" component={UpdateProfile}> </Route>
               <Route path="/drafts" component={Drafts}> </Route>
-              <Route path="/drafteditor/:id" component={DraftEditor}> </Route> */}
-              {updateRoute}
-             {authenticatedRoutes}
+              <Route path="/drafteditor/:id" component={DraftEditor}> </Route>
+              {/* {updateRoute}
+             {authenticatedRoutes} */}
               <Route path='/category/:id' component={Category} ></Route>
               <Route path='/search' component={SearchPost} ></Route>
               <Route path='/authorprofile/:userId' component={AuthorProfile} ></Route>
