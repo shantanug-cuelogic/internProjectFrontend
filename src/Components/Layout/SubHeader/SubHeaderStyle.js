@@ -1,6 +1,6 @@
 const style = theme => ({
     SubHeaderContainer: {
-        marginTop: '1%'
+        marginTop: '-1%'
     },
     SubHeader: {
         marginTop: '60px',

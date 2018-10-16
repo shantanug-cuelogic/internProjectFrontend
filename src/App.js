@@ -54,26 +54,26 @@ class App extends Component {
 
   };
   render() {
-    let authenticatedRoutes = null;
-    if (this.props.auth) {
-      authenticatedRoutes =
-        <Switch>
-          <Route path='/editor' component={Editor}></Route>
-          <Route path='/profile' component={Profile}></Route>
-          <Route path='/createpost' component={Editor} ></Route>
-          <Route path='/dashboard' component={Dashboard} ></Route>
-          <Route path="/updateprofile" component={UpdateProfile}> </Route>
-          <Route path="/drafts" component={Drafts}> </Route>
-          <Route path="/drafteditor/:id" component={DraftEditor}> </Route>
-        </Switch>
+    // let authenticatedRoutes = null;
+    // if (this.props.auth) {
+    //   authenticatedRoutes =
+    //     <Switch>
+    //       <Route path='/editor' component={Editor}></Route>
+    //       <Route path='/profile' component={Profile}></Route>
+    //       <Route path='/createpost' component={Editor} ></Route>
+    //       <Route path='/dashboard' component={Dashboard} ></Route>
+    //       <Route path="/updateprofile" component={UpdateProfile}> </Route>
+    //       <Route path="/drafts" component={Drafts}> </Route>
+    //       <Route path="/drafteditor/:id" component={DraftEditor}> </Route>
+    //     </Switch>
 
 
-    }
-    let updateRoute = null;
+    // }
+    // let updateRoute = null;
 
-    if (this.props.postUserId === this.props.userId) {
-      updateRoute = <Route path='/editpost/:id' component={EditPost}></Route>
-    }
+    // if (this.props.postUserId === this.props.userId) {
+    //   updateRoute = <Route path='/editpost/:id' component={EditPost}></Route>
+    // }
     const theme = this.props.isDark ? createMuiTheme(DarkTheme) : createMuiTheme(DefaultTheme);
     return (
       <MuiThemeProvider theme={theme}>
