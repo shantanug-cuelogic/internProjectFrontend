@@ -17,16 +17,16 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Thumbnail from '../../Components/ImageUploadPreviev/ImageUploadPreview';
-import validator from 'validator';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import styles from './EditorStyle';
 import categories from './PostCategory';
 import config from './EditorConfig';
 import EditorService from '../../Services/EditorService';
+import Validation from '../../Utility/validation';
 
 class Editor extends Component {
-    
+
     state = {
         model: '',
         Category: '',
@@ -34,7 +34,7 @@ class Editor extends Component {
         thumbnail: null
 
     }
-    componentDidMount = async ()=>{
+    componentDidMount = async () => {
         let getDraftPostResponse = await EditorService.getDraftPost(this.props.match.params.id);
         if (getDraftPostResponse.success) {
             this.setState({
@@ -62,33 +62,11 @@ class Editor extends Component {
             title: event.target.value
         })
     }
+    handlePost = async () => {
+        const postTitle = document.getElementById('postTitle').value;
 
-    validation = () => {
-        let postTitle = document.getElementById('postTitle').value;
-        if (validator.isEmpty(postTitle)) {
-            this.props.handleOpenSnackBar('Post Title Cannot Be Empty');
-            return false;
-        }
-        else {
-
-            if (validator.isEmpty(this.state.Category)) {
-                this.props.handleOpenSnackBar('Please Select Category ');
-                return false;
-            }
-            else {
-                if (validator.isEmpty(this.state.model)) {
-                    this.props.handleOpenSnackBar('Post Content Cannot Be Empty');
-                    return false;
-                }
-                else {
-                    return true;
-                }
-            }
-        }
-    }
-    handlePost = async() => {
-       let validation = this.validation();
-        if (validation) {
+        let validation = Validation.draftPostEditor(postTitle, this.state.Category, this.state.model);
+        if (validation === true) {
             const formData = new FormData();
             formData.append('file', document.getElementById('profilepic').files[0]);
             formData.append('title', this.state.title);
@@ -99,10 +77,13 @@ class Editor extends Component {
             formData.append('isDraft', 0);
             formData.append('postId', this.props.match.params.id);
             const savePostResponse = await EditorService.saveDraftPost(formData);
-            if(savePostResponse.success) {
+            if (savePostResponse.success) {
                 this.props.handleOpenSnackBar('Post Created Successfully!!');
                 this.props.history.push('/post/' + savePostResponse.id);
             }
+        }
+        else {
+            this.props.handleOpenSnackBar(validation);
         }
     }
     handleDiscardPost = async () => {

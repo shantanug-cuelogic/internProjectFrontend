@@ -10,33 +10,18 @@ import {
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
-import validator from 'validator';
 import Style from './ForgotPasswordStyle';
 import UserService from '../../Services/UserService';
+import Validation from '../../Utility/validation';
 
 class ForgotPassword extends React.Component {
     state = {
         succesful: null
     }
-    validation = () => {
-        let username = document.getElementById('username').value;
-        if (validator.isEmpty(username)) {
-            this.props.handleOpenSnackBar("Username Cannot be Empty");
-            return false;
-        }
-        else {
-            if (!validator.isEmail(username)) {
-                this.props.handleOpenSnackBar("Enter Valid Email");
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
-    }
     handleSubmit = async () => {
-        let validation = this.validation();
-        if (validation) {
+        const username = document.getElementById('username').value;
+        const validation = Validation.forgetPassword(username);
+        if (validation === true) {
             this.setState({
                 succesful: false
             });
@@ -51,6 +36,9 @@ class ForgotPassword extends React.Component {
                 this.props.handleOpenSnackBar(forgotPasswordResponse.data.message)
 
             }
+        }
+        else {
+            this.props.handleOpenSnackBar(validation);
         }
     }
     render() {

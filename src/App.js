@@ -4,30 +4,14 @@ import { withRouter } from 'react-router'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import * as actionTypes from './Store/Actions/actionTypes';
-
-import SignIn from './Components/Sign In/Sign In';
-import SignUp from './Components/Sign Up/Sign Up';
-import BlogBuilder from './Containers/BlogBuilder/BlogBuilder';
-import Post from './Containers/Post/Post';
-import Profile from './Components/Profile/Profile';
-import Editor from './Containers/Editor/Editor';
+import asyncImports from './Utility/asyncImports';
 import Layout from './Components/Layout/Layout';
-import Drafts from './Components/Drafts/Drafts';
-import DraftEditor from './Containers/Editor/DraftEditor';
-import EditPost from './Containers/Post/EditPost';
-import Dashboard from './Containers/Dashboard/Dashboard';
-import Category from './Containers/Category/Category';
-import SearchPost from './Components/SearchPost/SearchPost';
-import AuthorProfile from './Containers/AuthorProfile/AuthorProfile';
-import ForgotPassword from './Components/ForgotPassword/ForgotPassword';
-import PasswordRecover from './Components/PasswordRecover/PasswordRecover';
-import UpdateProfile from './Components/UpdateProfile/UpdateProfile';
-import HigherOrderComponent from './HigherOrderComponent/HigherOrderComponent';
 import Snackbar from '@material-ui/core/Snackbar';
 import UserService from './Services/UserService';
-
 import DarkTheme from './Themes/DarkTheme';
 import DefaultTheme from './Themes/DefaultTheme';
+import { routes } from './Utility/Routes';
+
 
 class App extends Component {
   componentDidMount = async () => {
@@ -55,24 +39,31 @@ class App extends Component {
   };
   render() {
     let authenticatedRoutes = null;
-    if (this.props.auth) {
-      authenticatedRoutes =
-        <HigherOrderComponent>
-          <Route path='/editor' component={Editor}></Route>
-          <Route path='/profile' component={Profile}></Route>
-          <Route path='/createpost' component={Editor} ></Route>
-          <Route path='/dashboard' component={Dashboard} ></Route>
-          <Route path="/updateprofile" component={UpdateProfile}> </Route>
-          <Route path="/drafts" component={Drafts}> </Route>
-          <Route path="/drafteditor/:id" component={DraftEditor}> </Route>
-        </HigherOrderComponent>
-
-
-    }
+    const pathname = this.props.location.pathname.split("/");
+    authenticatedRoutes = routes.map((route) => {
+      if (pathname.length > 2) {
+        if (route.path === pathname[1]) {
+          const url = `/${pathname[1]}/:id`
+          return (
+            <Switch>
+              <Route path={url} component={route.component} />
+            </Switch>
+          )
+        }
+      }
+      else {
+        if (route.path === this.props.location.pathname) {
+          return (
+            <Switch>
+              <Route path={route.path} component={route.component} />
+            </Switch>
+          )
+        }
+      }
+    })
     let updateRoute = null;
-
     if (this.props.postUserId === this.props.userId) {
-      updateRoute = <Route path='/editpost/:id' component={EditPost}></Route>
+      updateRoute = <Route path='/editpost/:id' component={asyncImports.asyncEditPost}></Route>
     }
     const theme = this.props.isDark ? createMuiTheme(DarkTheme) : createMuiTheme(DefaultTheme);
     return (
@@ -80,27 +71,8 @@ class App extends Component {
         <div className="App">
           <Layout logout={this.logout} />
           <div style={{ textAlign: 'center', width: '90%', marginLeft: '5%', marginRight: '5%' }}>
-            <Switch>
-              <Route path='/signin' component={SignIn}></Route>
-              <Route path='/signup' component={SignUp}></Route>
-              <Route path='/post/:id' component={Post} ></Route>
-              {/* <Route path='/editpost/:id' component={EditPost}></Route> */}
-              {/* <Route path='/editor' component={Editor}></Route>
-              <Route path='/profile' component={Profile}></Route>
-              <Route path='/createpost' component={Editor} ></Route>
-              <Route path='/dashboard' component={Dashboard} ></Route>
-              <Route path="/updateprofile" component={UpdateProfile}> </Route>
-              <Route path="/drafts" component={Drafts}> </Route>
-              <Route path="/drafteditor/:id" component={DraftEditor}> </Route> */}
-              {updateRoute}
-             {authenticatedRoutes}
-              <Route path='/category/:id' component={Category} ></Route>
-              <Route path='/search' component={SearchPost} ></Route>
-              <Route path='/authorprofile/:userId' component={AuthorProfile} ></Route>
-              <Route path='/forgotpassword' component={ForgotPassword}></Route>
-              <Route path='/recoverpassword/:authToken' component={PasswordRecover}></Route>
-              <Route path='/' exact component={BlogBuilder}></Route>
-            </Switch>
+            {authenticatedRoutes}
+            {updateRoute}
           </div>
           <Snackbar
             anchorOrigin={{

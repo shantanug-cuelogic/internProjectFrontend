@@ -12,7 +12,8 @@ const initialState = {
     allowedToLike : false,
     likes : 0,
     views: 0,
-    postCategory:''
+    postCategory:'',
+    postTimestamp:null
 }
 
 const reducer = (state = initialState, action) => {
@@ -28,7 +29,8 @@ const reducer = (state = initialState, action) => {
                 postContent: action.postContent,
                 userId: action.userId,
                 allcomments: action.allcomments,
-                postCategory: action.category
+                postCategory: action.category,
+                postTimestamp: action.postTimestamp
             }
 
         }

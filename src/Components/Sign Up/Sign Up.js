@@ -5,15 +5,17 @@ import {
   Paper,
   Grid,
   Button,
-  Typography,
+  Typography
 } from '@material-ui/core';
-import validator from 'validator';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import GoogleLogin from 'react-google-login';
 import styles from './SignupStyle';
 import UserService from '../../Services/UserService';
+import ReactPasswordStrength from 'react-password-strength';
+import ValidationUtility from '../../Utility/validation';
+
 
 class SignUpProcess extends React.Component {
   constructor(props) {
@@ -36,7 +38,6 @@ class SignUpProcess extends React.Component {
   componentDidMount() {
     ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
       if (value !== this.state.formData.password) {
-
         this.setState({
           signUpButton: false
         })
@@ -47,10 +48,8 @@ class SignUpProcess extends React.Component {
       })
       return true;
     });
-
     ValidatorForm.addValidationRule('isEmpty', (value) => {
       if (value.length === 0) {
-
         this.setState({
           signUpButton: false
         })
@@ -62,45 +61,6 @@ class SignUpProcess extends React.Component {
     });
   }
 
-  validation = () => {
-    if (this.state.formData.firstName.length === 0) {
-      this.props.handleOpenSnackBar('First Name is Empty');
-      return false;
-    }
-    else {
-      if (this.state.formData.lastName.length === 0) {
-        this.props.handleOpenSnackBar('Last Name is Empty');
-        return false;
-      }
-      else {
-        if (this.state.formData.email.length === 0) {
-          this.props.handleOpenSnackBar("Email cannot be Empty");
-          return false;
-        }
-        else {
-          if (this.state.formData.password.length === 0) {
-            this.props.handleOpenSnackBar('Password cannot be empty');
-            return false;
-          }
-          else {
-            if (!validator.isEmail(this.state.formData.email)) {
-              this.props.handleOpenSnackBar('Enter Valid Email Id');
-              return false;
-            }
-            else {
-              if (this.state.formData.password === this.state.formData.repeatPassword) {
-                return true;
-              }
-              else {
-                this.props.handleOpenSnackBar('Password doest not Match')
-                return false;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
   responseGoogleSuccess = async (GoogleResponse) => {
     const userRegisterResponse = await UserService.userSignUp(
       GoogleResponse.w3.ofa,
@@ -139,9 +99,8 @@ class SignUpProcess extends React.Component {
   }
 
   handleSubmit = async () => {
-
-    let validation = this.validation();
-    if (validation) {
+    const validation = ValidationUtility.signUpValidation(this.state.formData.firstName,this.state.formData.lastName,this.state.formData.email,this.state.formData.password ,this.state.formData.repeatPassword );
+    if (validation === true) {
       const userRegisterResponse = await UserService.userSignUp(
         this.state.formData.firstName,
         this.state.formData.lastName,
@@ -173,14 +132,31 @@ class SignUpProcess extends React.Component {
         this.props.handleOpenSnackBar("Username already exists");
       }
     }
+    else {
+      this.props.handleOpenSnackBar(validation);
+    }
   }
   handleChange(event) {
     const { formData } = this.state;
     formData[event.target.name] = event.target.value;
     this.setState({ formData });
   }
+
+  handleChangePassword = () => {
+    const pass = document.getElementById('inputPassword1').value
+    const { formData } = this.state;
+    formData['password'] =pass;
+    this.setState({ formData });
+  }
   render() {
     const { classes } = this.props;
+    const inputProps = {
+      placeholder: "Enter a password",
+      autoFocus: true,
+      className: 'another-input-prop-class-name',
+    };
+
+
     return (
       <div className={classes.root}>
         <Typography variant="display2" className={classes.Title} > SIGN UP </Typography>
@@ -224,7 +200,7 @@ class SignUpProcess extends React.Component {
                 validators={['required', 'isEmail', 'isEmpty']}
                 errorMessages={['this field is required', 'email is not valid', 'field cannot be empty']}
               />
-              <Grid item>
+              {/* <Grid item>
                 <TextValidator
                   className={classes.Inputs}
                   label="Password"
@@ -235,6 +211,22 @@ class SignUpProcess extends React.Component {
                   validators={['required']}
                   errorMessages={['this field is required']}
                 />
+              </Grid> */}
+              <Grid item>
+                
+                <ReactPasswordStrength
+                  ref={ref => this.ReactPasswordStrength = ref}
+                  minLength={6}
+                  inputProps={{ ...inputProps, id: 'inputPassword1' }}
+                  changeCallback={this.handleChangePassword}
+                  className={classes.Inputs}
+                  label="Password"
+                  onChange={this.handleChange}
+                  type="password"
+                  name="password"
+                  value={this.state.formData.password}
+                />
+              
               </Grid>
               <Grid item>
                 <TextValidator

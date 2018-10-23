@@ -13,10 +13,10 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
-import validator from 'validator';
 import { NavLink } from 'react-router-dom';
 import styles from './SignInStyle';
 import UserService from '../../Services/UserService';
+import Validation from '../../Utility/validation';
 
 class SignIn extends React.Component {
     TransitionUp = (props) => {
@@ -28,38 +28,11 @@ class SignIn extends React.Component {
         document.getElementById('password').value = ""
     }
 
-    validation = () => {
-        let email = document.getElementById('email').value;
-        let password = document.getElementById('password').value;
-
-        if (validator.isEmpty(email)) {
-            this.props.handleOpenSnackBar("Username Cannot be Empty");
-            return false;
-        }
-        else {
-            if (!validator.isEmail(email)) {
-                this.props.handleOpenSnackBar("Enter Valid Email");
-                return false;
-            }
-            else {
-                if (validator.isEmpty(password)) {
-
-                    this.props.handleOpenSnackBar("Password cannot be empty");
-                    return false;
-                }
-                else {
-                    return true;
-                }
-            }
-        }
-    }
-
-
     handleSignIn = async () => {
-
-        let validation = this.validation();
-
-        if (validation) {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const validation = Validation.signInValidation(email, password);
+        if (validation === true) {
             const signinResponse = await UserService.userSignIn(document.getElementById('email').value, document.getElementById('password').value);
             if (signinResponse.success) {
                 this.props.handleOpenSnackBar("Succesfully Signed In");
@@ -80,6 +53,9 @@ class SignIn extends React.Component {
                 this.props.handleOpenSnackBar("Username or Password is Wrong")
             }
 
+        }
+        else {
+            this.props.handleOpenSnackBar(validation);
         }
     }
     render() {
