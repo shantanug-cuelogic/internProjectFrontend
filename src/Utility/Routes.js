@@ -21,7 +21,7 @@ export const routes = [
         auth:false
     },
     {
-        path: '/post/:id',
+        path: 'post',
         component:asyncImports.asyncPost,
         exact:true,
         auth:false
@@ -63,13 +63,13 @@ export const routes = [
         auth:false
     },
     {
-        path: '/drafteditor/:id',
+        path: 'drafteditor',
         component: asyncImports.asyncDraftEditor,
         exact:true,
         auth:false
     },
     {
-        path: '/category/:id',
+        path: 'category',
         component:asyncImports.asyncCategory,
         exact:true,
         auth:false
@@ -81,7 +81,7 @@ export const routes = [
         auth:false
     },
     {
-        path: '/authorprofile/:userId',
+        path: 'authorprofile',
         component: asyncImports.asyncAuthorProfile,
         exact:true,
         auth:false
@@ -93,7 +93,7 @@ export const routes = [
         auth:false
     },
     {
-        path: '/recoverpassword/:authToken',
+        path: 'recoverpassword',
         component:asyncImports.asyncPasswordRecover,
         exact:true,
         auth:false

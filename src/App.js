@@ -39,15 +39,27 @@ class App extends Component {
   };
   render() {
     let authenticatedRoutes = null;
+    const pathname = this.props.location.pathname.split("/");
     authenticatedRoutes = routes.map((route) => {
-      if (route.path === this.props.location.pathname) {
-        return (
-          <Switch>
-            <Route path={route.path} component={route.component} />
-          </Switch>
-        )
+      if (pathname.length > 2) {
+        if (route.path === pathname[1]) {
+          const url = `/${pathname[1]}/:id`
+          return (
+            <Switch>
+              <Route path={url} component={route.component} />
+            </Switch>
+          )
+        }
       }
-
+      else {
+        if (route.path === this.props.location.pathname) {
+          return (
+            <Switch>
+              <Route path={route.path} component={route.component} />
+            </Switch>
+          )
+        }
+      }
     })
     let updateRoute = null;
     if (this.props.postUserId === this.props.userId) {

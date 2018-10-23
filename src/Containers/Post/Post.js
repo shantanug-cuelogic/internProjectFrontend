@@ -65,6 +65,7 @@ class Post extends Component {
 
     render() {
         const { classes } = this.props;
+        
         return (
             <div className={classes.root}>
                 <Author

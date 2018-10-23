@@ -12,7 +12,7 @@ class ForgotPassword extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            authToken: this.props.match.params.authToken,
+            authToken: this.props.match.params.id,
             isValidToken: false,
             firstName: '',
             lastName: '',

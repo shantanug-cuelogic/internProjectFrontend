@@ -28,7 +28,7 @@ class Profile extends React.Component {
     }
 
     async componentDidMount() {
-        const authorInformaton = await AuthorProfileServices.getAuthorInformation(this.props.match.params.userId);
+        const authorInformaton = await AuthorProfileServices.getAuthorInformation(this.props.match.params.id);
         const { firstName, lastName, email, profileImage, followers } = authorInformaton;
         this.setState({
             firstName: firstName,
