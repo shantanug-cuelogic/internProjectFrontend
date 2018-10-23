@@ -1,12 +1,12 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { Paper, Grid, Typography, Button } from '@material-ui/core';
-import validator from 'validator';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import { connect } from 'react-redux';
 import Style from './PasswordRecoverStyle';
 import UserService from '../../Services/UserService';
+import Validation from '../../Utility/validation';
 
 class ForgotPassword extends React.Component {
     constructor(props) {
@@ -45,32 +45,12 @@ class ForgotPassword extends React.Component {
             this.props.handleOpenSnackBar("User authenticated");
         }
     }
-    validation = () => {
-        let password = document.getElementById('password').value;
-        let confirmpassword = document.getElementById('confirmpassword').value;
-        if (validator.isEmpty(password)) {
-            this.props.handleOpenSnackBar("Password Cannot Be Empty");
-            return false;
-        }
-        else {
-            if (validator.isEmpty(confirmpassword)) {
-                this.props.handleOpenSnackBar("Password Cannot Be Empty");
-                return false;
-            }
-            else {
-                if (password !== confirmpassword) {
-                    this.props.handleOpenSnackBar("Password does not match");
-                    return false
-                }
-                else {
-                    return true
-                }
-            }
-        }
-    }
+   
     handleUpdatePassword = async () => {
-        let validation = this.validation()
-        if (validation) {
+        const password = document.getElementById('password').value;
+        const confirmpassword = document.getElementById('confirmpassword').value;
+        const validation = Validation.passwordRecovery(password,confirmpassword);
+        if (validation === true) {
             const updatePasswordResponse = await UserService.changeUserPassword(this.state.userId, this.state.password);
             if (updatePasswordResponse.success) {
                 this.props.handleOpenSnackBar("Password Changed Succesfully");
@@ -79,6 +59,9 @@ class ForgotPassword extends React.Component {
             else {
                 this.props.handleOpenSnackBar(updatePasswordResponse.message);
             }
+        }
+        else {
+            this.props.handleOpenSnackBar(validation);
         }
     }
     handleChangePassword = (event) => {

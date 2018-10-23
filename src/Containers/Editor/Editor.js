@@ -17,7 +17,6 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Thumbnail from '../../Components/ImageUploadPreviev/ImageUploadPreview';
-import validator from 'validator';
 import { connect } from 'react-redux';
 import * as actionTypes from '../../Store/Actions/actionTypes';
 import { withRouter } from 'react-router';
@@ -25,6 +24,8 @@ import styles from './EditorStyle'
 import categories from './PostCategory';
 import config from './EditorConfig';
 import EditorService from '../../Services/EditorService';
+import Validation from '../../Utility/validation';
+
 class Editor extends Component {
     state = {
         model: '',
@@ -41,40 +42,12 @@ class Editor extends Component {
             Category: event.target.value,
         });
     };
-    validation = () => {
-        let postTitle = document.getElementById('postTitle').value;
-        let image = document.getElementById('profilepic').files[0];
-        if (validator.isEmpty(postTitle)) {
-            this.props.handleOpenSnackBar('Post Title Cannot Be Empty');
-            return false;
-        }
-        else {
 
-            if (validator.isEmpty(this.state.Category)) {
-                this.props.handleOpenSnackBar('Please Select Category ');
-                return false;
-            }
-            else {
-                if (image === undefined) {
-                    this.props.handleOpenSnackBar('Thumbnail Cannot Be Empty')
-                    return false;
-                }
-
-                else {
-                    if (validator.isEmpty(this.state.model)) {
-                        this.props.handleOpenSnackBar('Post Content Cannot Be Empty');
-                        return false;
-                    }
-                    else {
-                        return true;
-                    }
-                }
-            }
-        }
-    }
     handlePost = async () => {
-        let validation = this.validation();
-        if (validation) {
+        const postTitle = document.getElementById('postTitle').value;
+        const image = document.getElementById('profilepic').files[0];
+        const validation = Validation.createPostValidation(postTitle,this.state.Category,image,this.state.model);
+        if (validation === true) {
             const formData = new FormData();
             formData.append('file', document.getElementById('profilepic').files[0]);
             formData.append('title', document.getElementById('postTitle').value);
@@ -89,6 +62,9 @@ class Editor extends Component {
                 this.props.handleOpenSnackBar('Post Created Successfully!!');
                 this.props.history.push('/post/' + postBlogResponse.id);
             }
+        }
+        else {
+            this.props.handleOpenSnackBar(validation);
         }
     }
 

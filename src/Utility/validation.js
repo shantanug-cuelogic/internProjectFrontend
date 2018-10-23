@@ -2,46 +2,135 @@ import validator from 'validator';
 
 class Validations {
 
-    signUpValidation = (firstName, lastName , email, password, repeatPassword) => {
-        if (firstName.length === 0) {
-           // this.props.handleOpenSnackBar('First Name is Empty');
-            return 'First Name is Empty';
+  signUpValidation = (firstName, lastName, email, password, repeatPassword) => {
+    if (firstName.length === 0) {
+      return 'First Name is Empty';
+    }
+    else {
+      if (lastName.length === 0) {
+        return 'Last Name is Empty';
+      }
+      else {
+        if (email.length === 0) {
+          return "Email cannot be Empty";
+        }
+        else {
+          if (password.length === 0) {
+            return 'Password cannot be empty';
           }
           else {
-            if (lastName.length === 0) {
-            //  this.props.handleOpenSnackBar('Last Name is Empty');
-              return 'Last Name is Empty';
+            if (!validator.isEmail(email)) {
+              return 'Enter Valid Email Id';
             }
             else {
-              if (email.length === 0) {
-                //this.props.handleOpenSnackBar("Email cannot be Empty");
-                return "Email cannot be Empty";
+              if (password === repeatPassword) {
+                return true;
               }
               else {
-                if (password.length === 0) {
-                 // this.props.handleOpenSnackBar('Password cannot be empty');
-                  return 'Password cannot be empty';
-                }
-                else {
-                  if (!validator.isEmail(email)) {
-                  //  this.props.handleOpenSnackBar('Enter Valid Email Id');
-                    return 'Enter Valid Email Id';
-                  }
-                  else {
-                    if (this.state.formData.password === this.state.formData.repeatPassword) {
-                      return true;
-                    }
-                    else {
-                     // this.props.handleOpenSnackBar('Password doest not Match')
-                      return 'Password doest not Match';
-                    }
-                  }
-                }
+                return 'Password doest not Match';
               }
             }
           }
+        }
+      }
     }
+  }
 
+  signInValidation = (email, password) => {
+    if (email.length === 0) {
+      return "Email cannot be Empty";
+    }
+    else {
+      if (password.length === 0) {
+        return 'Password cannot be empty';
+      }
+      else {
+        return true;
+      }
+    }
+  }
 
+  createPostValidation = (postTitle, category, image, postContent) => {
+    if (validator.isEmpty(postTitle)) {
+      return 'Post Title Cannot Be Empty';
+    }
+    else {
+
+      if (validator.isEmpty(category)) {
+        return 'Please Select Category ';
+      }
+      else {
+        if (image === undefined) {
+          return 'Thumbnail Cannot Be Empty';
+        }
+
+        else {
+          if (validator.isEmpty(postContent)) {
+            return 'Post Content Cannot Be Empty';
+          }
+          else {
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  draftPostEditor = (postTitle, category, postContent) => {
+    if (validator.isEmpty(postTitle)) {
+      return 'Post Title Cannot Be Empty';
+    }
+    else {
+
+      if (validator.isEmpty(category)) {
+        return 'Please Select Category ';
+      }
+      else {
+        if (validator.isEmpty(postContent)) {
+          return 'Post Content Cannot Be Empty';
+        }
+        else {
+          return true;
+        }
+      }
+    }
+  }
+
+  passwordRecovery = (password, confirmpassword) => {
+    if (validator.isEmpty(password)) {
+      return "Password Cannot Be Empty";
+    }
+    else {
+      if (validator.isEmpty(confirmpassword)) {
+        return "Password Cannot Be Empty";
+      }
+      else {
+        if (password !== confirmpassword) {
+          return "Password does not match"
+        }
+        else {
+          return true
+        }
+      }
+    }
+  }
+
+  forgetPassword = (username) => {
+    if (validator.isEmpty(username)) {
+      return "Username Cannot be Empty";
+    }
+    else {
+      if (!validator.isEmail(username)) {
+        return "Enter Valid Email";
+      }
+      else {
+        return true;
+      }
+    }
+  }
 }
+
+
+
+
 export default new Validations(); 

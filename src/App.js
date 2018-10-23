@@ -10,7 +10,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import UserService from './Services/UserService';
 import DarkTheme from './Themes/DarkTheme';
 import DefaultTheme from './Themes/DefaultTheme';
-
+import { routes } from './Utility/Routes';
 
 
 class App extends Component {
@@ -39,44 +39,17 @@ class App extends Component {
   };
   render() {
     let authenticatedRoutes = null;
-    if (this.props.auth) {
-      authenticatedRoutes =
-        <Switch>
-          <Route path='/signin' component={asyncImports.asyncSignIn}></Route>
-          <Route path='/signup' component={asyncImports.asyncSignUp}></Route>
-          <Route path='/post/:id' component={asyncImports.asyncPost} ></Route>
-          <Route path='/editor' component={asyncImports.asyncEditor}></Route>
-          <Route path='/profile' component={asyncImports.asyncProfile}></Route>
-          <Route path='/createpost' component={asyncImports.asyncEditor} ></Route>
-          <Route path='/dashboard' component={asyncImports.asyncDashboard} ></Route>
-          <Route path="/updateprofile" component={asyncImports.asyncUpdateProfile}> </Route>
-          <Route path="/drafts" component={asyncImports.asyncDrafts}> </Route>
-          <Route path="/drafteditor/:id" component={asyncImports.asyncDraftEditor}> </Route>
-          <Route path='/category/:id' component={asyncImports.asyncCategory} ></Route>
-          <Route path='/search' component={asyncImports.asyncSearchPost} ></Route>
-          <Route path='/authorprofile/:userId' component={asyncImports.asyncAuthorProfile} ></Route>
-          <Route path='/forgotpassword' component={asyncImports.asyncForgotPassword}></Route>
-          <Route path='/recoverpassword/:authToken' component={asyncImports.asyncPasswordRecover}></Route>
-          <Route path='/' exact component={asyncImports.asyncBlogBuilder}></Route>
-        </Switch>
-    }
-    else {
-      authenticatedRoutes =
-        <Switch>
-          <Route path='/signin' component={asyncImports.asyncSignIn}></Route>
-          <Route path='/signup' component={asyncImports.asyncSignUp}></Route>
-          <Route path='/post/:id' component={asyncImports.asyncPost} ></Route>
-          <Route path='/category/:id' component={asyncImports.asyncCategory} ></Route>
-          <Route path='/search' component={asyncImports.asyncSearchPost} ></Route>
-          <Route path='/authorprofile/:userId' component={asyncImports.asyncAuthorProfile} ></Route>
-          <Route path='/forgotpassword' component={asyncImports.asyncForgotPassword}></Route>
-          <Route path='/recoverpassword/:authToken' component={asyncImports.asyncPasswordRecover}></Route>
-          <Route path='/' exact component={asyncImports.asyncBlogBuilder}></Route>
-        </Switch>
-    }
+    authenticatedRoutes = routes.map((route) => {
+      if (route.path === this.props.location.pathname) {
+        return (
+          <Switch>
+            <Route path={route.path} component={route.component} />
+          </Switch>
+        )
+      }
 
+    })
     let updateRoute = null;
-
     if (this.props.postUserId === this.props.userId) {
       updateRoute = <Route path='/editpost/:id' component={asyncImports.asyncEditPost}></Route>
     }
@@ -86,11 +59,8 @@ class App extends Component {
         <div className="App">
           <Layout logout={this.logout} />
           <div style={{ textAlign: 'center', width: '90%', marginLeft: '5%', marginRight: '5%' }}>
-            {/* <div id="google_translate_element" style={{ display: 'inline', height: 27, float: 'right' , marginTop:'10%' }} ></div> */}
-
-              {updateRoute}
-              {authenticatedRoutes}
-             
+            {authenticatedRoutes}
+            {updateRoute}
           </div>
           <Snackbar
             anchorOrigin={{
