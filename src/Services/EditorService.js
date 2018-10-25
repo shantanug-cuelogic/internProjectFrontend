@@ -4,7 +4,7 @@ class EditorService {
 
     postBlog = (formData) => {
         return new Promise((resolve, reject) => {
-            axios.post('/posts/create', formData, {
+            axios.post('/posts', formData, {
                 headers: {
                     'accept': 'application/json',
                     'Accept-Language': 'en-US,en;q=0.8',
@@ -22,7 +22,7 @@ class EditorService {
 
     getDraftPost = (postId) => {
         return new Promise ((resolve,reject)=>{
-            axios.get('/posts/?postId=' +postId)
+            axios.get(`/user/${postId}/posts`)
             .then((response) => {
                resolve(response.data);
             })

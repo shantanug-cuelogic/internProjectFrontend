@@ -37,7 +37,7 @@ class Profile extends React.Component {
             profileImage: profileImage,
             followers: followers
         });
-        const allAuthorPosts = await AuthorProfileServices.getAuthorPosts(this.props.match.params.userId)
+        const allAuthorPosts = await AuthorProfileServices.getAuthorPosts(this.props.match.params.id)
         this.setState({
             authorPosts: [...allAuthorPosts],
         });
@@ -52,8 +52,8 @@ class Profile extends React.Component {
             }
             else {
                 feedbackButton = <div>
-                    <FeedbackModal name={this.state.firstName} authorId={this.props.match.params.userId} />
-                    <MessageModal name={this.state.firstName} authorId={this.props.match.params.userId} />
+                    <FeedbackModal name={this.state.firstName} authorId={this.props.match.params.id} />
+                    <MessageModal name={this.state.firstName} authorId={this.props.match.params.id} />
                 </div>
             }
         }

@@ -8,22 +8,18 @@ class DashboardService {
             axios.get(`/user/:${userId}/recentactivity/`)
                 .then((response) => {
                     if (response.data.success) {
-
                         resolve(response.data.result)
                     }
                 })
                 .catch((error) => {
                     console.log(error);
                 })
-
         });
     }
     getLikeCount = (likeUrl) => {
-
         return new Promise((resolve, reject) => {
             axios.get(likeUrl)
                 .then((response) => {
-
                     if (response.data.success) {
                         resolve(response.data.likeCount)
                     }

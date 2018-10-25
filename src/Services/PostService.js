@@ -1,92 +1,52 @@
 import axios from 'axios';
+import restApi from '../Utility/restApi';
 
 class PostService {
     fetchAllPostData = (postId) => {
-        return new Promise((resolve, reject) => {
-            axios.get('/posts/?postId=' + postId)
-                .then((response) => {
-                    if (response.data.success) {
-                        resolve(response.data.result[0])
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+        return new Promise(async (resolve, reject) => {
+            const response = await restApi.getRequest('/posts/?postId=' + postId);
+            resolve(response);
         });
     }
 
     fetchAllComments = (postId) => {
-        return new Promise((resolve, reject) => {
-
-            axios.get(`/posts/${postId}/comments`)
-                .then((response) => {
-
-                    if (response.data.success) {
-                        resolve(response.data.result);
-                    }
-                    else {
-                        let array = []
-                        resolve(array);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
+        return new Promise(async (resolve, reject) => {
+            const response = await restApi.getRequest(`/posts/${postId}/comments`);
+            resolve(response);
         });
     }
 
     fetchTotalLikesToPost = (postId) => {
-        return new Promise((resolve, reject) => {
-            axios.get(`/posts/${postId}/likes`)
-                .then((res) => {
-                    if (res.data.success) {
-                        resolve(res.data.count);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+        return new Promise(async (resolve, reject) => {
+            const response = await restApi.getRequest(`/posts/${postId}/likes`);
+            resolve(response);
         });
     }
 
     fetchTotalViewsToPost = (postId) => {
-        return new Promise((resolve, reject) => {
-            axios.get(`/posts/${postId}/views/` )
-                .then((response) => {
-                    if (response.data.success) {
-                        resolve(response.data.count)
-                        //this.props.totalViewsToPostReducer(response.data.count);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
+        return new Promise(async (resolve, reject) => {
+            const response = await restApi.getRequest(`/posts/${postId}/views/`);
+            resolve(response);
         });
     }
 
     fetchAuthorInformation = (userId) => {
-        return new Promise((resolve, reject) => {
-            axios.get('/user/profile/' + userId)
-                .then((response) => {
-                    resolve(response.data[0])
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
-        })
-    }
-    getPostRating = (postId) => {
-        return new Promise((resolve, reject) => {
-            axios.get(`/posts/${postId}/ratings`)
-                .then((response) => {
-                    resolve(response.data.Ratings)
 
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
+        return new Promise(async (resolve, reject) => {
+            const response = await restApi.getRequest('/user/profile/' + userId);
+            resolve(response[0]);
+        });
+
+    }
+    ////////////////////////////////////////////NOTWORKING//////////////////////////////////////////
+    getPostRating = (postId) => {
+        return new Promise(async (resolve, reject) => {
+            const response = await restApi.getRequest(`/posts/${postId}/ratings`);
+            console.log("===========>", response);
+            resolve(response);
         });
     }
+        ////////////////////////////////////////////NOTWORKING//////////////////////////////////////////
 
     postComment = (comment, postId) => {
         return new Promise((resolve, reject) => {
@@ -192,32 +152,32 @@ class PostService {
     }
 
     addViews = (postId) => {
-        return new Promise((resolve,reject)=>{
-            axios.post('/posts/views/add',{
-                postIdToView:postId,
+        return new Promise((resolve, reject) => {
+            axios.post('/posts/views/add', {
+                postIdToView: postId,
                 authToken: localStorage.getItem('authToken')
             })
-            .then((response)=>{
-                resolve(response.data);
-            })
-            .catch((error)=>{
-                console.log(error)
-            })
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
 
         });
     }
-    checkAlreadyLiked = (postId) =>{
-        return new Promise((resolve,reject)=>{
-            axios.post('/posts/likes/allowed',{
-                postIdToLike:postId,
-                authToken : localStorage.getItem('authToken')
+    checkAlreadyLiked = (postId) => {
+        return new Promise((resolve, reject) => {
+            axios.post('/posts/likes/allowed', {
+                postIdToLike: postId,
+                authToken: localStorage.getItem('authToken')
             })
-            .then((response)=>{
-                resolve(response.data);
-            })
-            .catch((error)=>{
-                console.log(error);
-            })
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
         })
     }
     addLike = (postId) => {
@@ -250,7 +210,7 @@ class PostService {
     }
     updatePost = (postId, postTitle, postContent, postCategory) => {
         return new Promise((resolve, reject) => {
-            axios.put('/posts/update', {
+            axios.put('/posts', {
                 postIdtoUpdate: postId,
                 title: postTitle,
                 postContent: postContent,
@@ -327,34 +287,34 @@ class PostService {
                 });
         });
     }
-    sendMeesage = (authorId,message) => {
-        return new Promise ((resolve,reject)=>{
-            axios.post('/user/messages',{
+    sendMeesage = (authorId, message) => {
+        return new Promise((resolve, reject) => {
+            axios.post('/user/messages', {
                 authToken: localStorage.getItem('authToken'),
-                authorId : authorId,
-                message : message
+                authorId: authorId,
+                message: message
             })
-            .then((response)=>{
-               resolve(response.data);
-            })
-            .catch((error)=>{
-                reject(error);
-            });
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
         });
     }
-    ratePost = (postId,ratings) => {
-        return new Promise((resolve,reject)=>{
-            axios.put('/posts/ratings',{
-                authToken :localStorage.getItem('authToken'),
-                postId : postId,
+    ratePost = (postId, ratings) => {
+        return new Promise((resolve, reject) => {
+            axios.put('/posts/ratings', {
+                authToken: localStorage.getItem('authToken'),
+                postId: postId,
                 rating: ratings
             })
-            .then((response) =>{
-              resolve(response.data);
-            })
-            .catch((error) =>{
-                reject(error);
-            })
+                .then((response) => {
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    reject(error);
+                })
         });
     }
 

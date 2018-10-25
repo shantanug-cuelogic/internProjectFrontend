@@ -59,8 +59,7 @@ class DashBoard extends React.Component {
         const viewCount = await DashboardServices.getViewCount(viewUrl);
         this.props.handleViews(viewCount);
         const postCount = await DashboardServices.getPostCount(postUrl);
-      console.log(postCount);
-        this.props.handlePosts(postCount);
+         this.props.handlePosts(postCount);
         const commentCount = await DashboardServices.getCommentCount(commentUrl);
         this.props.handleComments(commentCount);
         const followerInformation = await DashboardServices.getFollowerInformation(this.props.userId);
