@@ -50,10 +50,10 @@ class DashBoard extends React.Component {
     async componentDidMount() {
         const userRecentActivity = await DashboardServices.getUserRecentActivity(this.props.userId);
         this.props.handleRecentUserActivity(userRecentActivity)
-        let likeUrl = '/totallikes/' + this.props.userId;
-        let viewUrl = '/totalviews/' + this.props.userId;
-        let postUrl = '/totalposts/' + this.props.userId;
-        let commentUrl = '/totalcomments/' + this.props.userId;
+        let likeUrl = '/users/likes/' + this.props.userId;
+        let viewUrl = '/users/views/' + this.props.userId;
+        let postUrl = '/users/posts/' + this.props.userId;
+        let commentUrl = '/users/comments/' + this.props.userId;
         const likeCount = await DashboardServices.getLikeCount(likeUrl);
         this.props.handleLikes(likeCount);
         const viewCount = await DashboardServices.getViewCount(viewUrl);

@@ -16,7 +16,7 @@ class AuthorProfileService {
 
     getAuthorPosts = (authorId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/post/' + authorId)
+            axios.get('/posts/?userId =' + authorId)
             .then((response) => {
                 if (response.data.success) {
                     resolve(response.data.result);

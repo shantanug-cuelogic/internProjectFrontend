@@ -3,7 +3,7 @@ import axios from 'axios';
 class UserService {
     forgotPassword = (email) => {
         return new Promise((resolve, reject) => {
-            axios.post('/forgotPassword', {
+            axios.post('/user/forgotPassword', {
                 email: document.getElementById('username').value
             })
                 .then((response) => {
@@ -16,7 +16,7 @@ class UserService {
     }
     checkForgetToken = (token) => {
         return new Promise((resolve, reject) => {
-            axios.post('/checkforgettoken', {
+            axios.post('/user/token', {
                 forgetToken: token
             })
                 .then((response) => {
@@ -29,7 +29,7 @@ class UserService {
     }
     changeUserPassword = (userId, password) => {
         return new Promise((resolve, reject) => {
-            axios.put('/changepassword', {
+            axios.put('/user/changepassword', {
                 userId: userId,
                 password: password
             })
@@ -75,7 +75,7 @@ class UserService {
     }
     deleteUser = (userId) => {
         return new Promise((resolve, reject) => {
-            axios.put('/deleteuser', {
+            axios.put('/user/delete', {
                 authToken: localStorage.getItem('authToken'),
                 userIdtoDelete: userId
             })
@@ -91,7 +91,7 @@ class UserService {
 
     getAllUser = () => {
         return new Promise((resolve, reject) => {
-            axios.get('/allusers')
+            axios.get('/users')
                 .then((response) => {
                     resolve(response.data);
                 })
@@ -102,7 +102,7 @@ class UserService {
     }
     authorFollow = (authorId) => {
         return new Promise ((resolve,reject)=>{
-            axios.post('/follower/add', {
+            axios.post('/followers/add', {
                 authToken: localStorage.getItem('authToken'),
                 userIdToFollow: authorId
             })
@@ -116,7 +116,7 @@ class UserService {
     }
     authorUnfollow = (authorId) => {
         return new Promise ((resolve,reject)=>{
-            axios.put('/follower/unfollow', {
+            axios.put('/followers/unfollow', {
                 authToken: localStorage.getItem('authToken'),
                 userIdToUnfollow: authorId
             })
@@ -130,7 +130,7 @@ class UserService {
     }
     authenticateUser = () =>{
         return new Promise ((resolve,reject)=>{
-            axios.post('/authenticate',{
+            axios.post('/user/authenticate',{
                 authToken:localStorage.getItem('authToken'),
                 email:localStorage.getItem('email')
               })
@@ -145,7 +145,7 @@ class UserService {
 
     updateUserProfile = (formData) => {
         return new Promise ((resolve,reject)=>{
-            axios.put('/updateuserprofile', formData, {
+            axios.put('/user/update', formData, {
                 headers: {
                     'accept': 'application/json',
                     'Accept-Language': 'en-US,en;q=0.8',

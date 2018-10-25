@@ -3,10 +3,9 @@ import axios from 'axios';
 class PostService {
     fetchAllPostData = (postId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/post/getpost/' + postId)
+            axios.get('/posts/?postId=' + postId)
                 .then((response) => {
                     if (response.data.success) {
-
                         resolve(response.data.result[0])
                     }
                 })
@@ -19,7 +18,7 @@ class PostService {
     fetchAllComments = (postId) => {
         return new Promise((resolve, reject) => {
 
-            axios.get('/post/comment/' + postId)
+            axios.get(`/posts/${postId}/comments`)
                 .then((response) => {
 
                     if (response.data.success) {
@@ -38,7 +37,7 @@ class PostService {
 
     fetchTotalLikesToPost = (postId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/post/like/totallikes/' + postId)
+            axios.get('/posts/likes/' + postId)
                 .then((res) => {
                     if (res.data.success) {
                         resolve(res.data.count);
@@ -53,7 +52,7 @@ class PostService {
 
     fetchTotalViewsToPost = (postId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/post/view/totalviews/' + postId)
+            axios.get('/posts/views/' + postId)
                 .then((response) => {
                     if (response.data.success) {
                         resolve(response.data.count)
@@ -79,7 +78,7 @@ class PostService {
     }
     getPostRating = (postId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/post/ratings/' + postId)
+            axios.get(`/posts/${postId}/ratings`)
                 .then((response) => {
                     resolve(response.data.Ratings)
 
@@ -92,7 +91,7 @@ class PostService {
 
     postComment = (comment, postId) => {
         return new Promise((resolve, reject) => {
-            axios.put('/post/comment/', {
+            axios.put('/posts/comments/', {
                 authToken: localStorage.getItem('authToken'),
                 postId: postId,
                 commentContent: comment
@@ -110,7 +109,7 @@ class PostService {
 
     deleteComment = (commentId) => {
         return new Promise((resolve, reject) => {
-            axios.put('/post/comment/delete', {
+            axios.put('/posts/comments/delete', {
                 commentIdtoDelete: commentId,
                 authToken: localStorage.getItem('authToken')
 
@@ -129,7 +128,7 @@ class PostService {
     followAllowedCheck = (userId) => {
 
         return new Promise((resolve, reject) => {
-            axios.post('/follower/allowed', {
+            axios.post('/followers/allowed', {
                 authToken: localStorage.getItem('authToken'),
                 userIdToFollow: userId
             })
@@ -156,7 +155,7 @@ class PostService {
 
     getAllPosts = () => {
         return new Promise((resolve, reject) => {
-            axios.get('/post/')
+            axios.get('/posts/')
                 .then((response) => {
                     resolve(response.data);
                 })
@@ -168,7 +167,7 @@ class PostService {
 
     getPostsByFilter = (filterName, filterValue) => {
         return new Promise((resolve, reject) => {
-            axios.get(`/post/${filterName}/${filterValue}`)
+            axios.get(`/posts/${filterName}/${filterValue}`)
                 .then((response) => {
                     resolve(response.data);
                 })
@@ -180,7 +179,7 @@ class PostService {
 
     deletePost = (postId) => {
         return new Promise((resolve, reject) => {
-            axios.post('/post/delete', {
+            axios.post('/posts/delete', {
                 authToken: localStorage.getItem('authToken'),
                 postIdtoDelete: postId
             })
@@ -195,7 +194,7 @@ class PostService {
 
     addViews = (postId) => {
         return new Promise((resolve,reject)=>{
-            axios.post('/post/view/add',{
+            axios.post('/posts/views/add',{
                 postIdToView:postId,
                 authToken: localStorage.getItem('authToken')
             })
@@ -210,7 +209,7 @@ class PostService {
     }
     checkAlreadyLiked = (postId) =>{
         return new Promise((resolve,reject)=>{
-            axios.post('/post/like/allowed',{
+            axios.post('/posts/likes/allowed',{
                 postIdToLike:postId,
                 authToken : localStorage.getItem('authToken')
             })
@@ -224,7 +223,7 @@ class PostService {
     }
     addLike = (postId) => {
         return new Promise((resolve, reject) => {
-            axios.post('/post/like/add', {
+            axios.post('/posts/likes/add', {
                 postIdToLike: postId,
                 authToken: localStorage.getItem('authToken')
             })
@@ -238,7 +237,7 @@ class PostService {
     }
     removeLike = (postId) => {
         return new Promise((resolve, reject) => {
-            axios.put('/post/like/remove', {
+            axios.put('/posts/likes/remove', {
                 postIdToUnlike: postId,
                 authToken: localStorage.getItem('authToken')
             })
@@ -252,7 +251,7 @@ class PostService {
     }
     updatePost = (postId, postTitle, postContent, postCategory) => {
         return new Promise((resolve, reject) => {
-            axios.put('/post/update', {
+            axios.put('/posts/update', {
                 postIdtoUpdate: postId,
                 title: postTitle,
                 postContent: postContent,
@@ -269,7 +268,7 @@ class PostService {
     }
     fetchPostHistory = (postId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/post/history/' + postId)
+            axios.get(`/posts/${postId}/history`)
                 .then((response) => {
                     resolve(response.data);
                 })
@@ -281,7 +280,7 @@ class PostService {
 
     fetchPopularPost = () => {
         return new Promise((resolve, reject) => {
-            axios.get('/post/popular')
+            axios.get('/posts/popular')
                 .then((response) => {
                     resolve(response.data);
                 })
@@ -293,7 +292,7 @@ class PostService {
 
     fetchDraftPosts = (userId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/post/draft/' + userId)
+            axios.get('/posts/draft/' + userId)
                 .then((response) => {
                     resolve(response.data);
                 })
@@ -305,7 +304,7 @@ class PostService {
 
     sendFeedback = (authorId, feedback) => {
         return new Promise((resolve, reject) => {
-            axios.post('/feedback', {
+            axios.post('/user/feedbacks', {
                 authToken: localStorage.getItem('authToken'),
                 authorId: authorId,
                 feedback: feedback
@@ -320,7 +319,7 @@ class PostService {
     }
     fetchCategoryPost = (category) => {
         return new Promise((resolve, reject) => {
-            axios.get('/post/'+category)
+            axios.get('/posts/'+category)
                 .then((response) => {
                     resolve(response.data);
                 })
@@ -331,7 +330,7 @@ class PostService {
     }
     sendMeesage = (authorId,message) => {
         return new Promise ((resolve,reject)=>{
-            axios.post('/message',{
+            axios.post('/user/messages',{
                 authToken: localStorage.getItem('authToken'),
                 authorId : authorId,
                 message : message
@@ -346,7 +345,7 @@ class PostService {
     }
     ratePost = (postId,ratings) => {
         return new Promise((resolve,reject)=>{
-            axios.put('/post/ratings',{
+            axios.put('/posts/ratings',{
                 authToken :localStorage.getItem('authToken'),
                 postId : postId,
                 rating: ratings

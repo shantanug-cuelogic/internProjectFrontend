@@ -45,7 +45,7 @@ class Header extends React.Component {
     handleSearch = async (e) => {
         if (e.keyCode === 13) {
             let search = e.target.value;
-            let url = '/post/search/?search=' + search;
+            let url = '/posts/search/?search=' + search;
             const searchPostResponse = await PostService.searchPost(url);
             if (searchPostResponse.success) {
                 this.props.history.push('/signin');

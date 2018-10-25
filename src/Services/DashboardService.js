@@ -5,7 +5,7 @@ class DashboardService {
     getUserRecentActivity = (userId) => {
         return new Promise((resolve, reject) => {
 
-            axios.get('/recentactivity/' + userId)
+            axios.get('/user/recentactivity/' + userId)
                 .then((response) => {
                     if (response.data.success) {
 
@@ -84,7 +84,7 @@ class DashboardService {
 
     getFollowerInformation = (userId) => {
         return new Promise((resolve, reject) => {
-            axios.get('followersinfo/' + userId)
+            axios.get('followers/' + userId)
                 .then((response) => {
                     if (response.data.success) {
                         resolve(response.data.result);
@@ -98,7 +98,7 @@ class DashboardService {
 
     getFeedbacks = (userId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/feedback/' + userId)
+            axios.get('/feedbacks/' + userId)
                 .then((response) => {
                     if (response.data.success) {
                         resolve(response.data.result);
@@ -112,7 +112,7 @@ class DashboardService {
 
     getMessages = (userId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/message/' + userId)
+            axios.get('/messages/' + userId)
                 .then((response) => {
 
                     if (response.data.success) {
@@ -128,7 +128,7 @@ class DashboardService {
     getViewsPerPost = (userId) => {
         return new Promise((resolve, reject) => {
 
-            axios.get('viewsperpost/' + userId)
+            axios.get('views/' + userId)
                 .then((response) => {
                     resolve(response.data);
                 })
