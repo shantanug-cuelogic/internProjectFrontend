@@ -5,7 +5,7 @@ class DashboardService {
     getUserRecentActivity = (userId) => {
         return new Promise((resolve, reject) => {
 
-            axios.get('/user/recentactivity/' + userId)
+            axios.get(`/user/:${userId}/recentactivity/`)
                 .then((response) => {
                     if (response.data.success) {
 

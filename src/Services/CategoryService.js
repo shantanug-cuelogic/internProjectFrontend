@@ -4,7 +4,7 @@ class CategoryService {
 
     getCategoryPosts = (category) => {
         return new Promise((resolve, reject) => {
-            axios.get('/posts/category/' + category)
+            axios.get(`/posts/category/${category}`)
                 .then((response) => {
                     resolve(response.data);
                 })

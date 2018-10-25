@@ -37,11 +37,10 @@ class PostService {
 
     fetchTotalLikesToPost = (postId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/posts/likes/' + postId)
+            axios.get(`/posts/${postId}/likes`)
                 .then((res) => {
                     if (res.data.success) {
                         resolve(res.data.count);
-                        // this.props.totalLikesToPostReducer(res.data.count)
                     }
                 })
                 .catch((error) => {
@@ -52,7 +51,7 @@ class PostService {
 
     fetchTotalViewsToPost = (postId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/posts/views/' + postId)
+            axios.get(`/posts/${postId}/views/` )
                 .then((response) => {
                     if (response.data.success) {
                         resolve(response.data.count)
@@ -67,7 +66,7 @@ class PostService {
 
     fetchAuthorInformation = (userId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/userprofile/' + userId)
+            axios.get('/user/profile/' + userId)
                 .then((response) => {
                     resolve(response.data[0])
                 })
@@ -292,7 +291,7 @@ class PostService {
 
     fetchDraftPosts = (userId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/posts/draft/' + userId)
+            axios.get(`/user/${userId}/posts/drafts`)
                 .then((response) => {
                     resolve(response.data);
                 })
@@ -319,7 +318,7 @@ class PostService {
     }
     fetchCategoryPost = (category) => {
         return new Promise((resolve, reject) => {
-            axios.get('/posts/'+category)
+            axios.get(`/posts/${category}`)
                 .then((response) => {
                     resolve(response.data);
                 })

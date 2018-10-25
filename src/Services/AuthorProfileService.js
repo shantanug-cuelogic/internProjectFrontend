@@ -4,7 +4,7 @@ class AuthorProfileService {
 
     getAuthorInformation = (userId) => {
         return new Promise((resolve, reject) => {
-            axios.get('/userprofile/' + userId)
+            axios.get('/user/profile/' + userId)
                 .then((response) => {
                     resolve(response.data[0]);
                 })
